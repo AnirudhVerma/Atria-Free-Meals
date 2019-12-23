@@ -1,0 +1,140 @@
+name: customer_application
+description: Doorstep BabkingCustomer Application
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable: ^0.2.6
+  bloc_pattern: ^2.3.2
+  flutter_bloc: ^1.0.0
+  dio: ^3.0.7
+  fluttertoast: ^3.1.0
+  shared_preferences: ^0.5.4+3
+  json_annotation: ^3.0.0
+  crypto: ^2.1.3
+  bubble_bottom_bar: ^1.2.0
+  bottom_navy_bar: ^5.2.2
+  flutter_jailbreak_detection: ^1.1.0
+  google_maps_flutter: ^0.5.21+15
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner:
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  fonts:
+    - family: LilyoftheValley
+      fonts:
+        - asset: assets/fonts/LilyoftheValley.ttf
+          weight: 400
+    - family: FFF_Tusj
+      fonts:
+        - asset: assets/fonts/FFF_Tusj.ttf
+          weight: 400
+    - family: GreatVibes-Regular
+      fonts:
+        - asset: assets/fonts/GreatVibes-Regular.otf
+          weight: 400
+    - family: Lobster_1.3
+      fonts:
+        - asset: assets/fonts/Lobster_1.3.otf
+          weight: 400
+    - family: Alegreya-BoldItalic
+      fonts:
+        - asset: assets/fonts/Alegreya-BoldItalic.ttf
+          weight: 400
+    - family: HelveticaNeue
+      fonts:
+        - asset: assets/fonts/HelveticaNeue.ttf
+          weight: 600
+    - family: Helvetica Neu Bold
+      fonts:
+        - asset: assets/fonts/Helvetica Neu Bold.ttf
+          weight: 400
+    - family: HelveticaNeue Light
+      fonts:
+        - asset: assets/fonts/HelveticaNeue Light.ttf
+          weight: 400
+    - family: HelveticaNeueLight
+      fonts:
+        - asset: assets/fonts/HelveticaNeueLight.ttf
+          weight: 400
+
+  assets:
+    - assets/images/blue_door.png
+    - assets/images/background1.jpg
+    - assets/images/background2.jpg
+    - assets/images/background3.jpg
+    - assets/images/myBackground.png
+    - assets/images/myBackgroungHorizontal.png
+    - assets/images/123392.png
+    - assets/images/1698558.png
+    - assets/images/1458279.png
+    - assets/images/1698540.png
+    - assets/images/1997427.png
+    - assets/images/199086.png
+    - assets/images/1716885.png
+
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #  - images/a_dot_burr.jpeg
+  #  - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
