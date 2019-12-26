@@ -97,8 +97,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: /*buildCenterInitial(),*/ Center(
         child: BlocBuilder<SignInBloc, SignInState>(builder: (context, state) {
           if (state is InitialSignInState) {
-            return buildCenterInitialPIN();
+//            return buildCenterInitialPIN();
 //          return myListView();
+          return buildCenterOTP();
           }
           if (state is LoadingSignInState) {
             return Center(
@@ -169,6 +170,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
 //                  SizedBox(height: 35.0),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
+                      child: Image(
+                        image: AssetImage('assets/images/blue_door.png'),
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
                     Text(
                       " Door-Step Banking",
                       style: TextStyle(
@@ -176,14 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.blue,
                         fontFamily: 'HelveticaNeue',
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
-                      child: Image(
-                        image: AssetImage('assets/images/blue_door.png'),
-                        height: 100,
-                        width: 100,
                       ),
                     ),
                     /*Text(
@@ -312,7 +313,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
 //                  SizedBox(height: 35.0),
                   Text(
-                    " Door-Step Banking",
+                    ' Door Step Banking',
                     style: TextStyle(
                       fontSize: 26,
                       color: Colors.blue,
