@@ -99,30 +99,49 @@ class _MyHomePageState extends State<MyHomePage> {
         child: BlocBuilder<SignInBloc, SignInState>(
             bloc: mySignInBloc,
             builder: (context, state) {
-          if (state is InitialSignInState) {
+              if (state is InitialSignInState) {
 //            return buildCenterInitialPIN();
 //          return myListView();
-          return buildCenterOTP();
-          }
-          if (state is LoadingSignInState) {
-            return Center(
-              child: CupertinoActivityIndicator(),
-            );
-          }
-          if (state is LoadedSignInState) {
-            return Center(child: Text('Login Successful'));
-          }
-          if (state is ErrorSignInState) {
-            return Center(child: Text('Login UnSuccessful'));
-          }
-          if (state is OTPSignInState) {
-            return buildCenterOTP();
-          }
-          if (state is EnterOTPState) {
-            return buildCenterEnterOTP();
-          }
-          return null;
-        }),
+                return buildCenterOTP();
+              }
+              if (state is LoadingSignInState) {
+                return Center(
+                  child: CupertinoActivityIndicator(),
+                );
+              }
+              if (state is LoadedSignInState) {
+                return Center(child: Text('Login Successful'));
+              }
+              if (state is ErrorSignInState) {
+                return Center(child: Text('Login UnSuccessful'));
+              }
+              if (state is OTPSignInState) {
+                return buildCenterOTP();
+              }
+              if (state is EnterOTPState) {
+                return buildCenterEnterOTP();
+              }
+              if (state is showProgressBar) {
+                return Center(
+//                  child: CupertinoActivityIndicator(),
+                  child: CircularProgressIndicator()
+                );
+              }
+
+              if (state is ErrorState) {
+
+                var data = state.errorResp;
+                if(state.errorResp == null){
+                  data = "something went wrong";
+                }
+                return Center(
+
+                  child: Text(data
+                  ),
+                );
+              }
+              return null;
+            }),
       ),
     );
   }
@@ -490,8 +509,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontSize: 18,
                             //previous SizeConfig.permanentBlockSize * 1.5
                             color: Colors.black,
-                            fontWeight: FontWeight.normal
-                        ),
+                            fontWeight: FontWeight.normal),
                       ),
                     ),
                     SizedBox(
@@ -501,17 +519,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: GestureDetector(
                         onTap: () {
                           final SiginInBloc =
-                          BlocProvider.of<SignInBloc>(context);
+                              BlocProvider.of<SignInBloc>(context);
                           SiginInBloc.add(DoSignInWithPIN());
                         },
                         child: Text(
                           " Sign-in with PIN ",
                           style: TextStyle(
-                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                              //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
                               color: Colors.black,
                               decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.normal
-                          ),
+                              fontWeight: FontWeight.normal),
                         ),
                       ),
                     ),
@@ -818,8 +835,7 @@ class _MyHomePageState extends State<MyHomePage> {
               .myDio
               .post("/validateOTP", data: validateOTPJSON);
           print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
-          final SiginInBloc = BlocProvider.of<SignInBloc>(context);
-          SiginInBloc.add(EnterOTP());
+          mySignInBloc.add(EnterOTP());
         }
       } else {
         print('Something went wrong');
@@ -1260,7 +1276,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
-      getOTP(myController.text);
+
+      String phoneNumber = myController.text;
+      mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
+
+
 //      _formKey.currentState.save();
     } else {
 //    If all data are not valid then start auto validation.

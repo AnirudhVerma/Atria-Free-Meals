@@ -38,3 +38,24 @@ class EnterOTPState extends SignInState{
   @override
   List<Object> get props => null;
 }
+
+
+class showProgressBar extends SignInState{
+  @override
+  List<Object> get props => null;
+}
+
+class ErrorState extends SignInState{
+
+
+
+
+  final String errorResp;
+
+  ErrorState({this.errorResp});
+
+  @override
+  List<Object> get props => [errorResp];
+
+}
+
