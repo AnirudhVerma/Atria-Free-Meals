@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final myController = TextEditingController();
   final myOTPController = TextEditingController();
   final nonDigit = new RegExp(r"(\D+)");
+  final mySignInBloc = new SignInBloc();
   String thePhoneNumber;
   String userName;
 
@@ -95,7 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: /*buildCenterInitial(),*/ Center(
-        child: BlocBuilder<SignInBloc, SignInState>(builder: (context, state) {
+        child: BlocBuilder<SignInBloc, SignInState>(
+            bloc: mySignInBloc,
+            builder: (context, state) {
           if (state is InitialSignInState) {
 //            return buildCenterInitialPIN();
 //          return myListView();
@@ -244,9 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          final SiginInWithOTPBloc =
-                              BlocProvider.of<SignInBloc>(context);
-                          SiginInWithOTPBloc.add(DoSignInwithOTP());
+//                              BlocProvider.of<SignInBloc>(context);
+                          mySignInBloc.add(DoSignInwithOTP());
                         },
                         child: Text(
                           " Sign-in with OTP ",
