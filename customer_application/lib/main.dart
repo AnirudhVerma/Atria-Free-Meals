@@ -1294,5 +1294,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     super.dispose();
     myController.dispose();
+    mySignInBloc.close();
   }
 }
