@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:customer_application/BookService.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
@@ -30,17 +31,17 @@ class MyApp extends StatelessWidget {
 }
 
 class MyMainPage extends StatefulWidget {
-  MyMainPage({Key key, this.title, this.phoneNumber, this.accessToken})
+  MyMainPage({Key key, this.title, this.phoneNumber, this.accessToken, this.userid})
       : super(key: key);
 
   final String title;
-
+  final int userid;
   final String phoneNumber;
   final String accessToken;
 
   @override
   _MyMainPageState createState() =>
-      _MyMainPageState(title, phoneNumber, accessToken);
+      _MyMainPageState(title, phoneNumber, accessToken, userid);
 }
 
 class _MyMainPageState extends State<MyMainPage> {
@@ -49,8 +50,9 @@ class _MyMainPageState extends State<MyMainPage> {
   String title;
   String phoneNumber;
   String accessToken;
+  int userid;
 
-  _MyMainPageState(this.title, this.phoneNumber, this.accessToken);
+  _MyMainPageState(this.title, this.phoneNumber, this.accessToken, this.userid);
 
   GoogleMapController mapController;
 
@@ -209,7 +211,16 @@ class _MyMainPageState extends State<MyMainPage> {
                 return ListTile(
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                  onTap: () {},
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: 'You tapped on ${output.servicename}',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIos: 1,
+                        backgroundColor: Colors.blue,
+                        textColor: Colors.white);
+                    Navigator.push(context, new CupertinoPageRoute(builder: (context) => BookService(output.servicename, userid)));
+                  },
                 );
               }
             },

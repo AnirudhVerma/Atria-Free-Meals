@@ -37,10 +37,10 @@ class NetworkCommon {
 
 //    dio.interceptors.add(alice.getDioInterceptor());
     // set base url
-    dio.options.baseUrl = 'http://192.168.0.137:30000/doorstep';
+    dio.options.baseUrl = 'http://10.10.20.15:30000/doorstep';
     // handle timeouts
-    dio.options.connectTimeout = 50000; //5s
-    dio.options.receiveTimeout = 50000;
+    dio.options.connectTimeout = 5000; //5s
+    dio.options.receiveTimeout = 5000;
 
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
