@@ -200,7 +200,7 @@ class _MyMainPageState extends State<MyMainPage> {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(),
           );
         } else {
 //          print('The data is loaded!!!!');

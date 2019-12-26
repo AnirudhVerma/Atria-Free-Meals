@@ -377,28 +377,34 @@ class _MySignUpPageState extends State<MySignUpPage> {
     );
   }
 
-  DropdownButton<String> dropDown() {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
+  Widget dropDown() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: DropdownButton<String>(
+          value: dropdownValue,
+          icon: Icon(Icons.arrow_downward),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: Colors.blue),
+          isExpanded: true,
+          underline: Container(
+            height: 2,
+            color: Colors.blue,
+          ),
+          onChanged: (String newValue) {
+            setState(() {
+              dropdownValue = newValue;
+            });
+          },
+          items: myItems.map<DropdownMenuItem<String>>((String value1) {
+            return DropdownMenuItem<String>(
+              value: value1,
+              child: Text(value1),
+            );
+          }).toList(),
+        ),
       ),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: myItems.map<DropdownMenuItem<String>>((String value1) {
-        return DropdownMenuItem<String>(
-          value: value1,
-          child: Text(value1),
-        );
-      }).toList(),
     );
   }
 
