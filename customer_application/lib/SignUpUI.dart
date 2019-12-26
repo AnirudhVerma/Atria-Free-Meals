@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:customer_application/JSONResponseClasses/ValidateOTP.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:flutter/material.dart';

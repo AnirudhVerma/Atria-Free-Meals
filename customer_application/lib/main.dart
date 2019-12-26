@@ -109,9 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: CupertinoActivityIndicator(),
                 );
               }
-              if (state is LoadedSignInState) {
-                return Center(child: Text('Login Successful'));
-              }
               if (state is ErrorSignInState) {
                 return Center(child: Text('Login UnSuccessful'));
               }
@@ -123,8 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
               if (state is showProgressBar) {
                 return Center(
-//                  child: CupertinoActivityIndicator(),
-                  child: CircularProgressIndicator()
+                  child: CircularProgressIndicator(),
                 );
               }
 
@@ -396,9 +392,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        final SiginInBloc =
-                            BlocProvider.of<SignInBloc>(context);
-                        SiginInBloc.add(DoSignInWithPIN());
+                        mySignInBloc.add(DoSignInWithPIN());
                       },
                       child: Text(
                         " Sign-in with PIN ",
@@ -518,9 +512,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          final SiginInBloc =
-                              BlocProvider.of<SignInBloc>(context);
-                          SiginInBloc.add(DoSignInWithPIN());
+                          mySignInBloc.add(DoSignInWithPIN());
                         },
                         child: Text(
                           " Sign-in with PIN ",
@@ -542,7 +534,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /*DELETE myListView*/
 
-  ListView myListView() {
+/*  ListView myListView() {
     return ListView(
       children: <Widget>[
         Container(
@@ -683,7 +675,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
-  }
+  }*/
 
   /*DELETE myStack*/
 
@@ -715,8 +707,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: GestureDetector(
                 onTap: () {
-                  final SiginInBloc = BlocProvider.of<SignInBloc>(context);
-                  SiginInBloc.add(DoSignInwithOTP());
+                  mySignInBloc.add(DoSignInwithOTP());
                 },
                 child: Text(
                   " Sign-in with OTP ",

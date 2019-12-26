@@ -28,10 +28,10 @@ class ServiceList {
 }
 
 class OUTPUT {
-  int serviceid;
+  String serviceid;
   String servicename;
-  Null description;
-  int serviceCharge;
+  String description;
+  String serviceCharge;
   String homebranch;
   List<CustomParams> customParams;
 

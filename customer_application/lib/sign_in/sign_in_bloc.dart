@@ -1,5 +1,4 @@
 import 'package:customer_application/repository.dart';
-
 import '../bloc.dart';
 import 'dart:async';
 import 'package:bloc/bloc.dart';
@@ -20,7 +19,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
         yield InitialSignInState();
       } catch (e) {
-        yield ErrorSignInState();
+        yield ErrorSignInState('error Message');
         print(e);
       }
     }
@@ -34,22 +33,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       yield showProgressBar();
 
-      String resp = await repository().getOTP(event.phoneNumber);
-      print('repository().resp : ${repository().resp }');
+      String resp = await Repository().getOTP(event.phoneNumber);
+      print('repository().resp : ${Repository().resp }');
       print('resp : $resp ');
 
-
-
-      if(repository().resp == 'Success'){
+      if(Repository().resp == 'Success'){
 
         yield EnterOTPState();
 
       }
       else{
-        yield ErrorState(errorResp: repository().resp );
+        yield ErrorState(errorResp: Repository().resp );
 
       }
-
 
     }
     // TODO: Add Logic

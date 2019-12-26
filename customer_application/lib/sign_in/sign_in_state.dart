@@ -14,19 +14,11 @@ class LoadingSignInState extends SignInState {
   List<Object> get props => null;
 }
 
-class LoadedSignInState extends SignInState {
-
-  final String loginResponse;
-
-  LoadedSignInState(this.loginResponse);
-
-  @override
-  List<Object> get props => [loginResponse];
-}
-
 class ErrorSignInState extends SignInState {
+  final String errorMessage;
+   ErrorSignInState(this.errorMessage);
   @override
-  List<Object> get props => null;
+  List<Object> get props => [errorMessage];
 }
 
 class OTPSignInState extends SignInState {
@@ -46,9 +38,6 @@ class showProgressBar extends SignInState{
 }
 
 class ErrorState extends SignInState{
-
-
-
 
   final String errorResp;
 

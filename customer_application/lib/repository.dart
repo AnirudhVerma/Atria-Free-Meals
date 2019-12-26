@@ -1,25 +1,20 @@
-
-
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'networkConfig.dart';
 
-class repository {
+class Repository {
 
-
-  static final repository _singleton = new repository._internal();
+  static final Repository _singleton = new Repository._internal();
 
   var resp = null;
 
-  factory repository() {
+  factory Repository() {
     return _singleton;
   }
 
-  repository._internal();
+  Repository._internal();
 
   getOTP(String phoneNumber) async {
     try {
@@ -123,8 +118,6 @@ class repository {
         resp = response1.toString();
         return response1.toString();
       }
-
-
 
 //        var parsedJson = json.decode(response1);
 

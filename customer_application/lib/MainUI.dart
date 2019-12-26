@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyMainPage extends StatefulWidget {
-  MyMainPage({Key key, this.title, this.phoneNumber, this.accessToken, this.userid})
+  MyMainPage(
+      {Key key, this.title, this.phoneNumber, this.accessToken, this.userid})
       : super(key: key);
 
   final String title;
@@ -197,11 +198,12 @@ class _MyMainPageState extends State<MyMainPage> {
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.data == null) {
           print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
-            child: CupertinoActivityIndicator(),
+            child: CircularProgressIndicator(),
           );
         } else {
-          print('The data is loaded!!!!');
+//          print('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,
             itemBuilder: (context, index) {
@@ -219,7 +221,11 @@ class _MyMainPageState extends State<MyMainPage> {
                         timeInSecForIos: 1,
                         backgroundColor: Colors.blue,
                         textColor: Colors.white);
-                    Navigator.push(context, new CupertinoPageRoute(builder: (context) => BookService(output.servicename, userid)));
+                    Navigator.push(
+                        context,
+                        new CupertinoPageRoute(
+                            builder: (context) =>
+                                BookService(output.servicename, userid)));
                   },
                 );
               }
@@ -261,7 +267,8 @@ class _MyMainPageState extends State<MyMainPage> {
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print('                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
@@ -291,7 +298,42 @@ class _MyMainPageState extends State<MyMainPage> {
             },
             children: <Widget>[
               Container(
-                child: servicesWidget(),
+                child: servicesWidget(),/*Column(
+                  children: <Widget>[
+                    servicesWidget(),
+                    MaterialButton(
+                      child: Text(
+                        "Cupertino date Picker",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.redAccent,
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext builder) {
+                              return Container(
+                                  height: MediaQuery.of(context)
+                                          .copyWith()
+                                          .size
+                                          .height /
+                                      3,
+                                  child: CupertinoDatePicker(
+                                    initialDateTime: DateTime.now(),
+                                    onDateTimeChanged: (DateTime newDate) {
+                                      print(newDate);
+                                    },
+//                                    use24hFormat: true,
+//                                    maximumDate: new DateTime(2018, 12, 30),
+//                                    minimumYear: 2010,
+//                                    maximumYear: 2018,
+//                                    minuteInterval: 1,
+                                    mode: CupertinoDatePickerMode.dateAndTime,
+                                  ));
+                            });
+                      },
+                    ),
+                  ],
+                ),*/
               ),
               Container(
 //                color: Colors.red,
@@ -404,13 +446,10 @@ class _MyMainPageState extends State<MyMainPage> {
                       ),
                     ),
                     Center(
-                        child: RaisedButton(
-                      child: Text(
-                        'LOGOUT',
-                      ),
-                      textColor: Colors.white,
-                      onPressed: logout,
-                      color: Colors.blue,
+                        child: RaisedButton(child: Text('LOGOUT',),
+                        textColor: Colors.white,
+                        onPressed: logout,
+                        color: Colors.blue,
                     )),
                   ],
                 ),
