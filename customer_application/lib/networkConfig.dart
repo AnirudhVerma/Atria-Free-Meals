@@ -31,13 +31,12 @@ class NetworkCommon {
     }
   }
 
-  // global configration
+  // global configuration
   Dio get myDio {
     Dio dio = new Dio();
 
 //    dio.interceptors.add(alice.getDioInterceptor());
-    // set base url
-    dio.options.baseUrl = 'http://111.125.203.226:30000/doorstep';
+    dio.options.baseUrl = 'http://111.125.203.226:30001/doorstep';
 
     // handle timeouts
     dio.options.connectTimeout = 50000; //5s
