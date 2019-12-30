@@ -4,7 +4,7 @@ import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:customer_application/CommonMethods.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'networkConfig.dart';
 
@@ -36,11 +36,13 @@ class BookService extends StatelessWidget {
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.data == null) {
           print('The data is in loading state');
+          CommonMethods().toast(context, 'data not loaded');
           return Center(
             child: CupertinoActivityIndicator(),
           );
         } else {
           print('The data is loaded!!!!');
+          CommonMethods().toast(context, 'The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,
             itemBuilder: (context, index) {
