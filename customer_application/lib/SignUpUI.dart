@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/JSONResponseClasses/ValidateOTP.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +173,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                       " Sign-Up!",
                       style: TextStyle(
                           fontSize: 24,
-                          color: Colors.blue[900],
+                          color: Colors.blue,
                           fontFamily: 'HelveticaNeue',
                           fontWeight: FontWeight.bold),
                     ),
@@ -251,7 +252,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                       " Enter OTP",
                       style: TextStyle(
                           fontSize: 24,
-                          color: Colors.blue[900],
+                          color: Colors.blue,
                           fontFamily: 'HelveticaNeue',
                           fontWeight: FontWeight.bold),
                     ),
@@ -260,7 +261,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "We've sent an OTP to ${myController.text}",
+                          " We've sent an OTP to ${myController.text}",
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'HelveticaNeue',
@@ -495,7 +496,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
     );
   }
 
-  Widget phoneNumberInput() {
+  Widget   phoneNumberInput() {
     return TextFormField(
       maxLength: 10,
       obscureText: false,
@@ -739,13 +740,14 @@ class _MySignUpPageState extends State<MySignUpPage> {
 
               mySignUpBloc.add(RegistrationForm());
             } else {
-              Fluttertoast.showToast(
+              CommonMethods().toast(context, validateOTPObject.eRRORMSG);
+              /*Fluttertoast.showToast(
                   msg: "${validateOTPObject.eRRORMSG}",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIos: 1,
                   backgroundColor: Colors.blue,
-                  textColor: Colors.white);
+                  textColor: Colors.white);*/
             }
 
 //            if (myController.text.length == 10) {

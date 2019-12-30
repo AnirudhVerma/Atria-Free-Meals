@@ -38,7 +38,7 @@ class BookService extends StatelessWidget {
           print('The data is in loading state');
           CommonMethods().toast(context, 'data not loaded');
           return Center(
-            child: CupertinoActivityIndicator(),
+            child: CircularProgressIndicator(),
           );
         } else {
           print('The data is loaded!!!!');

@@ -126,14 +126,21 @@ class _MyHomePageState extends State<MyHomePage> {
               }
 
               if (state is ErrorState) {
-
                 var data = state.errorResp;
-                if(state.errorResp == null){
+                if (state.errorResp == null) {
                   data = "something went wrong";
                 }
                 return Center(
-
-                  child: Text(data
+                  child: Column(
+                    children: <Widget>[
+                      Text(data),
+                      MaterialButton(
+                        child: Text('Retry'),
+                        onPressed: () {
+                          mySignInBloc.add(DoSignInwithOTP());
+                        },
+                      ),
+                    ],
                   ),
                 );
               }
@@ -492,20 +499,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     Center(
                       child: ArgonTimerButton(
                         elevation: 5.0,
-                        color: Colors.blue,
-                        initialTimer: 10, // Optional
+                        color: Colors.redAccent,
+                        initialTimer: 30,
+                        // Optional
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.45,
                         minWidth: MediaQuery.of(context).size.width * 0.30,
                         borderRadius: 30.0,
                         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                         child: Text(
-                          "Resend OTP to ${myController.text}",
+                          "Resend OTP",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                         loader: (timeLeft) {
                           return Text(
@@ -513,8 +520,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold
-                            ),
+                                fontWeight: FontWeight.bold),
                           );
                         },
                         onTap: (startTimer, btnState) {
@@ -895,9 +901,8 @@ class _MyHomePageState extends State<MyHomePage> {
     },
     "mobilenumber":"$phoneNumber"
     }""";
-    Response response2 = await NetworkCommon()
-        .myDio
-        .post("/generateOTP", data: generateOTPJSON);
+    Response response2 =
+        await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
     print('GENERATE OTP RESPONSE IS $response2');
   }
 
@@ -1324,7 +1329,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
       String phoneNumber = myController.text;
       mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
-
 
 //      _formKey.currentState.save();
     } else {

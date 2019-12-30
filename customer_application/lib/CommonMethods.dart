@@ -7,7 +7,7 @@ class CommonMethods{
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         timeInSecForIos: 1,
         backgroundColor: Colors.blue,
         textColor: Colors.white);

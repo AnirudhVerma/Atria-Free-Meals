@@ -18,6 +18,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       yield EnterOTPSignUpState();
     }
 
-    // TODO: Add Logic
+    // TODO: Add Logic flushbar
   }
 }

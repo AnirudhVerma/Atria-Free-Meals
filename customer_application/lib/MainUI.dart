@@ -298,7 +298,8 @@ class _MyMainPageState extends State<MyMainPage> {
             },
             children: <Widget>[
               Container(
-                child: servicesWidget(),/*Column(
+                child: servicesWidget(),
+                /*Column(
                   children: <Widget>[
                     servicesWidget(),
                     MaterialButton(
@@ -339,6 +340,7 @@ class _MyMainPageState extends State<MyMainPage> {
 //                color: Colors.red,
                 child: GoogleMap(
                   onMapCreated: _onMapCreated,
+                  mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
                     target: _center,
                     zoom: 11.0,
