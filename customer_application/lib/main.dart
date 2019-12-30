@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/MainUI.dart';
@@ -488,6 +489,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 15.0,
                     ),
                     //loginWithOTPRow(),
+                    Center(
+                      child: ArgonTimerButton(
+                        elevation: 5.0,
+                        color: Colors.blue,
+                        initialTimer: 10, // Optional
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        minWidth: MediaQuery.of(context).size.width * 0.30,
+                        borderRadius: 30.0,
+                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        child: Text(
+                          "Resend OTP to ${myController.text}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        loader: (timeLeft) {
+                          return Text(
+                            "Wait | $timeLeft",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                            ),
+                          );
+                        },
+                        onTap: (startTimer, btnState) {
+                          if (btnState == ButtonState.Idle) {
+                            startTimer(20);
+//                            generateOTP(myController.text);
+                          }
+                        },
+                      ),
+                    ),
                     SizedBox(
                       height: 15.0,
                     ),
@@ -800,7 +837,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Response response2 = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
-        print("THE OTP RESPONSE IS :: $response2");
+        print("THE GENERATE OTP RESPONSE IS :: $response2");
         var myOTPVar = jsonDecode(response2.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
         // userName = oTPResponse.oUTPUT.firstname;
@@ -845,6 +882,23 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  generateOTP(String phoneNumber) async {
+    String generateOTPJSON = """{
+        "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17"
+    },
+    "mobilenumber":"$phoneNumber"
+    }""";
+    Response response2 = await NetworkCommon()
+        .myDio
+        .post("/generateOTP", data: generateOTPJSON);
+    print('GENERATE OTP RESPONSE IS $response2');
   }
 
   Future navigateTosignUp(context) async {
