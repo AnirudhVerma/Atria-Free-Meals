@@ -128,14 +128,19 @@ class _MyHomePageState extends State<MyHomePage> {
               if (state is ErrorState) {
                 var data = state.errorResp;
                 if (state.errorResp == null) {
-                  data = "something went wrong";
+                  data = "oops, something went wrong";
                 }
                 return Center(
                   child: Column(
                     children: <Widget>[
                       Text(data),
                       MaterialButton(
-                        child: Text('Retry'),
+                        color: Colors.blue,
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                              color: Colors.white,),
+                        ),
                         onPressed: () {
                           mySignInBloc.add(DoSignInwithOTP());
                         },
