@@ -128,25 +128,28 @@ class _MyHomePageState extends State<MyHomePage> {
               if (state is ErrorState) {
                 var data = state.errorResp;
                 if (state.errorResp == null) {
-                  data = "oops, something went wrong";
+                  data = "OOPS, something went wrong";
                 }
-                return Center(
-                  child: Column(
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(data),
                       MaterialButton(
                         color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                        ),
                         child: Text(
                           'Retry',
                           style: TextStyle(
-                              color: Colors.white,),
+                              color: Colors.white,
+                          fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           mySignInBloc.add(DoSignInwithOTP());
                         },
                       ),
                     ],
-                  ),
                 );
               }
               return null;
@@ -806,26 +809,27 @@ class _MyHomePageState extends State<MyHomePage> {
     "mobilenumber":"$phoneNumber"
     }""";
 
-      String json1 = """{
+      String fetchUserDetailsString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
 
     },
     "mobilenumber":"$phoneNumber",
     "type":"login"
     }""";
 
-      print("Resquest :: " + json1);
+      print("Resquest :: " + fetchUserDetailsString);
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
 
       Response response1 =
-          await NetworkCommon().myDio.post("/fetchUserDetails", data: json1);
+          await NetworkCommon().myDio.post("/fetchUserDetails", data: fetchUserDetailsString);
 
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
@@ -838,10 +842,12 @@ class _MyHomePageState extends State<MyHomePage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber"
     }""";
+
 
       print("RESPONSE CODE :: ${firstResponse.eRRORCODE}");
       if (firstResponse.eRRORCODE == "00") {
@@ -862,7 +868,8 @@ class _MyHomePageState extends State<MyHomePage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber",
     "otp":"123456"
@@ -902,7 +909,8 @@ class _MyHomePageState extends State<MyHomePage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber"
     }""";
@@ -980,7 +988,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 "client_app_ver":"1.0.0",
                 "client_apptype":"DSB",
                 "platform":"ANDROID",
-                "vendorid":"17"
+                "vendorid":"17",
+                "ClientAppName":"ANIOSCUST"
                 },
                 "mobilenumber":"$phoneNumber",
                 "otp":"123456"

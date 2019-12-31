@@ -24,32 +24,35 @@ class Repository {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
 
     },
     "mobilenumber":"$phoneNumber"
     }""";
 
-      String json1 = """{
+      String fetchUserDetailsString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
 
     },
     "mobilenumber":"$phoneNumber",
-    "type":"login"
+    "type":"login",
+    "usertype":"C"
     }""";
 
-      print("Resquest :: " + json1);
+      print("Resquest :: " + fetchUserDetailsString);
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
 
       Response response1 =
-      await NetworkCommon().myDio.post("/fetchUserDetails", data: json1);
+      await NetworkCommon().myDio.post("/fetchUserDetails", data: fetchUserDetailsString);
       print("THE Fetch User RESPONSE IS :: $response1");
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
@@ -62,7 +65,8 @@ class Repository {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber"
     }""";
@@ -86,7 +90,8 @@ class Repository {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber",
     "otp":"123456"

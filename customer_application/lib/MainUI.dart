@@ -102,7 +102,8 @@ class _MyMainPageState extends State<MyMainPage> {
                     "client_app_ver":"1.0.0",
                     "client_apptype":"DSB",
                     "platform":"ANDROID",
-                    "vendorid":"17"
+                    "vendorid":"17",
+                    "ClientAppName":"ANIOSCUST"
                     },
                     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
                     "authorization":"$accessToken",
@@ -243,7 +244,8 @@ class _MyMainPageState extends State<MyMainPage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",

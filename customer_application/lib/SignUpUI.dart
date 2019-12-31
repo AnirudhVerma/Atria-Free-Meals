@@ -717,7 +717,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
             "client_app_ver":"1.0.0",
             "client_apptype":"DSB",
             "platform":"ANDROID",
-            "vendorid":"17"
+            "vendorid":"17",
+            "ClientAppName":"ANIOSCUST"
             },
             "mobilenumber":"${myController.text}",
             "otp":"${myOTPController.text}"
@@ -778,7 +779,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
 
     },
     "mobilenumber":"$phoneNumber",
@@ -791,7 +793,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"$phoneNumber"
     }""";
@@ -830,7 +833,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
 
     },
     "username":"$phoneNumber",
@@ -871,6 +875,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
             _validateInputs();
 
             if(_registrationFormKey.currentState.validate()){
+            //  make register user api call
             //  registerCustomer(phoneNumber, name, password, email, securityQuestion, securityAnswer, alternatemob, address, latitude, longitude, pincode);
             }
             else{
