@@ -3,7 +3,19 @@ class Address {
   String eRRORMSG;
   List<OUTPUT> oUTPUT;
 
-  Address({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  Address._privateConstructor();  //Singleton start
+
+  static final Address instance = Address._privateConstructor();
+
+  factory Address({String eRRORCODE,String eRRORMSG,List<OUTPUT> oUTPUT}){
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUT = oUTPUT;
+    return instance;
+  }                                     //Singleton End
+
+
+//  Address({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
   Address.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

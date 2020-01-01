@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:customer_application/BookService.dart';
+import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
@@ -52,6 +53,7 @@ class _MyMainPageState extends State<MyMainPage> {
   String phoneNumber;
   String accessToken;
   int userid;
+  FirstResponse myUserData = FirstResponse();
 
   _MyMainPageState(this.title, this.phoneNumber, this.accessToken, this.userid);
 
@@ -223,6 +225,7 @@ class _MyMainPageState extends State<MyMainPage> {
                         backgroundColor: Colors.blue,
                         textColor: Colors.white);
                     print('        SERVICEID IS ${output.serviceid}');
+                    CommonMethods().toast(context, 'The users first name is ${myUserData.oUTPUTOBJECT.firstname}');
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(

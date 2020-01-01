@@ -3,7 +3,18 @@ class ServiceList {
   String eRRORMSG;
   List<OUTPUT> oUTPUT;
 
-  ServiceList({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  ServiceList._privateConstructor();  //Singleton start
+
+  static final ServiceList instance = ServiceList._privateConstructor();
+
+  factory ServiceList({String eRRORCODE,String eRRORMSG,List<OUTPUT> oUTPUT}){
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUT = oUTPUT;
+    return instance;
+  }                                     //Singleton End
+
+//  ServiceList({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
   ServiceList.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

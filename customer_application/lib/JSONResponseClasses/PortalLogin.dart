@@ -3,7 +3,18 @@ class PortalLogin {
   String eRRORMSG;
   OUTPUT oUTPUT;
 
-  PortalLogin({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  PortalLogin._privateConstructor();  //Singleton start
+
+  static final PortalLogin instance = PortalLogin._privateConstructor();
+
+  factory PortalLogin({String eRRORCODE,String eRRORMSG,OUTPUT oUTPUT}){
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUT = oUTPUT;
+    return instance;
+  }                                     //Singleton End
+
+//  PortalLogin({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
   PortalLogin.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

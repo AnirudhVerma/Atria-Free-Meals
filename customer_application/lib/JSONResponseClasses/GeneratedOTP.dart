@@ -3,7 +3,18 @@ class GeneratedOTP {
   String eRRORMSG;
   OUTPUT oUTPUT;
 
-  GeneratedOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  GeneratedOTP._privateConstructor();  //Singleton start
+
+  static final GeneratedOTP instance = GeneratedOTP._privateConstructor();
+
+  factory GeneratedOTP({String eRRORCODE,String eRRORMSG,OUTPUT oUTPUT}){
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUT = oUTPUT;
+    return instance;
+  }                                     //Singleton End
+
+//  GeneratedOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});      // previous code
 
   GeneratedOTP.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

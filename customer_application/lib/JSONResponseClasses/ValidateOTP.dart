@@ -3,7 +3,18 @@ class ValidateOTP {
   String eRRORMSG;
   String oUTPUT;
 
-  ValidateOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  ValidateOTP._privateConstructor();  //Singleton start
+
+  static final ValidateOTP instance = ValidateOTP._privateConstructor();
+
+  factory ValidateOTP({String eRRORCODE,String eRRORMSG,String oUTPUT}){
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUT = oUTPUT;
+    return instance;
+  }                                     //Singleton End
+
+//  ValidateOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
   ValidateOTP.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

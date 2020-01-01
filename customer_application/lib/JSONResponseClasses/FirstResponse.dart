@@ -6,13 +6,13 @@ class FirstResponse {
 
   FirstResponse._privateConstructor();  //Singleton start
 
-  static final FirstResponse _instance = FirstResponse._privateConstructor();
+  static final FirstResponse instance = FirstResponse._privateConstructor();
 
   factory FirstResponse({String eRRORCODE,String eRRORMSG,OUTPUTOBJECT oUTPUTOBJECT}){
-    _instance.eRRORMSG = eRRORMSG;
-    _instance.eRRORCODE = eRRORCODE;
-    _instance.oUTPUTOBJECT = oUTPUTOBJECT;
-    return _instance;
+    instance.eRRORMSG = eRRORMSG;
+    instance.eRRORCODE = eRRORCODE;
+    instance.oUTPUTOBJECT = oUTPUTOBJECT;
+    return instance;
   }                                     //Singleton End
 
 //  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
