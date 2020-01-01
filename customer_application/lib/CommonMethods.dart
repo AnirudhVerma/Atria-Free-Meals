@@ -9,7 +9,7 @@ class CommonMethods{
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         timeInSecForIos: 1,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple,
         textColor: Colors.white);
   }
 

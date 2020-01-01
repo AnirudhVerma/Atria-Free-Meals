@@ -222,11 +222,12 @@ class _MyMainPageState extends State<MyMainPage> {
                         timeInSecForIos: 1,
                         backgroundColor: Colors.blue,
                         textColor: Colors.white);
+                    print('        SERVICEID IS ${output.serviceid}');
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(
                             builder: (context) =>
-                                BookService(output.servicename, userid)));
+                                BookService(output.servicename, userid, int.parse(output.serviceid), accessToken, phoneNumber )));
                   },
                 );
               }

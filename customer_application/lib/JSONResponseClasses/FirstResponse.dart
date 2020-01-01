@@ -1,9 +1,21 @@
 class FirstResponse {
+
   String eRRORCODE;
   String eRRORMSG;
   OUTPUTOBJECT oUTPUTOBJECT;
 
-  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
+  FirstResponse._privateConstructor();  //Singleton start
+
+  static final FirstResponse _instance = FirstResponse._privateConstructor();
+
+  factory FirstResponse({String eRRORCODE,String eRRORMSG,OUTPUTOBJECT oUTPUTOBJECT}){
+    _instance.eRRORMSG = eRRORMSG;
+    _instance.eRRORCODE = eRRORCODE;
+    _instance.oUTPUTOBJECT = oUTPUTOBJECT;
+    return _instance;
+  }                                     //Singleton End
+
+//  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
 
   FirstResponse.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

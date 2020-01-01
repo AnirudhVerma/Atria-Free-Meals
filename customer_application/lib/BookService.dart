@@ -12,8 +12,11 @@ class BookService extends StatelessWidget {
 
   final String title;
   final int userid;
+  final int serviceid;
+  final String accessToken;
+  final String userName;
 
-  BookService(this.title, this.userid);
+  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +24,16 @@ class BookService extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Column(
-        children: <Widget>[
-          Text('Choose a delivery location'),
-        ],
-      ),
+      body: addressList(),
     );
   }
 
   Widget addressList() {
-    var output;
+    var addressOutput;
     return FutureBuilder(
-      future: getaddress(),
-      builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null) {
+      future: getAddress(),
+      builder: (context, addressSnapShot) {
+        if (addressSnapShot.data == null) {
           print('The data is in loading state');
           CommonMethods().toast(context, 'data not loaded');
           return Center(
@@ -44,14 +43,17 @@ class BookService extends StatelessWidget {
           print('The data is loaded!!!!');
           CommonMethods().toast(context, 'The data is loaded!!!!');
           return ListView.builder(
-            itemCount: servicesSnapShot.data.length,
+//            itemCount: int.parse(addressSnapShot.data.length),
+            itemCount: addressSnapShot.data.length,
             itemBuilder: (context, index) {
               {
-                output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
+                addressOutput = addressSnapShot.data[index];
+                print('project snapshot data is: ${addressSnapShot.data}');
                 return ListTile(
-                  title: Text('address'),
+                  title: Text(addressOutput.address),
+                  subtitle: Text(addressOutput.addressid.toString()),
                   onTap: () {
+                    CommonMethods().toast(context, 'You tapped on ${addressOutput.address}');
                     },
                 );
               }
@@ -62,17 +64,20 @@ class BookService extends StatelessWidget {
     );
   }
 
-  Future<void> getaddress() async {
+  Future<void> getAddress() async {
     String getAddressString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
     "platform":"ANDROID",
-    "vendorid":"17"
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
     },
-    "userid":$userid
-
+    "userid":$userid,
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
     }""";
     Response getAddressResponse = await NetworkCommon()
         .myDio
@@ -85,7 +90,7 @@ class BookService extends StatelessWidget {
 
     print("THE ADDRESS RESPONSE IS $getAddressResponseObject");
 
-    var output = getAddressResponseObject;
+    var output = getAddressResponseObject.oUTPUT;
 
     List address = [];
 
