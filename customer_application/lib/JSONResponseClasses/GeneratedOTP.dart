@@ -16,6 +16,10 @@ class GeneratedOTP {
 
 //  GeneratedOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});      // previous code
 
+  GeneratedOTP get myGeneratedOTP {
+    return instance;
+  }
+
   GeneratedOTP.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];

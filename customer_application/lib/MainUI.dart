@@ -53,7 +53,7 @@ class _MyMainPageState extends State<MyMainPage> {
   String phoneNumber;
   String accessToken;
   int userid;
-  FirstResponse myUserData = FirstResponse();
+  FirstResponse myUserData = FirstResponse().myFirstResponse;
 
   _MyMainPageState(this.title, this.phoneNumber, this.accessToken, this.userid);
 
@@ -203,7 +203,7 @@ class _MyMainPageState extends State<MyMainPage> {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
-            child: CupertinoActivityIndicator(),
+            child: CircularProgressIndicator(),
           );
         } else {
 //          print('The data is loaded!!!!');

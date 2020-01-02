@@ -16,6 +16,10 @@ class ServiceList {
 
 //  ServiceList({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
+  ServiceList get myServiceList {
+    return instance;
+  }
+
   ServiceList.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];

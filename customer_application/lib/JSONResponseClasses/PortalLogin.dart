@@ -16,6 +16,10 @@ class PortalLogin {
 
 //  PortalLogin({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
+  PortalLogin get myPortalLogin {
+    return instance;
+  }
+
   PortalLogin.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];

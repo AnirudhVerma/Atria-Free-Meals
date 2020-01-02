@@ -14,8 +14,11 @@ class Address {
     return instance;
   }                                     //Singleton End
 
-
 //  Address({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+
+  Address get myAddress {
+    return instance;
+  }
 
   Address.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

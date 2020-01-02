@@ -16,6 +16,10 @@ class ValidateOTP {
 
 //  ValidateOTP({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
+  ValidateOTP get myValidateOTP {
+    return instance;
+  }
+
   ValidateOTP.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];

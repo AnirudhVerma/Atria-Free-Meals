@@ -17,6 +17,10 @@ class FirstResponse {
 
 //  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
 
+  FirstResponse get myFirstResponse {
+    return instance;
+  }
+
   FirstResponse.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];
