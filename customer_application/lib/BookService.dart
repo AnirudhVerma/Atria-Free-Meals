@@ -12,14 +12,15 @@ import 'JSONResponseClasses/ServiceList.dart';
 import 'networkConfig.dart';
 
 class BookService extends StatelessWidget {
-
   final String title;
   final int userid;
   final int serviceid;
   final String accessToken;
   final String userName;
   final myBookServiceBloc = new BookServiceBloc();
-  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
+
+  BookService(
+      this.title, this.userid, this.serviceid, this.accessToken, this.userName);
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +29,23 @@ class BookService extends StatelessWidget {
         title: Text(title),
       ),
 //      body: addressUI(context),
-      body: Center(child: BlocBuilder<BookServiceBloc,BookServiceState>(
-        bloc: myBookServiceBloc,
-        builder: (context, state){
-          if (state is InitialBookServiceState){
-            return addressUI(context);
-          }
-          if (state is FetchBankList){
-            return bankListUI(context);
-          }
-          return null;
-        }
-      ),),
+      body: Center(
+        child: BlocBuilder<BookServiceBloc, BookServiceState>(
+            bloc: myBookServiceBloc,
+            builder: (context, state) {
+              if (state is InitialBookServiceState) {
+                return addressUI(context);
+              }
+              if (state is FetchBankList) {
+                return bankListUI(context);
+              }
+              return null;
+            }),
+      ),
     );
   }
 
   Stack addressUI(BuildContext context) {
-
     Future<void> getAddress() async {
       String getBankString = """{
           "additionalData":
@@ -62,10 +63,10 @@ class BookService extends StatelessWidget {
     }""";
       Response getAddressResponse = await NetworkCommon()
           .myDio
-          .post("/getBankList", data: getBankString);
+          .post("/getAddressList", data: getBankString);
       var getAddressResponseString = jsonDecode(getAddressResponse.toString());
       var getAddressResponseObject =
-      Address.fromJson(getAddressResponseString);// replace with PODO class
+          Address.fromJson(getAddressResponseString); // replace with PODO class
 
       print("THE ADDRESS RESPONSE IS $getAddressResponseObject");
 
@@ -95,6 +96,7 @@ class BookService extends StatelessWidget {
           } else {
             return ListView.builder(
 //            itemCount: int.parse(addressSnapShot.data.length),
+              shrinkWrap: true,
               itemCount: addressSnapShot.data.length,
               itemBuilder: (context, index) {
                 {
@@ -104,7 +106,8 @@ class BookService extends StatelessWidget {
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.addressid.toString()),
                     onTap: () {
-                      CommonMethods().toast(context, 'You tapped on ${addressOutput.address}');
+                      CommonMethods().toast(
+                          context, 'You tapped on ${addressOutput.address}');
                     },
                   );
                 }
@@ -120,31 +123,51 @@ class BookService extends StatelessWidget {
         ClipPath(
           clipper: WaveClipperTwo(),
           child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor
-            ),
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             height: 200,
           ),
         ),
         Column(
           children: <Widget>[
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Row(
               children: <Widget>[
-                SizedBox(width: 16,),
-                CircleAvatar(child: Text('1', style: TextStyle(color: Colors.blue[900]),),backgroundColor: Colors.blue[100],),
-                SizedBox(width: 16,),
-                Text('Choose an Address', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),),
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '1',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Text(
+                  'Choose an Address',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
+                ),
               ],
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               elevation: 20,
-              margin: EdgeInsets.all(8),
-              child:Expanded (child: addressList(),),
+              margin: EdgeInsets.all(18),
+              child: Center(
+                child: Container( child: addressList()),
+              ),
             ),
           ],
         ),
@@ -153,7 +176,6 @@ class BookService extends StatelessWidget {
   }
 
   Stack bankListUI(BuildContext context) {
-
     Future<void> getBankList() async {
       String getBankListString = """{
           "additionalData":
@@ -175,7 +197,7 @@ class BookService extends StatelessWidget {
           .post("/getBankList", data: getBankListString);
       var getAddressResponseString = jsonDecode(getAddressResponse.toString());
       var getAddressResponseObject =
-      Address.fromJson(getAddressResponseString);// replace with PODO class
+          Address.fromJson(getAddressResponseString); // replace with PODO class
 
       var output = getAddressResponseObject.oUTPUT;
 
@@ -193,6 +215,7 @@ class BookService extends StatelessWidget {
             );
           } else {
             return ListView.builder(
+              shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
               itemCount: bankSnapShot.data.length,
               itemBuilder: (context, index) {
@@ -203,7 +226,8 @@ class BookService extends StatelessWidget {
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.addressid.toString()),
                     onTap: () {
-                      CommonMethods().toast(context, 'You tapped on ${addressOutput.address}');
+                      CommonMethods().toast(
+                          context, 'You tapped on ${addressOutput.address}');
                     },
                   );
                 }
@@ -219,31 +243,51 @@ class BookService extends StatelessWidget {
         ClipPath(
           clipper: WaveClipperTwo(),
           child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor
-            ),
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             height: 200,
           ),
         ),
         Column(
           children: <Widget>[
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Row(
               children: <Widget>[
-                SizedBox(width: 16,),
-                CircleAvatar(child: Text('2', style: TextStyle(color: Colors.blue[900]),),backgroundColor: Colors.blue[100],),
-                SizedBox(width: 16,),
-                Text('Select your Bank', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),),
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '2',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Text(
+                  'Select your Bank',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
+                ),
               ],
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               elevation: 20,
-              margin: EdgeInsets.all(8),
-              child:Expanded (child: bankList(),),
+              margin: EdgeInsets.all(18),
+              child: Expanded(
+                child: bankList(),
+              ),
             ),
           ],
         ),
@@ -251,8 +295,94 @@ class BookService extends StatelessWidget {
     );
   }
 
-  void dispose(){
-    myBookServiceBloc.close();
+  Stack phoneLinkedWithAccountUI(BuildContext context) {
+
+      String getBankListString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "serviceid":"5",      
+    "pincode":"560092",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    }""";
+//      Response getAddressResponse = await NetworkCommon().myDio.post("/getBankList", data: getBankListString);
+
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            height: 200,
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '3',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Text(
+                  'Enter the number linked with your Bank',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 20,
+              margin: EdgeInsets.all(18),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      SizedBox(width: 8,),
+                      Text("Use Registered Mobile Number?", style: TextStyle(color: Colors.blue, fontSize: 18),),
+                    ],
+                  ),
+                  TextFormField(
+                  maxLength: 6,
+                  obscureText: false,
+                  keyboardType: TextInputType.numberWithOptions(),),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
+  void dispose() {
+    myBookServiceBloc.close();
+  }
 }
