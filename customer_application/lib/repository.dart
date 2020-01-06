@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:dio/dio.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
@@ -57,6 +58,14 @@ class Repository {
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
       var firstResponse = FirstResponse.fromJson(myVar);
+
+      FirstResponse fr1 = FirstResponse.fromJson(myVar);
+      GlobalVariables().firstResponse= fr1;
+
+      FirstResponse fr = new FirstResponse();
+      fr = FirstResponse.fromJson(myVar);
+
+//      FirstResponse().myFirstResponse = FirstResponse.fromJson(myVar);
       var userName = firstResponse.oUTPUTOBJECT.firstname;
 
       String generateOTPJSON = """{

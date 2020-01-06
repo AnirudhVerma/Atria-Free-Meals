@@ -4,22 +4,10 @@ class FirstResponse {
   String eRRORMSG;
   OUTPUTOBJECT oUTPUTOBJECT;
 
-  FirstResponse._privateConstructor();  //Singleton start
 
-  static final FirstResponse instance = FirstResponse._privateConstructor();
 
-  factory FirstResponse({String eRRORCODE,String eRRORMSG,OUTPUTOBJECT oUTPUTOBJECT}){
-    instance.eRRORMSG = eRRORMSG;
-    instance.eRRORCODE = eRRORCODE;
-    instance.oUTPUTOBJECT = oUTPUTOBJECT;
-    return instance;
-  }                                     //Singleton End
+  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
 
-//  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
-
-  FirstResponse get myFirstResponse {
-    return instance;
-  }
 
   FirstResponse.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];

@@ -496,7 +496,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
     );
   }
 
-  Widget   phoneNumberInput() {
+  Widget phoneNumberInput() {
     return TextFormField(
       maxLength: 10,
       obscureText: false,

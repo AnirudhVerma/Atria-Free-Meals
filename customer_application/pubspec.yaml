@@ -32,6 +32,7 @@ dependencies:
   flutter_jailbreak_detection: ^1.1.0
   google_maps_flutter: ^0.5.21+15
   argon_buttons_flutter: ^1.0.2
+  flutter_custom_clippers: ^0.1.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

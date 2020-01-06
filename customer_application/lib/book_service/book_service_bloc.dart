@@ -10,6 +10,9 @@ class BookServiceBloc extends Bloc<BookServiceEvent, BookServiceState> {
   Stream<BookServiceState> mapEventToState(
     BookServiceEvent event,
   ) async* {
+    if (event is FetchBankList){
+      yield BankListState();
+    }
     // TODO: Add Logic
   }
 }

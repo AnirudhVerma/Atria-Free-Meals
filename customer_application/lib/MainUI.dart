@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:customer_application/BookService.dart';
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/bloc.dart';
@@ -53,7 +54,8 @@ class _MyMainPageState extends State<MyMainPage> {
   String phoneNumber;
   String accessToken;
   int userid;
-  FirstResponse myUserData = FirstResponse().myFirstResponse;
+//  FirstResponse myUserData = FirstResponse().myFirstResponse;
+  FirstResponse fr = new FirstResponse();
 
   _MyMainPageState(this.title, this.phoneNumber, this.accessToken, this.userid);
 
@@ -217,15 +219,6 @@ class _MyMainPageState extends State<MyMainPage> {
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
-                    Fluttertoast.showToast(
-                        msg: 'You tapped on ${output.servicename}',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIos: 1,
-                        backgroundColor: Colors.blue,
-                        textColor: Colors.white);
-                    print('        SERVICEID IS ${output.serviceid}');
-                    CommonMethods().toast(context, 'The users first name is ${myUserData.oUTPUTOBJECT.firstname}');
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(
@@ -293,7 +286,7 @@ class _MyMainPageState extends State<MyMainPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text('Welcome ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}!'),
           automaticallyImplyLeading: false,
         ),
         body: SizedBox.expand(

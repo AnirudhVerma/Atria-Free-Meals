@@ -8,3 +8,8 @@ class InitialBookServiceState extends BookServiceState {
   @override
   List<Object> get props => [];
 }
+
+class BankListState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}
