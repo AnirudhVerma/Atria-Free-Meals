@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
@@ -36,7 +37,7 @@ class BookService extends StatelessWidget {
               if (state is InitialBookServiceState) {
                 return addressUI(context);
               }
-              if (state is FetchBankList) {
+              if (state is BankListState) {
                 return bankListUI(context);
               }
               return null;
@@ -108,6 +109,7 @@ class BookService extends StatelessWidget {
                     onTap: () {
                       CommonMethods().toast(
                           context, 'You tapped on ${addressOutput.address}');
+                      myBookServiceBloc.add(FetchBankList());
                     },
                   );
                 }
@@ -186,7 +188,7 @@ class BookService extends StatelessWidget {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "serviceid":"5",      
+    "serviceid":"3",      
     "pincode":"560092",
     "authorization":"$accessToken",
     "username":"$userName",
@@ -285,9 +287,7 @@ class BookService extends StatelessWidget {
               ),
               elevation: 20,
               margin: EdgeInsets.all(18),
-              child: Expanded(
-                child: bankList(),
-              ),
+              child: bankList(),
             ),
           ],
         ),
@@ -295,7 +295,7 @@ class BookService extends StatelessWidget {
     );
   }
 
-  Stack phoneLinkedWithAccountUI(BuildContext context) {
+  Stack getPhoneLinkedWithAccountUI(BuildContext context) {
 
       String getBankListString = """{
           "additionalData":

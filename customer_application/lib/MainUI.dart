@@ -337,14 +337,14 @@ class _MyMainPageState extends State<MyMainPage> {
               ),
               Container(
 //                color: Colors.red,
-                child: GoogleMap(
+                /*child: GoogleMap(
                   onMapCreated: _onMapCreated,
                   mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
                     target: _center,
                     zoom: 11.0,
                   ),
-                ),
+                ),*/
               ),
               Container(
                 color: Colors.green,

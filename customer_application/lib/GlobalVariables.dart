@@ -4,6 +4,7 @@ class GlobalVariables{
   String token = '90';
   String otherString;
   FirstResponse firstResponse = new FirstResponse();
+  String pin;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 
