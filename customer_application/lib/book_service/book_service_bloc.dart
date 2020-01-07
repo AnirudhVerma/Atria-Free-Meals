@@ -13,6 +13,9 @@ class BookServiceBloc extends Bloc<BookServiceEvent, BookServiceState> {
     if (event is FetchBankList){
       yield BankListState();
     }
+    if (event is RegisteredNumber){
+      yield EnterRegisteredNumberState();
+    }
     // TODO: Add Logic
   }
 }

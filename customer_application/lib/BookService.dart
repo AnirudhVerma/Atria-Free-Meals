@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/Address.dart';
+import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'networkConfig.dart';
 
@@ -19,6 +22,8 @@ class BookService extends StatelessWidget {
   final String accessToken;
   final String userName;
   final myBookServiceBloc = new BookServiceBloc();
+  final nonDigit = new RegExp(r"(\D+)");
+  final myPhoneNumberController = TextEditingController(text: '${GlobalVariables().phoneNumber}');
 
   BookService(
       this.title, this.userid, this.serviceid, this.accessToken, this.userName);
@@ -39,6 +44,9 @@ class BookService extends StatelessWidget {
               }
               if (state is BankListState) {
                 return bankListUI(context);
+              }
+              if (state is EnterRegisteredNumberState){
+                return getPhoneNumberUI(context);
               }
               return null;
             }),
@@ -194,14 +202,14 @@ class BookService extends StatelessWidget {
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
     }""";
-      Response getAddressResponse = await NetworkCommon()
+      Response getBankListResponse = await NetworkCommon()
           .myDio
           .post("/getBankList", data: getBankListString);
-      var getAddressResponseString = jsonDecode(getAddressResponse.toString());
-      var getAddressResponseObject =
-          Address.fromJson(getAddressResponseString); // replace with PODO class
+      var getBankListResponseString = jsonDecode(getBankListResponse.toString());
+      var getBankListResponseObject =
+          Bank.fromJson(getBankListResponseString); // replace with PODO class
 
-      var output = getAddressResponseObject.oUTPUT;
+      var output = getBankListResponseObject.oUTPUT;
 
       return output;
     }
@@ -225,11 +233,12 @@ class BookService extends StatelessWidget {
                   addressOutput = bankSnapShot.data[index];
                   print('project snapshot data is: ${bankSnapShot.data}');
                   return ListTile(
-                    title: Text(addressOutput.address),
-                    subtitle: Text(addressOutput.addressid.toString()),
+                    title: Text(addressOutput.bankname),
+                    subtitle: Text(addressOutput.bankCode.toString()),
                     onTap: () {
+                      myBookServiceBloc.add(RegisteredNumber());
                       CommonMethods().toast(
-                          context, 'You tapped on ${addressOutput.address}');
+                          context, 'You tapped on ${addressOutput.toString()}');
                     },
                   );
                 }
@@ -295,7 +304,7 @@ class BookService extends StatelessWidget {
     );
   }
 
-  Stack getPhoneLinkedWithAccountUI(BuildContext context) {
+  Stack getPhoneNumberUI(BuildContext context) {
 
       String getBankListString = """{
           "additionalData":
@@ -343,12 +352,17 @@ class BookService extends StatelessWidget {
                 SizedBox(
                   width: 16,
                 ),
-                Text(
-                  'Enter the number linked with your Bank',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
+                Flexible(
+                  child: Text(
+                    'Enter the number linked with your Bank',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
                 ),
               ],
             ),
@@ -363,16 +377,73 @@ class BookService extends StatelessWidget {
               margin: EdgeInsets.all(18),
               child: Column(
                 children: <Widget>[
+                  SizedBox(height: 8),
                   Row(
                     children: <Widget>[
-                      SizedBox(width: 8,),
+                      SizedBox(width: 12,),
                       Text("Use Registered Mobile Number?", style: TextStyle(color: Colors.blue, fontSize: 18),),
                     ],
                   ),
-                  TextFormField(
-                  maxLength: 6,
-                  obscureText: false,
-                  keyboardType: TextInputType.numberWithOptions(),),
+                  SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: TextFormField(
+                      maxLength: 10,
+                      obscureText: false,
+                      keyboardType: TextInputType.numberWithOptions(),
+                      validator: (phoneNumber) {
+                        if (phoneNumber.length < 10) {
+                          return 'Please enter a valid Phone Number!';
+                        }
+                        if (nonDigit.hasMatch(phoneNumber)) {
+                          return 'Please enter only Numbers!';
+                        }
+                        return null;
+                      },
+                      controller: myPhoneNumberController,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(16.0),
+                          prefixText: '+91 ',
+                          prefixStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                          hintText: "Phone Number",
+                          suffixIcon: Icon(
+                            Icons.phone,
+                            color: Colors.blue,
+                          ),
+                          /*border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/),
+                    ),
+                  ),
+                  SizedBox(height: 8,),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ArgonButton(
+                      height: 50,
+                      width: 350,
+                      borderRadius: 5.0,
+                      color: Colors.blue,
+                      child: Text(
+                        "Continue",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700
+                        ),
+                      ),
+                      loader: Container(
+                        padding: EdgeInsets.all(10),
+                        child: SpinKitRotatingCircle(
+                          color: Colors.white,
+                          // size: loaderWidth ,
+                        ),
+                      ),
+                      onTap: (startLoading, stopLoading, btnState) {
+                        CommonMethods().toast(context, 'The Phone number is ${GlobalVariables().phoneNumber}');
+                          startLoading();
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8,)
                 ],
               ),
             ),
@@ -380,6 +451,32 @@ class BookService extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  fetchUserAccountDetails() async {
+    String getBankListString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${GlobalVariables().phoneNumber}",      
+    "bankcode":"01",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    }""";
+    Response getBankListResponse = await NetworkCommon()
+        .myDio
+        .post("/getBankList", data: getBankListString);
+    var getBankListResponseString = jsonDecode(getBankListResponse.toString());
+    var getBankListResponseObject =
+    Bank.fromJson(getBankListResponseString); // replace with PODO class
+
+    var output = getBankListResponseObject.oUTPUT;
   }
 
   void dispose() {

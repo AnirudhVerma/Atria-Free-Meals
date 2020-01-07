@@ -336,7 +336,7 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),*/
               ),
               Container(
-//                color: Colors.red,
+                color: Colors.red,
                 /*child: GoogleMap(
                   onMapCreated: _onMapCreated,
                   mapType: MapType.normal,

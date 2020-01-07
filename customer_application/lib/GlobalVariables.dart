@@ -5,6 +5,7 @@ class GlobalVariables{
   String otherString;
   FirstResponse firstResponse = new FirstResponse();
   String pin;
+  String phoneNumber;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

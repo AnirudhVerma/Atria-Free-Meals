@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/CommonMethods.dart';
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/MainUI.dart';
@@ -993,7 +994,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 "ClientAppName":"ANIOSCUST"
                 },
                 "mobilenumber":"$phoneNumber",
-                "otp":"123456"
+                "otp":"${myOTPController.text}"
                 }""";
 
               String enteredOTP = myOTPController.text;
@@ -1010,6 +1011,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               var myResponse = jsonDecode(response3.toString());
               var loginResponse = PortalLogin.fromJson(myResponse);
+              GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
               CommonMethods().toast(context, loginResponse.eRRORMSG);
               print('');
               print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");

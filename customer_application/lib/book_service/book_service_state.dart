@@ -13,3 +13,8 @@ class BankListState extends BookServiceState {
   @override
   List<Object> get props => [];
 }
+
+class EnterRegisteredNumberState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}
