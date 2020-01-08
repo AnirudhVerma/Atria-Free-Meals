@@ -6,7 +6,6 @@ import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'networkConfig.dart';
 
 class Repository {
-
   static final Repository _singleton = new Repository._internal();
 
   var resp = null;
@@ -52,15 +51,16 @@ class Repository {
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
 
-      Response response1 =
-      await NetworkCommon().myDio.post("/fetchUserDetails", data: fetchUserDetailsString);
+      Response response1 = await NetworkCommon()
+          .myDio
+          .post("/fetchUserDetails", data: fetchUserDetailsString);
       print("THE Fetch User RESPONSE IS :: $response1");
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
       var firstResponse = FirstResponse.fromJson(myVar);
 
       FirstResponse fr1 = FirstResponse.fromJson(myVar);
-      GlobalVariables().firstResponse= fr1;
+      GlobalVariables().firstResponse = fr1;
 
       FirstResponse fr = new FirstResponse();
       fr = FirstResponse.fromJson(myVar);
@@ -113,18 +113,15 @@ class Repository {
               .post("/validateOTP", data: validateOTPJSON);
           print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
 
-
-         // mySignInBloc.add(EnterOTP());
+          // mySignInBloc.add(EnterOTP());
           resp = "Success";
           return "Success";
-        }
-        else {
+        } else {
           print('Something went wrong');
           print("Response :: " + response2.toString());
           resp = response2.toString();
           return response2.toString();
         }
-
       }
       else {
         print('Something went wrong');
@@ -132,22 +129,8 @@ class Repository {
         resp = response1.toString();
         return response1.toString();
       }
-
-//        var parsedJson = json.decode(response1);
-
-//      print("Response :: " + response1.toString());
-//      Fluttertoast.showToast(
-//          msg: response1.toString(),
-//          toastLength: Toast.LENGTH_SHORT,
-//          gravity: ToastGravity.CENTER,
-//          timeInSecForIos: 1,
-//          backgroundColor: Colors.blue,
-//          textColor: Colors.white);
     } catch (e) {
       print(e);
     }
   }
-
-
-
 }

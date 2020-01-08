@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'SizeConfig.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -130,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
               if (state is ErrorState) {
                 var data = state.errorResp;
                 if (state.errorResp == null) {
-                  data = "OOPS, something went wrong";
+//                  data = "OOPS, something went wrong";
                 }
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -535,7 +536,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         onTap: (startTimer, btnState) {
                           if (btnState == ButtonState.Idle) {
-                            startTimer(20);
+                            String generateOTPJSON = """{
+                                 "additionalData":
+                             {
+                             "client_app_ver":"1.0.0",
+                             "client_apptype":"DSB",
+                             "platform":"ANDROID",
+                             "vendorid":"17",
+                             "ClientAppName":"ANIOSCUST"
+                             },
+                             "mobilenumber":"${GlobalVariables().phoneNumber}"
+                             }""";
+                            NetworkCommon()
+                                  .myDio
+                                  .post("/generateOTP", data: generateOTPJSON);
 //                            generateOTP(myController.text);
                           }
                         },
@@ -860,9 +874,6 @@ class _MyHomePageState extends State<MyHomePage> {
         var myOTPVar = jsonDecode(response2.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
         // userName = oTPResponse.oUTPUT.firstname;
-        print('');
-        //print('The User Name is ${oTPResponse.oUTPUT.firstname}');
-        print('');
 
         String validateOTPJSON = """{
         "additionalData":
@@ -1013,10 +1024,8 @@ class _MyHomePageState extends State<MyHomePage> {
               var loginResponse = PortalLogin.fromJson(myResponse);
               GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
               CommonMethods().toast(context, loginResponse.eRRORMSG);
-              print('');
               print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
-              print(
-                  "THE ACCESS TOKEN IS + ${loginResponse.oUTPUT.token.accessToken}");
+              print("THE ACCESS TOKEN IS + ${loginResponse.oUTPUT.token.accessToken}");
               print('');
 
               if (loginResponse.eRRORCODE == "00") {
@@ -1201,10 +1210,6 @@ class _MyHomePageState extends State<MyHomePage> {
           minWidth: SizeConfig.blockSizeHorizontal * 70,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-//           Navigator.push(context, MaterialPageRoute(builder: (context) => MySignUpPage()));
-
-//            BlocProvider.of<SignInBloc>(context).add(DoSignIn(userId: " ", OTP: " ")); // this is the one!!
-
             _validateInputs();
 
             /*return showDialog(
@@ -1215,10 +1220,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             );*/
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(builder: (context) => MySignUpPage()),
-//            );
+
           },
           child: Text(
             "Get OTP",
@@ -1227,6 +1229,36 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ));
   }
+
+  Widget enterArgonOTPButton() {
+    return ArgonButton(
+      elevation: 5.0,
+      minWidth: SizeConfig.blockSizeHorizontal * 70,
+      borderRadius: 30.0,
+      color: Colors.blue,
+      padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+      child: Text(
+        "Get OTP",
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w700
+        ),
+      ),
+      loader: Container(
+        padding: EdgeInsets.all(10),
+        child: SpinKitRotatingCircle(
+          color: Colors.white,
+          // size: loaderWidth ,
+        ),
+      ),
+      onTap: (startLoading, stopLoading, btnState) {
+        startLoading();
+        _validateInputs();
+      },
+    );
+  }
+
 
   Widget loginWithPINRow() {
     return Row(

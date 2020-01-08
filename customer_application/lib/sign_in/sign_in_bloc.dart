@@ -1,4 +1,5 @@
 import 'package:customer_application/repository.dart';
+import '../CommonMethods.dart';
 import '../bloc.dart';
 import 'dart:async';
 import 'package:bloc/bloc.dart';
@@ -31,7 +32,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     }
     if (event is DoOTPSignIN) {
 
-      yield showProgressBar();
+      yield showProgressBar(); //Comment this
 
       String resp = await Repository().getOTP(event.phoneNumber);
       print('repository().resp : ${Repository().resp }');
@@ -43,8 +44,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       }
       else{
-        yield ErrorState(errorResp: Repository().resp );
-
+        yield ErrorState(errorResp: Repository().resp ); // print the toast message
       }
 
     }
