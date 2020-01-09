@@ -220,9 +220,12 @@ class _MyMainPageState extends State<MyMainPage> {
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
                     output = servicesSnapShot.data[index];
-                    /*print('******************** THE OUTPUT IS $output');
-                    GlobalVariables().userSelectedService = output;*/        //unable to instantiate
-                    
+                    /*print('******************** THE OUTPUT IS ${output.toString()}');
+                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                    GlobalVariables().serviceid = output.serviceid;
+                    GlobalVariables().servicename = output.servicename;
+                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    String servicename;
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(

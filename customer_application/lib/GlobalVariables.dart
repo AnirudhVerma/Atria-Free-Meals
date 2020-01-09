@@ -12,8 +12,11 @@ class GlobalVariables{
   UserAccountDetails myUserAccountDetails = new UserAccountDetails();
   SelectedService userSelectedService = new SelectedService();
   ServiceList myServiceList = new ServiceList();
-  String pin;
   String phoneNumber;
+  String serviceid;
+  String servicename;
+  String pincode;
+  String bankCode;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

@@ -126,6 +126,9 @@ class BookService extends StatelessWidget {
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.addressid.toString()),
                     onTap: () {
+                      addressOutput = addressSnapShot.data[index];
+                      GlobalVariables().pincode = addressOutput.pincode;
+                      print('********************** THE PINCODE IS ${GlobalVariables().pincode}');
                       CommonMethods().toast(
                           context, 'You tapped on ${addressOutput.address}');
                       myBookServiceBloc.add(FetchBankList());
@@ -207,8 +210,8 @@ class BookService extends StatelessWidget {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "serviceid":"3",      
-    "pincode":"560092",
+    "serviceid":"${GlobalVariables().serviceid}",      
+    "pincode":"${GlobalVariables().pincode}",
     "authorization":"$accessToken",
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
@@ -229,7 +232,7 @@ class BookService extends StatelessWidget {
 
 
     Widget bankList() {
-      var addressOutput;
+      var bankOutput;
       return FutureBuilder(
         future: getBankList(),
         builder: (context, bankSnapShot) {
@@ -244,15 +247,18 @@ class BookService extends StatelessWidget {
               itemCount: bankSnapShot.data.length,
               itemBuilder: (context, index) {
                 {
-                  addressOutput = bankSnapShot.data[index];
+                  bankOutput = bankSnapShot.data[index];
                   print('project snapshot data is: ${bankSnapShot.data}');
                   return ListTile(
-                    title: Text(addressOutput.bankname),
-                    subtitle: Text(addressOutput.bankCode.toString()),
+                    title: Text(bankOutput.bankname),
+                    subtitle: Text(bankOutput.bankCode.toString()),
                     onTap: () {
+                      bankOutput = bankSnapShot.data[index];
+                      GlobalVariables().bankCode = bankOutput.bankCode;
+                      print('******************  THE BANKCODE IS ${GlobalVariables().bankCode}');
                       myBookServiceBloc.add(RegisteredNumber());
                       CommonMethods().toast(
-                          context, 'You tapped on ${addressOutput.toString()}');
+                          context, 'You tapped on ${bankOutput.toString()}');
                     },
                   );
                 }
@@ -319,22 +325,6 @@ class BookService extends StatelessWidget {
   }
 
   Stack getPhoneNumberUI(BuildContext context) {
-    String getBankListString = """{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    },
-    "serviceid":"3",      
-    "pincode":"560092",
-    "authorization":"$accessToken",
-    "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
-    }""";
-//      Response getAddressResponse = await NetworkCommon().myDio.post("/getBankList", data: getBankListString);
 
     return Stack(
       children: <Widget>[
@@ -499,7 +489,7 @@ class BookService extends StatelessWidget {
     "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",      
-    "bankcode":"17",
+    "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"$accessToken",
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
@@ -676,11 +666,11 @@ class BookService extends StatelessWidget {
     "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",      
-    "bankcode":"17",
+    "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"$accessToken",
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
-    "OTP":"123456",
+    "OTP":"${myBankOTPController.text}",
     "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.uniqrefnum}",
     "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.bankuniqrefnum}"
     }""";
@@ -695,36 +685,6 @@ class BookService extends StatelessWidget {
   }
 
   Stack userAccountDetailsUI(BuildContext context) {
-    Future<void> getBankList() async {
-      String getBankListString = """{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    },
-    "serviceid":"3",      
-    "pincode":"560092",
-    "authorization":"$accessToken",
-    "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
-    }""";
-      Response getBankListResponse = await NetworkCommon()
-          .myDio
-          .post("/getBankList", data: getBankListString);
-      var getBankListResponseString =
-      jsonDecode(getBankListResponse.toString());
-      var getBankListResponseObject =
-      Bank.fromJson(getBankListResponseString); // replace with PODO class
-
-      var output = getBankListResponseObject.oUTPUT;
-
-      return output;
-    }
-
-
 
     Widget accountList() {
       var accounts;
@@ -747,6 +707,7 @@ class BookService extends StatelessWidget {
                   return ListTile(
                     title: Text(accounts),
                     onTap: () {
+                      accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                     },
