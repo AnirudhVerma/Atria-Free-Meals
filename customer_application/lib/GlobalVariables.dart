@@ -1,5 +1,6 @@
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
+import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 
 class GlobalVariables{
@@ -8,6 +9,7 @@ class GlobalVariables{
   FirstResponse firstResponse = new FirstResponse();
   BankOTPResponse myBankOTPResponse = new BankOTPResponse();
   UserAccountDetails myUserAccountDetails = new UserAccountDetails();
+  ServiceList selectedService = new ServiceList();
   String pin;
   String phoneNumber;
 

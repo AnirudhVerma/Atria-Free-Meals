@@ -219,6 +219,9 @@ class _MyMainPageState extends State<MyMainPage> {
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
+                    output = servicesSnapShot.data[index];
+                    GlobalVariables().selectedService = output;
+                    print(' ************** SELECTED SERVICE OBJECT ${GlobalVariables().selectedService}');
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(
@@ -346,9 +349,9 @@ class _MyMainPageState extends State<MyMainPage> {
                   ),
                 ),*/
               ),
-              Container(
+              /*Container(
                 color: Colors.green,
-              ),
+              ),*/
               Container(
                 color: Colors.blue,
                 child: ListView(
@@ -475,13 +478,13 @@ class _MyMainPageState extends State<MyMainPage> {
                 activeColor: Colors.red,
                 inactiveColor: Colors.blue,
                 icon: Icon(Icons.apps)),
-            BottomNavyBarItem(
+            /*BottomNavyBarItem(
                 title: Text('OnGoing Services'),
                 activeColor: Colors.green,
                 inactiveColor: Colors.blue,
-                icon: Icon(Icons.chat_bubble)),
+                icon: Icon(Icons.chat_bubble)),*/
             BottomNavyBarItem(
-                title: Text('Help & Support'),
+                title: Text('Support'),
                 activeColor: Colors.blue,
                 inactiveColor: Colors.blue,
                 icon: Icon(Icons.help)),
