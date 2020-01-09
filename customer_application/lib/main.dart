@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
               if (state is ErrorState) {
                 var data = state.errorResp;
                 if (state.errorResp == null) {
-//                  data = "OOPS, something went wrong";
+                  data = "OOPS, something went wrong";
                 }
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,

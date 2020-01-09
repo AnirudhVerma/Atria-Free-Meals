@@ -4,6 +4,8 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:customer_application/JSONResponseClasses/Bank.dart';
+import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
+import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +25,10 @@ class BookService extends StatelessWidget {
   final String userName;
   final myBookServiceBloc = new BookServiceBloc();
   final nonDigit = new RegExp(r"(\D+)");
-  final myPhoneNumberController = TextEditingController(text: '${GlobalVariables().phoneNumber}');
+  final myBankPhoneNumberController =
+      TextEditingController(text: '${GlobalVariables().phoneNumber}');
+  final myBankOTPController =
+      TextEditingController();
 
   BookService(
       this.title, this.userid, this.serviceid, this.accessToken, this.userName);
@@ -45,10 +50,16 @@ class BookService extends StatelessWidget {
               if (state is BankListState) {
                 return bankListUI(context);
               }
-              if (state is EnterRegisteredNumberState){
+              if (state is EnterRegisteredNumberState) {
                 return getPhoneNumberUI(context);
               }
-              return null;
+              if (state is EnterBankOTPState) {
+                return enterOTPUI(context);
+              }
+              if (state is AccountListState){
+                return userAccountDetailsUI(context);
+              }
+              return Container(height: 0.0, width: 0.0,);
             }),
       ),
     );
@@ -176,7 +187,7 @@ class BookService extends StatelessWidget {
               elevation: 20,
               margin: EdgeInsets.all(18),
               child: Center(
-                child: Container( child: addressList()),
+                child: Container(child: addressList()),
               ),
             ),
           ],
@@ -205,7 +216,8 @@ class BookService extends StatelessWidget {
       Response getBankListResponse = await NetworkCommon()
           .myDio
           .post("/getBankList", data: getBankListString);
-      var getBankListResponseString = jsonDecode(getBankListResponse.toString());
+      var getBankListResponseString =
+          jsonDecode(getBankListResponse.toString());
       var getBankListResponseObject =
           Bank.fromJson(getBankListResponseString); // replace with PODO class
 
@@ -305,8 +317,7 @@ class BookService extends StatelessWidget {
   }
 
   Stack getPhoneNumberUI(BuildContext context) {
-
-      String getBankListString = """{
+    String getBankListString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
@@ -315,7 +326,7 @@ class BookService extends StatelessWidget {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "serviceid":"5",      
+    "serviceid":"3",      
     "pincode":"560092",
     "authorization":"$accessToken",
     "username":"$userName",
@@ -380,8 +391,13 @@ class BookService extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: <Widget>[
-                      SizedBox(width: 12,),
-                      Text("Use Registered Mobile Number?", style: TextStyle(color: Colors.blue, fontSize: 18),),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        "Use Registered Mobile Number?",
+                        style: TextStyle(color: Colors.blue, fontSize: 18),
+                      ),
                     ],
                   ),
                   SizedBox(height: 8),
@@ -400,21 +416,25 @@ class BookService extends StatelessWidget {
                         }
                         return null;
                       },
-                      controller: myPhoneNumberController,
+                      controller: myBankPhoneNumberController,
                       decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(16.0),
-                          prefixText: '+91 ',
-                          prefixStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                          hintText: "Phone Number",
-                          suffixIcon: Icon(
-                            Icons.phone,
-                            color: Colors.blue,
-                          ),
-                          /*border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/),
+                        contentPadding: EdgeInsets.all(16.0),
+                        prefixText: '+91 ',
+                        prefixStyle: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                        hintText: "Phone Number",
+                        suffixIcon: Icon(
+                          Icons.phone,
+                          color: Colors.blue,
+                        ),
+                        /*border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
+                      ),
                     ),
                   ),
-                  SizedBox(height: 8,),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Padding(
                     padding: EdgeInsets.all(8),
                     child: ArgonButton(
@@ -427,8 +447,7 @@ class BookService extends StatelessWidget {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w700
-                        ),
+                            fontWeight: FontWeight.w700),
                       ),
                       loader: Container(
                         padding: EdgeInsets.all(10),
@@ -437,13 +456,27 @@ class BookService extends StatelessWidget {
                           // size: loaderWidth ,
                         ),
                       ),
-                      onTap: (startLoading, stopLoading, btnState) {
-                        CommonMethods().toast(context, 'The Phone number is ${GlobalVariables().phoneNumber}');
-                          startLoading();
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        startLoading();
+                        CommonMethods().toast(context,
+                            'The Phone number is ${GlobalVariables().phoneNumber}');
+                        BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
+                        GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
+                        print('************ the login response is ${myBankOTPResponse.eRRORMSG}');
+                        if (myBankOTPResponse.eRRORMSG == 'SUCCESS') {
+                          myBookServiceBloc.add(EnterBankOTP());
+                        } else {
+                          CommonMethods()
+                              .toast(context, myBankOTPResponse.eRRORMSG);
+                        }
+                        //startLoading();
+                        stopLoading();
                       },
                     ),
                   ),
-                  SizedBox(height: 8,)
+                  SizedBox(
+                    height: 8,
+                  )
                 ],
               ),
             ),
@@ -453,7 +486,7 @@ class BookService extends StatelessWidget {
     );
   }
 
-  fetchUserAccountDetails() async {
+  Future<BankOTPResponse> fetchUserAccountDetails() async {
     String getBankListString = """{
           "additionalData":
     {
@@ -463,20 +496,322 @@ class BookService extends StatelessWidget {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "mobilenumber":"${GlobalVariables().phoneNumber}",      
-    "bankcode":"01",
+    "mobilenumber":"${myBankPhoneNumberController.text}",      
+    "bankcode":"17",
     "authorization":"$accessToken",
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
     }""";
     Response getBankListResponse = await NetworkCommon()
         .myDio
-        .post("/getBankList", data: getBankListString);
-    var getBankListResponseString = jsonDecode(getBankListResponse.toString());
-    var getBankListResponseObject =
-    Bank.fromJson(getBankListResponseString); // replace with PODO class
+        .post("/generateOTPBank", data: getBankListString);
+    print('************The bank string is $getBankListString');
+    var getBankOTPResponseString = jsonDecode(getBankListResponse.toString());
+    var getBankOTPResponseObject =
+        BankOTPResponse.fromJson(getBankOTPResponseString);
 
-    var output = getBankListResponseObject.oUTPUT;
+    var output = getBankOTPResponseObject.oUTPUT;
+    return getBankOTPResponseObject;
+  }
+
+  Stack enterOTPUI(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            height: 200,
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '4',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Flexible(
+                  child: Text(
+                    'An OTP has been sent to ${myBankPhoneNumberController.text}',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 20,
+              margin: EdgeInsets.all(18),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 8),
+                  Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        "Enter OTP",
+                        style: TextStyle(color: Colors.blue, fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: TextFormField(
+                      maxLength: 6,
+                      obscureText: false,
+                      keyboardType: TextInputType.numberWithOptions(),
+                      validator: (OTP) {
+                        if (OTP.length < 6) {
+                          return 'Please enter a valid Phone Number!';
+                        }
+                        if (nonDigit.hasMatch(OTP)) {
+                          return 'Please enter only Numbers!';
+                        }
+                        return null;
+                      },
+                      controller: myBankOTPController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(16.0),
+                        prefixText: ' ',
+                        prefixStyle: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                        hintText: "OTP",
+                        suffixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.blue,
+                        ),
+                        /*border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ArgonButton(
+                      height: 50,
+                      width: 350,
+                      borderRadius: 5.0,
+                      color: Colors.blue,
+                      child: Text(
+                        "Proceed",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      loader: Container(
+                        padding: EdgeInsets.all(10),
+                        child: SpinKitRotatingCircle(
+                          color: Colors.white,
+                          // size: loaderWidth ,
+                        ),
+                      ),
+                      onTap: (startLoading1, stopLoading, btnState) async {
+                        CommonMethods().toast(context,
+                            'The Entered OTP is ${myBankOTPController.text}');
+                        startLoading1();
+                        GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
+                        if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
+                          myBookServiceBloc.add(FetchAccountList());
+                        }
+                        else{
+                          CommonMethods().toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<UserAccountDetails> verifyOTPAndGetAccountDetails() async {
+    String verifyOTPAndGetAccountDetailsString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${myBankPhoneNumberController.text}",      
+    "bankcode":"17",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "OTP":"123456",
+    "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.uniqrefnum}",
+    "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.bankuniqrefnum}"
+    }""";
+    Response verifyOTPAndGetAccountDetailsResponse = await NetworkCommon()
+        .myDio
+        .post("/getAccountDetails", data: verifyOTPAndGetAccountDetailsString);
+    var verifyOTPString = jsonDecode(verifyOTPAndGetAccountDetailsResponse.toString());
+    var verifyOTPResponseObject =
+    UserAccountDetails.fromJson(verifyOTPString);
+
+    return verifyOTPResponseObject;
+  }
+
+  Stack userAccountDetailsUI(BuildContext context) {
+    Future<void> getBankList() async {
+      String getBankListString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "serviceid":"3",      
+    "pincode":"560092",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    }""";
+      Response getBankListResponse = await NetworkCommon()
+          .myDio
+          .post("/getBankList", data: getBankListString);
+      var getBankListResponseString =
+      jsonDecode(getBankListResponse.toString());
+      var getBankListResponseObject =
+      Bank.fromJson(getBankListResponseString); // replace with PODO class
+
+      var output = getBankListResponseObject.oUTPUT;
+
+      return output;
+    }
+
+
+
+    Widget accountList() {
+      var accounts;
+      return FutureBuilder(
+        future: verifyOTPAndGetAccountDetails(),
+        builder: (context, AccountSnapShot) {
+          if (AccountSnapShot.data == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+//            itemCount: int.parse(addressSnapShot.data.length),
+              itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
+              itemBuilder: (context, index) {
+                {
+                  accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                  print('project snapshot data is: ${AccountSnapShot.data}');
+                  return ListTile(
+                    title: Text(accounts),
+                    onTap: () {
+                      CommonMethods().toast(
+                          context, 'You tapped on ${accounts.toString()}');
+                    },
+                  );
+                }
+              },
+            );
+          }
+        },
+      );
+    }
+
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            height: 200,
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '5',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Flexible(
+                  child: Text(
+                    'Select an Account to get service from',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 20,
+              margin: EdgeInsets.all(18),
+              child: accountList(),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   void dispose() {
