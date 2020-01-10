@@ -33,3 +33,8 @@ class FetchTimeSlot extends BookServiceEvent{
    @override
    List<Object> get props => null;
 }
+
+class FetchLiamAccount extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}

@@ -69,6 +69,9 @@ class BookService extends StatelessWidget {
               if (state is TimeSlotState){
                 return selectTimeSlotUI(context);
               }
+              if (state is LiamAccountListState){
+                return selectLiamAccountUI(context);
+              }
               return Container(height: 0.0, width: 0.0,);
             }),
       ),
@@ -751,6 +754,36 @@ class BookService extends StatelessWidget {
     return timeSlotObject;
   }
 
+  Future<Branch> bookService() async {
+    String fetchBranchesString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${myBankPhoneNumberController.text}",  
+    "DEVICEID": "",    
+    "bankcode":"${GlobalVariables().bankCode}",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "latitude":"${GlobalVariables().latitude}",
+    "longitude":"${GlobalVariables().longitude}",
+    "pincode":"${GlobalVariables().pincode}"
+    }""";
+    Response fetchBranchesStringResponse = await NetworkCommon()
+        .myDio
+        .post("/getBranchList", data: fetchBranchesString);
+    var getBranchesResponseString = jsonDecode(fetchBranchesStringResponse.toString());
+    var branchListObject =
+    Branch.fromJson(getBranchesResponseString);
+
+    return branchListObject;
+  }
+
   Stack userAccountDetailsUI(BuildContext context) {
 
     Widget accountList() {
@@ -843,6 +876,7 @@ class BookService extends StatelessWidget {
         ),
       ],
     );
+
   }
 
   Stack branchListUI (BuildContext context) {
@@ -939,100 +973,6 @@ class BookService extends StatelessWidget {
     );
   }
 
-  Stack selectLiamAccountUI(BuildContext context) {
-
-    Widget accountList() {
-      var accounts;
-      return FutureBuilder(
-        future: fetchUserAccountDetails(),
-        builder: (context, AccountSnapShot) {
-          if (AccountSnapShot.data == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return ListView.builder(
-              shrinkWrap: true,
-//            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
-              itemBuilder: (context, index) {
-                {
-                  accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
-                  print('project snapshot data is: ${AccountSnapShot.data}');
-                  return ListTile(
-                    title: Text(accounts),
-                    onTap: () {
-                      accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
-                      CommonMethods().toast(
-                          context, 'You tapped on ${accounts.toString()}');
-                      myBookServiceBloc.add(FetchBranchList());
-                    },
-                  );
-                }
-              },
-            );
-          }
-        },
-      );
-    }
-
-    return Stack(
-      children: <Widget>[
-        ClipPath(
-          clipper: WaveClipperTwo(),
-          child: Container(
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-            height: 200,
-          ),
-        ),
-        Column(
-          children: <Widget>[
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                CircleAvatar(
-                  child: Text(
-                    '7',
-                    style: TextStyle(color: Colors.blue[900]),
-                  ),
-                  backgroundColor: Colors.blue[100],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Flexible(
-                  child: Text(
-                    'Select an Account to be charged',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              elevation: 20,
-              margin: EdgeInsets.all(18),
-              child: accountList(),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Stack selectTimeSlotUI(BuildContext context) {
 
     Widget slotList() {
@@ -1047,18 +987,18 @@ class BookService extends StatelessWidget {
           } else {
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: timeSlotSnapShot.data.oUTPUT.slotnumber.length,
+              itemCount: timeSlotSnapShot.data.oUTPUT.length,
               itemBuilder: (context, index) {
                 {
-                  timeSlot = timeSlotSnapShot.data.oUTPUT.slotnumber[index];
+                  timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
                   print('project snapshot data is: ${timeSlotSnapShot.data}');
                   return ListTile(
                     title: Text(timeSlot),
                     onTap: () {
-                      timeSlot = timeSlotSnapShot.data.oUTPUT.slotnumber[index];
+                      timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
                       CommonMethods().toast(
                           context, 'You tapped on ${timeSlot.toString()}');
-                      myBookServiceBloc.add(FetchBranchList());
+                      myBookServiceBloc.add(FetchLiamAccount());
                     },
                   );
                 }
@@ -1124,6 +1064,104 @@ class BookService extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Stack selectLiamAccountUI(BuildContext context) {
+
+    Widget accountList() {
+      var accounts;
+      return FutureBuilder(
+        future: verifyOTPAndGetAccountDetails(),
+        builder: (context, AccountSnapShot) {
+          if (AccountSnapShot.data == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+//            itemCount: int.parse(addressSnapShot.data.length),
+              itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
+              itemBuilder: (context, index) {
+                {
+                  accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                  print('project snapshot data is: ${AccountSnapShot.data}');
+                  return ListTile(
+                    title: Text(accounts),
+                    onTap: () {
+                      accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                      CommonMethods().toast(
+                          context, 'You tapped on ${accounts.toString()}');
+                      myBookServiceBloc.add(FetchBranchList());
+                    },
+                  );
+                }
+              },
+            );
+          }
+        },
+      );
+    }
+
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            height: 200,
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 16,
+                ),
+                CircleAvatar(
+                  child: Text(
+                    '8',
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                  backgroundColor: Colors.blue[100],
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Flexible(
+                  child: Text(
+                    'Almost Done, Select an account to be charged',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 20,
+              margin: EdgeInsets.all(18),
+              child: accountList(),
+            ),
+          ],
+        ),
+      ],
+    );
+
   }
 
   void dispose() {

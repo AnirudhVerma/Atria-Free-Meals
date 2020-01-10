@@ -28,6 +28,9 @@ class BookServiceBloc extends Bloc<BookServiceEvent, BookServiceState> {
     if (event is FetchTimeSlot){
       yield TimeSlotState();
     }
+    if (event is FetchLiamAccount){
+      yield LiamAccountListState();
+    }
     // TODO: Add Logic
   }
 }
