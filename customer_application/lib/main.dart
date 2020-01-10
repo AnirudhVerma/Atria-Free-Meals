@@ -334,11 +334,11 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),  // previous 2
         // previous-10   0.8     SizeConfig.blockSizeHorizontal
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4), // previous 2.5
             //previous-36     SizeConfig.blockSizeHorizontal * 1.5
             child: Form(
               key: _formKey,
@@ -464,11 +464,11 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
         // previous-10   0.8     SizeConfig.blockSizeHorizontal
         child: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
               //previous-36     SizeConfig.blockSizeHorizontal * 1.5
               child: Form(
                 key: _formKey,

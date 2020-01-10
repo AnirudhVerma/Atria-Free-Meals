@@ -17,6 +17,8 @@ class GlobalVariables{
   String servicename;
   String pincode;
   String bankCode;
+  String latitude;
+  String longitude;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

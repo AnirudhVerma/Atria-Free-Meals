@@ -28,3 +28,13 @@ class AccountListState extends BookServiceState {
   @override
   List<Object> get props => [];
 }
+
+class BranchListState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}
+
+class TimeSlotState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}

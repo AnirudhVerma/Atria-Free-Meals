@@ -23,3 +23,13 @@ class FetchAccountList extends BookServiceEvent{
    @override
    List<Object> get props => null;
 }
+
+class FetchBranchList extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}
+
+class FetchTimeSlot extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}
