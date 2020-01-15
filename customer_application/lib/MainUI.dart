@@ -17,6 +17,10 @@ import 'package:customer_application/CommonMethods.dart';
 import 'networkConfig.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+const Color _colorOne = Color(0x33000000);
+const Color _colorTwo = Color(0x24000000);
+const Color _colorThree = Color(0x1F000000);
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -78,6 +82,30 @@ class _MyMainPageState extends State<MyMainPage> {
     _pageController.dispose();
     super.dispose();
   }
+
+  final Map<int, Widget> services = const <int, Widget>{
+    0: Text('Completed'),
+    1: Text('On-Going'),
+  };
+
+  final Map<int, Widget> icons = <int, Widget>{
+    0: Center(
+      child: FlutterLogo(
+        colors: Colors.red,
+        size: 200.0,
+      ),
+    ),
+    1: Center(
+      child: Center(child: Center(child: bookingHistoryWidget())),),
+    2: Center(
+      child: FlutterLogo(
+        colors: Colors.cyan,
+        size: 200.0,
+      ),
+    ),
+  };
+
+  int currentValue = 0;
 
   Future<void> logout() async {
     return showDialog(
@@ -224,6 +252,10 @@ class _MyMainPageState extends State<MyMainPage> {
                     GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                     GlobalVariables().serviceid = output.serviceid;
                     GlobalVariables().servicename = output.servicename;
+                    GlobalVariables().servicetype = output.servicetype;
+                    GlobalVariables().servicecategory = output.servicecategory;
+                    GlobalVariables().serviceCharge = output.serviceCharge;
+                    GlobalVariables().servicecode = output.servicecode;
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(
@@ -285,6 +317,102 @@ class _MyMainPageState extends State<MyMainPage> {
     print(getServicesResponse);
   }
 
+  static Widget bookingHistoryWidget() {
+    var output;
+    return FutureBuilder(
+      future: getBookingHistory(),
+      builder: (context, servicesSnapShot) {
+        if (servicesSnapShot.data == null) {
+          print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+//          print('The data is loaded!!!!');
+          return ListView.builder(
+            itemCount: servicesSnapShot.data.length,
+            itemBuilder: (context, index) {
+              {
+                output = servicesSnapShot.data[index];
+                print('project snapshot data is: ${servicesSnapShot.data}');
+                return ListTile(
+                  title: Text(output.servicename),
+                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                  onTap: () {
+                    output = servicesSnapShot.data[index];
+                    /*print('******************** THE OUTPUT IS ${output.toString()}');
+                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                    GlobalVariables().serviceid = output.serviceid;
+                    GlobalVariables().servicename = output.servicename;
+                    GlobalVariables().servicetype = output.servicetype;
+                    GlobalVariables().servicecategory = output.servicecategory;
+                    GlobalVariables().serviceCharge = output.serviceCharge;
+                    GlobalVariables().servicecode = output.servicecode;
+                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    String servicename;
+                    Navigator.push(
+                        context,
+                        new CupertinoPageRoute(
+                            builder: (context) =>
+                                BookService(output.servicename, GlobalVariables().myPortalLogin.oUTPUT.user.userid, int.parse(output.serviceid), GlobalVariables().myPortalLogin.oUTPUT.token.toString(), GlobalVariables().phoneNumber )));
+                  },
+                );
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+
+  static Future<void> getBookingHistory() async {
+    String getBookingHistoryString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "username":"${GlobalVariables().phoneNumber}",
+    "DEVICEID": "",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "startindex":1,
+   	"limit":10
+    }""";
+
+    Response getBookingHistoryResponse = await NetworkCommon()
+        .myDio
+        .post("/getBookingHistory", data: getBookingHistoryString);
+    var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
+    var getBookingHistoryResponseObject =
+    ServiceList.fromJson(getBookingHistoryResponseString);
+    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+
+    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+
+    var output = getBookingHistoryResponseObject.oUTPUT;
+
+    List services = [];
+
+    for (int i = 0; i < output.length; i++) {
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      services.add(output[i].servicename);
+    }
+
+    print('             THE SERVICES OFFERED ARE $services                 ');
+
+    return output;
+    //print(accessToken);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -305,57 +433,76 @@ class _MyMainPageState extends State<MyMainPage> {
             children: <Widget>[
               Container(
                 child: servicesWidget(),
-                /*Column(
-                  children: <Widget>[
-                    servicesWidget(),
-                    MaterialButton(
-                      child: Text(
-                        "Cupertino date Picker",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.redAccent,
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext builder) {
-                              return Container(
-                                  height: MediaQuery.of(context)
-                                          .copyWith()
-                                          .size
-                                          .height /
-                                      3,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime: DateTime.now(),
-                                    onDateTimeChanged: (DateTime newDate) {
-                                      print(newDate);
-                                    },
-//                                    use24hFormat: true,
-//                                    maximumDate: new DateTime(2018, 12, 30),
-//                                    minimumYear: 2010,
-//                                    maximumYear: 2018,
-//                                    minuteInterval: 1,
-                                    mode: CupertinoDatePickerMode.dateAndTime,
-                                  ));
-                            });
-                      },
-                    ),
-                  ],
-                ),*/
               ),
               Container(
-                color: Colors.red,
-                /*child: GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                    target: _center,
-                    zoom: 11.0,
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    SizedBox(
+                      width: 500.0,
+                      child: CupertinoSegmentedControl<int>(
+                        children: services,
+                        onValueChanged: (int val) {
+                          setState(() {
+                            currentValue = val;
+                          });
+                        },
+                        groupValue: currentValue,
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 32.0,
+                          horizontal: 16.0,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 64.0,
+                            horizontal: 16.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.white,
+                            borderRadius: BorderRadius.circular(3.0),
+                            boxShadow: const <BoxShadow>[
+                              BoxShadow(
+                                offset: Offset(0.0, 3.0),
+                                blurRadius: 5.0,
+                                spreadRadius: -1.0,
+                                color: _colorOne,
+                              ),
+                              BoxShadow(
+                                offset: Offset(0.0, 6.0),
+                                blurRadius: 10.0,
+                                spreadRadius: 0.0,
+                                color: _colorTwo,
+                              ),
+                              BoxShadow(
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 18.0,
+                                spreadRadius: 0.0,
+                                color: _colorThree,
+                              ),
+                            ],
+                          ),
+                          child: icons[currentValue],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                /*CupertinoSegmentedControl<int>(
+                  children: services,
+                  onValueChanged: (int val){
+                    setState(() {
+                      currentValue = val;
+                    });
+                  },
+                  groupValue: currentValue,
                 ),*/
               ),
-              /*Container(
-                color: Colors.green,
-              ),*/
               Container(
                 color: Colors.blue,
                 child: ListView(

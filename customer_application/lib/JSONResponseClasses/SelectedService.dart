@@ -1,4 +1,4 @@
-// DELETE
+// DELETE THIS CLASS
 
 class SelectedService {
   OUTPUT oUTPUT;

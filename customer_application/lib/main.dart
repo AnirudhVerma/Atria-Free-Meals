@@ -1023,6 +1023,7 @@ class _MyHomePageState extends State<MyHomePage> {
               var myResponse = jsonDecode(response3.toString());
               var loginResponse = PortalLogin.fromJson(myResponse);
               GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
+              GlobalVariables().myPortalLogin = loginResponse;            // TODO: fetch mobile number from from login response instead of creating a separate variable
               CommonMethods().toast(context, loginResponse.eRRORMSG);
               print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
               print("THE ACCESS TOKEN IS + ${loginResponse.oUTPUT.token.accessToken}");
@@ -1043,7 +1044,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         builder: (context) => MyMainPage(
                               title: 'Welcome $userName!',
                               phoneNumber: phoneNumber,
-                              userid: loginResponse.oUTPUT.user.userid,
+                              userid: loginResponse.oUTPUT.user.userid,  // TODO: stop sending userid from one widget to other
                               accessToken:
                                   loginResponse.oUTPUT.token.accessToken,
                             )));

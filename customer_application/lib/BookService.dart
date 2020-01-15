@@ -6,6 +6,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
+import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
@@ -143,6 +144,8 @@ class BookService extends StatelessWidget {
                       GlobalVariables().pincode = addressOutput.pincode;
                       GlobalVariables().latitude = addressOutput.latitude;
                       GlobalVariables().longitude = addressOutput.longitude;
+                      GlobalVariables().addressid = addressOutput.addressid;
+                      GlobalVariables().address = addressOutput.address;
                       CommonMethods().toast(
                           context, 'You tapped on ${addressOutput.address}');
                       myBookServiceBloc.add(FetchBankList());
@@ -269,6 +272,7 @@ class BookService extends StatelessWidget {
                     onTap: () {
                       bankOutput = bankSnapShot.data[index];
                       GlobalVariables().bankCode = bankOutput.bankCode;
+                      GlobalVariables().bankname = bankOutput.bankname;
                       print('******************  THE BANKCODE IS ${GlobalVariables().bankCode}');
                       myBookServiceBloc.add(RegisteredNumber());
                       CommonMethods().toast(
@@ -754,8 +758,12 @@ class BookService extends StatelessWidget {
     return timeSlotObject;
   }
 
-  Future<Branch> bookService() async {
-    String fetchBranchesString = """{
+  Future<BookServiceResponse> bookService() async {
+
+    var requestTime = CommonMethods().getEpochTime();
+    String date = DateTime.now().toString().substring(0,10);
+
+    String bookServiceString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
@@ -765,23 +773,55 @@ class BookService extends StatelessWidget {
     "ClientAppName":"ANIOSCUST"
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",  
-    "DEVICEID": "",    
+    "customerid":"${GlobalVariables().myPortalLogin.oUTPUT.user.userid}",
+    "customername":"${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}",
+    "requesttime":"$requestTime",
+    "DEVICEID": "",
+    "serviceid":"$serviceid",
+    "servicetype":"${GlobalVariables().servicetype}",
+    "servicecategory":"${GlobalVariables().servicecategory}",
+    "servicename":"${GlobalVariables().servicename}",
+    "servicecharge":"${GlobalVariables().serviceCharge}",
     "bankcode":"${GlobalVariables().bankCode}",
+    "bankname":"${GlobalVariables().bankname}",
+    "branchcode":"${GlobalVariables().branchcode}",
+    "branchname":"${GlobalVariables().branchname}",
+    "addressid":"${GlobalVariables().addressid}",
+    "address":"${GlobalVariables().address}",
+    "lienmarkaccounttype":"NA",
+    "lienmarkaccount":"${GlobalVariables().lianAccount}",
+    "serviceaccounttype":"NA",
+    "serviceaccount":"${GlobalVariables().serviceAccount}",
+    "prefereddate":"$date",
+    "slot":"${GlobalVariables().timeSlot}",
+    "channel":"iOS",
+    "ccagentid":"",
     "authorization":"$accessToken",
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
     "latitude":"${GlobalVariables().latitude}",
     "longitude":"${GlobalVariables().longitude}",
-    "pincode":"${GlobalVariables().pincode}"
+    "pincode":"${GlobalVariables().pincode}",
+    "servicecode":"${GlobalVariables().servicecode}",
+    "custom_params": [
+		{
+        		"NAME"  : "Amount" ,
+        		"VALUE" : "10000"
+    			 },{
+        		"NAME"  : "Remarks" ,
+        		"VALUE" : "Test"
+    			 }
+        	]
     }""";
-    Response fetchBranchesStringResponse = await NetworkCommon()
-        .myDio
-        .post("/getBranchList", data: fetchBranchesString);
-    var getBranchesResponseString = jsonDecode(fetchBranchesStringResponse.toString());
-    var branchListObject =
-    Branch.fromJson(getBranchesResponseString);
 
-    return branchListObject;
+    Response bokServiceResponse = await NetworkCommon()
+        .myDio
+        .post("/bookService", data: bookServiceString);
+    var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
+    var bookServiceObject =
+    BookServiceResponse.fromJson(getBranchesResponseString);
+
+    return bookServiceObject;
   }
 
   Stack userAccountDetailsUI(BuildContext context) {
@@ -810,6 +850,7 @@ class BookService extends StatelessWidget {
                       accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
+                      GlobalVariables().serviceAccount = accounts;
                       myBookServiceBloc.add(FetchBranchList());
                     },
                   );
@@ -905,6 +946,8 @@ class BookService extends StatelessWidget {
                       branches = branchSnapShot.data.oUTPUT[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${branches.branchname.toString()}');
+                      GlobalVariables().branchcode = branches.branchcode;
+                      GlobalVariables().branchname = branches.branchname;
                       myBookServiceBloc.add(FetchTimeSlot());
                     },
                   );
@@ -998,6 +1041,7 @@ class BookService extends StatelessWidget {
                       timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
                       CommonMethods().toast(
                           context, 'You tapped on ${timeSlot.toString()}');
+                      GlobalVariables().timeSlot = timeSlot;
                       myBookServiceBloc.add(FetchLiamAccount());
                     },
                   );
@@ -1092,7 +1136,8 @@ class BookService extends StatelessWidget {
                       accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
-                      myBookServiceBloc.add(FetchBranchList());
+                      GlobalVariables().lianAccount = accounts;
+                      bookService();
                     },
                   );
                 }

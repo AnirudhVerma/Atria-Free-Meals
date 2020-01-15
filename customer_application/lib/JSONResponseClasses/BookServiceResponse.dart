@@ -1,11 +1,11 @@
-class BookService {
+class BookServiceResponse {
   String eRRORCODE;
   String eRRORMSG;
   List<OUTPUT> oUTPUT;
 
-  BookService({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
+  BookServiceResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
-  BookService.fromJson(Map<String, dynamic> json) {
+  BookServiceResponse.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];
     if (json['OUTPUT'] != null) {
