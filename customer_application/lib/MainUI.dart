@@ -248,7 +248,7 @@ class _MyMainPageState extends State<MyMainPage> {
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   leading: CircleAvatar(
                     child: new Image(
-                        image: new AssetImage('assets/images/cheque.png')),
+                        image: new AssetImage(getIconPath(output.servicecode))),
                   ),
                   onTap: () {
                     output = servicesSnapShot.data[index];
@@ -260,6 +260,7 @@ class _MyMainPageState extends State<MyMainPage> {
                     GlobalVariables().servicecategory = output.servicecategory;
                     GlobalVariables().serviceCharge = output.serviceCharge;
                     GlobalVariables().servicecode = output.servicecode;
+                    CommonMethods().toast(context, output.servicecode);
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(
@@ -275,6 +276,15 @@ class _MyMainPageState extends State<MyMainPage> {
         }
       },
     );
+  }
+
+  String getIconPath(String serviceCode){
+    if (serviceCode == 'CHQCTL'){
+      return 'assets/images/cheque.png';
+    }
+    if (serviceCode == 'ACCSTMT'){
+      return 'assets/images/bank-statement.png';
+    }
   }
 
   Future<void> getServices() async {

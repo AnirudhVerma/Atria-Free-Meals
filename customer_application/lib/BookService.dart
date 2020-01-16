@@ -21,6 +21,20 @@ import 'JSONResponseClasses/ServiceList.dart';
 import 'JSONResponseClasses/TimeSlot.dart';
 import 'networkConfig.dart';
 
+class MyBookService extends StatefulWidget {
+  @override
+  _MyBookServiceState createState() => _MyBookServiceState();
+}
+
+class _MyBookServiceState extends State<MyBookService>{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+
+}
+
 class BookService extends StatelessWidget {
   final String title;
   final int userid;
@@ -33,12 +47,22 @@ class BookService extends StatelessWidget {
       TextEditingController(text: '${GlobalVariables().phoneNumber}');
   final myBankOTPController =
       TextEditingController();
+  var _myFocusNode = new FocusNode();
+  var _onPressed;
+  bool _enabled = false;
 
   BookService(
       this.title, this.userid, this.serviceid, this.accessToken, this.userName);
 
   @override
   Widget build(BuildContext context) {
+
+    if(_enabled){
+      _onPressed = (){
+        Navigator.of(context).pop(false);
+        bookService();
+      };
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -417,6 +441,11 @@ class BookService extends StatelessWidget {
                       maxLength: 10,
                       obscureText: false,
                       keyboardType: TextInputType.numberWithOptions(),
+                      onChanged: (phoneNumber){
+                        if(phoneNumber.length == 6){
+                          FocusScope.of(context).requestFocus(_myFocusNode);
+                        }
+                      },
                       validator: (phoneNumber) {
                         if (phoneNumber.length < 10) {
                           return 'Please enter a valid Phone Number!';
@@ -598,6 +627,11 @@ class BookService extends StatelessWidget {
                       maxLength: 6,
                       obscureText: false,
                       keyboardType: TextInputType.numberWithOptions(),
+                      onChanged: (OTP){
+                        if(OTP.length == 6){
+                          FocusScope.of(context).requestFocus(_myFocusNode);
+                        }
+                      },
                       validator: (OTP) {
                         if (OTP.length < 6) {
                           return 'Please enter a valid Phone Number!';
@@ -1028,16 +1062,27 @@ class BookService extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return GridView.builder(
               shrinkWrap: true,
               itemCount: timeSlotSnapShot.data.oUTPUT.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+              ),
               itemBuilder: (context, index) {
                 {
                   timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
                   print('project snapshot data is: ${timeSlotSnapShot.data}');
-                  return ListTile(
-                    title: Text(timeSlot),
-                    onTap: () {
+                  return MaterialButton(
+                    //title: Text(timeSlot),
+                    child: Center(child: Text(timeSlot,style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                    )),
+                    color: Colors.blue[400],
+                    onPressed: () {
                       timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
                       CommonMethods().toast(
                           context, 'You tapped on ${timeSlot.toString()}');
@@ -1102,7 +1147,7 @@ class BookService extends StatelessWidget {
               ),
               elevation: 20,
               margin: EdgeInsets.all(18),
-              child: slotList(),
+              child: Padding(child: slotList(), padding: EdgeInsets.all(5.0),),
             ),
           ],
         ),
@@ -1137,6 +1182,46 @@ class BookService extends StatelessWidget {
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().lianAccount = accounts;
+                      showDialog(
+                        context: context,
+                        child: CupertinoAlertDialog(
+                          title: Text('Confirm Booking'),
+                          content: Column(
+                            children: <Widget>[
+                              Text('Name : ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}'),
+                              Text('Service Type : ${GlobalVariables().servicetype}'),
+                              Text('Service Charge : ${GlobalVariables().serviceCharge}'),
+                              Text('Bank : ${GlobalVariables().bankname}'),
+                              Text('Branch : ${GlobalVariables().branchname}'),
+                              Text('Address : ${GlobalVariables().address}'),
+                              Text('Service Delivery Account : ${GlobalVariables().serviceAccount}'),
+                              Text('Payment Account : ${GlobalVariables().lianAccount}'),
+                              Text('Prefered Time : ${GlobalVariables().timeSlot}'),
+                              Checkbox(
+                                value: _enabled,
+                                onChanged: (bool value){
+                                 /* setState((){
+                                    _enabled = value;
+                                  });*/
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            RaisedButton(
+                              /*onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },*/
+                              onPressed: _onPressed,
+                              child: Text(
+                                'Confirm',
+                                style: TextStyle(
+                                    color: Colors.blue, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                       bookService();
                     },
                   );
