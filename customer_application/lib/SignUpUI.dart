@@ -57,6 +57,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
     'Question Four',
     'Question Five'
   ];
+  var _myFocusNode = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -501,6 +502,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
       maxLength: 10,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
+      onChanged: (phoneNumber){
+        if(phoneNumber.length == 10){
+          FocusScope.of(context).requestFocus(_myFocusNode);
+        }
+      },
       validator: (phoneNumber) {
         if (phoneNumber.length < 10) {
           return 'Please enter a valid Phone Number!';
@@ -532,6 +538,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
       maxLength: 6,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
+      onChanged: (OTP){
+        if(OTP.length == 6){
+          FocusScope.of(context).requestFocus(_myFocusNode);
+        }
+      },
       validator: (OTP) {
         if (OTP.length < 6) {
           return 'Please enter 6 digit OTP!';

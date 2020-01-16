@@ -246,6 +246,10 @@ class _MyMainPageState extends State<MyMainPage> {
                 return ListTile(
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                  leading: CircleAvatar(
+                    child: new Image(
+                        image: new AssetImage('assets/images/cheque.png')),
+                  ),
                   onTap: () {
                     output = servicesSnapShot.data[index];
                     /*print('******************** THE OUTPUT IS ${output.toString()}');
@@ -343,12 +347,12 @@ class _MyMainPageState extends State<MyMainPage> {
                     output = servicesSnapShot.data[index];
                     /*print('******************** THE OUTPUT IS ${output.toString()}');
                     GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
-                    GlobalVariables().serviceid = output.serviceid;
+                    /*GlobalVariables().serviceid = output.serviceid;
                     GlobalVariables().servicename = output.servicename;
                     GlobalVariables().servicetype = output.servicetype;
                     GlobalVariables().servicecategory = output.servicecategory;
                     GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;
+                    GlobalVariables().servicecode = output.servicecode;*/
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(

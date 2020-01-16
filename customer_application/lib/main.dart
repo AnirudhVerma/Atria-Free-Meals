@@ -88,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final mySignInBloc = new SignInBloc();
   String thePhoneNumber;
   String userName;
+  var _myFocusNode = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -942,6 +943,11 @@ class _MyHomePageState extends State<MyHomePage> {
       maxLength: 10,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
+        onChanged: (phoneNumber){
+        if(phoneNumber.length == 10){
+          FocusScope.of(context).requestFocus(_myFocusNode);
+        }
+        },
       validator: (phoneNumber) {
         if (phoneNumber.length < 10) {
           return 'Please enter a valid Phone Number!';
@@ -973,6 +979,11 @@ class _MyHomePageState extends State<MyHomePage> {
       maxLength: 6,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
+      onChanged: (OTP){
+        if(OTP.length == 6){
+          FocusScope.of(context).requestFocus(_myFocusNode);
+        }
+      },
       validator: (OTP) {
         if (nonDigit.hasMatch(OTP)) {
           return 'Please enter only Numbers!';

@@ -115,6 +115,8 @@ flutter:
     - assets/images/1997427.png
     - assets/images/199086.png
     - assets/images/1716885.png
+    - assets/images/bank-statement.png
+    - assets/images/cheque.png
 
 
   # To add assets to your application, add an assets section, like this:
