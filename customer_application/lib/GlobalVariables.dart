@@ -1,4 +1,5 @@
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
+import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/JSONResponseClasses/SelectedService.dart';
@@ -14,6 +15,7 @@ class GlobalVariables{
   SelectedService userSelectedService = new SelectedService();
   ServiceList myServiceList = new ServiceList();
   PortalLogin myPortalLogin = new PortalLogin();
+  BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
   String phoneNumber;
   String serviceid;
   String servicename;

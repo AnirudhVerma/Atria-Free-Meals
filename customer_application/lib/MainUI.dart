@@ -5,6 +5,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/bloc.dart';
+import 'package:customer_application/main.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,30 +39,30 @@ class MyApp extends StatelessWidget {
 
 class MyMainPage extends StatefulWidget {
   MyMainPage(
-      {Key key, this.title, this.phoneNumber, this.accessToken, this.userid})
+      {Key key, title})
       : super(key: key);
 
-  final String title;
-  final int userid;
-  final String phoneNumber;
-  final String accessToken;
+  final String title = 'Welcome ${GlobalVariables().myPortalLogin.oUTPUT.user.name}!';
+  final int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
+  final String phoneNumber = GlobalVariables().phoneNumber;
+  final String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
 
   @override
   _MyMainPageState createState() =>
-      _MyMainPageState(title, phoneNumber, accessToken, userid);
+      _MyMainPageState();
 }
 
 class _MyMainPageState extends State<MyMainPage> {
   int _currentIndex = 0;
   PageController _pageController;
   String title;
-  String phoneNumber;
-  String accessToken;
-  int userid;
+  String phoneNumber = GlobalVariables().phoneNumber;
+  String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
+  int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
 //  FirstResponse myUserData = FirstResponse().myFirstResponse;
   FirstResponse fr = new FirstResponse();
 
-  _MyMainPageState(this.title, this.phoneNumber, this.accessToken, this.userid);
+  _MyMainPageState();
 
   GoogleMapController mapController;
 
@@ -149,8 +150,11 @@ class _MyMainPageState extends State<MyMainPage> {
                   if (logoutResponse.toString().contains('"ERRORCODE":"00')) {
                     print('logout success');
                     Navigator.of(context).pop();
+//                    Navigator.of(context).pop();
+//                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
                   }
                   Navigator.of(context).pop();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
                 },
                 child: Text(
                   'Logout',
@@ -267,7 +271,7 @@ class _MyMainPageState extends State<MyMainPage> {
                         context,
                         new CupertinoPageRoute(
                             builder: (context) =>
-                                BookService(output.servicename, userid, int.parse(output.serviceid), accessToken, phoneNumber )));
+                                BookService( )));
                   },
                 );
               }
@@ -369,7 +373,7 @@ class _MyMainPageState extends State<MyMainPage> {
                         context,
                         new CupertinoPageRoute(
                             builder: (context) =>
-                                BookService(output.servicename, GlobalVariables().myPortalLogin.oUTPUT.user.userid, int.parse(output.serviceid), GlobalVariables().myPortalLogin.oUTPUT.token.toString(), GlobalVariables().phoneNumber )));
+                                BookService()));
                   },
                 );
               }
@@ -446,7 +450,14 @@ class _MyMainPageState extends State<MyMainPage> {
             },
             children: <Widget>[
               Container(
-                child: servicesWidget(),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 15,),
+                    Text('Select a Service',style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),),
+                    SizedBox(height: 15,),
+                    Expanded(child: servicesWidget()),
+                  ],
+                ),
               ),
               Container(
                 child: Column(

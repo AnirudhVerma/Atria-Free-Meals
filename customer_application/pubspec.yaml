@@ -117,6 +117,10 @@ flutter:
     - assets/images/1716885.png
     - assets/images/bank-statement.png
     - assets/images/cheque.png
+    - assets/images/address_icon.png
+    - assets/images/bank_icon.png
+    - assets/images/bank_account_icon.png
+    - assets/images/branch_icon.png
 
 
   # To add assets to your application, add an assets section, like this:

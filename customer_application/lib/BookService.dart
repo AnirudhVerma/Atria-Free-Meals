@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:html';
 
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
 import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
+import 'package:customer_application/MainUI.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,26 +23,26 @@ import 'JSONResponseClasses/ServiceList.dart';
 import 'JSONResponseClasses/TimeSlot.dart';
 import 'networkConfig.dart';
 
-class MyBookService extends StatefulWidget {
+class BookService extends StatefulWidget {
   @override
-  _MyBookServiceState createState() => _MyBookServiceState();
+  _BookServiceState createState() => _BookServiceState();
 }
 
-class _MyBookServiceState extends State<MyBookService>{
+/*class _MyBookServiceState extends State<MyBookService>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return null;
   }
 
-}
+}*/
 
-class BookService extends StatelessWidget {
-  final String title;
-  final int userid;
-  final int serviceid;
-  final String accessToken;
-  final String userName;
+class _BookServiceState extends State<BookService> {
+  final String title = GlobalVariables().servicename;
+  final int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
+  final int serviceid = int.parse(GlobalVariables().serviceid);
+  final String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
+  final String userName = GlobalVariables().phoneNumber;
   final myBookServiceBloc = new BookServiceBloc();
   final nonDigit = new RegExp(r"(\D+)");
   final myBankPhoneNumberController =
@@ -51,8 +53,9 @@ class BookService extends StatelessWidget {
   var _onPressed;
   bool _enabled = false;
 
-  BookService(
-      this.title, this.userid, this.serviceid, this.accessToken, this.userName);
+//  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
+
+//  BookService(){};
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +164,10 @@ class BookService extends StatelessWidget {
                   addressOutput = addressSnapShot.data[index];
                   print('project snapshot data is: ${addressSnapShot.data}');
                   return ListTile(
+                    leading: CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage('assets/images/address_icon.png')),
+                    ),
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.addressid.toString()),
                     onTap: () {
@@ -291,6 +298,10 @@ class BookService extends StatelessWidget {
                   bankOutput = bankSnapShot.data[index];
                   print('project snapshot data is: ${bankSnapShot.data}');
                   return ListTile(
+                    leading: CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage('assets/images/bank_icon.png')),
+                    ),
                     title: Text(bankOutput.bankname),
                     subtitle: Text(bankOutput.bankCode.toString()),
                     onTap: () {
@@ -852,10 +863,58 @@ class BookService extends StatelessWidget {
         .myDio
         .post("/bookService", data: bookServiceString);
     var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
-    var bookServiceObject =
+    GlobalVariables().myBookServiceResponseObject =
     BookServiceResponse.fromJson(getBranchesResponseString);
 
-    return bookServiceObject;
+    if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
+      showDialog(
+        context: context,
+        child: CupertinoAlertDialog(
+          title: Text('Success'),
+          content: Text(
+              'Your Booking was Successful'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    else{
+      showDialog(
+        context: context,
+        child: CupertinoAlertDialog(
+          title: Text('Sorry'),
+          content: Text(
+              '${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GlobalVariables().myBookServiceResponseObject;
   }
 
   Stack userAccountDetailsUI(BuildContext context) {
@@ -879,6 +938,10 @@ class BookService extends StatelessWidget {
                   accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
                   print('project snapshot data is: ${AccountSnapShot.data}');
                   return ListTile(
+                    leading: new CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage('assets/images/bank_account_icon.png')),
+                    ),
                     title: Text(accounts),
                     onTap: () {
                       accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
@@ -975,6 +1038,10 @@ class BookService extends StatelessWidget {
                   branches = branchSnapShot.data.oUTPUT[index];
                   print('project snapshot data is: ${branchSnapShot.data}');
                   return ListTile(
+                    leading: new CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage('assets/images/branch_icon.png')),
+                    ),
                     title: Text(branches.branchname),
                     onTap: () {
                       branches = branchSnapShot.data.oUTPUT[index];
@@ -1176,6 +1243,10 @@ class BookService extends StatelessWidget {
                   accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
                   print('project snapshot data is: ${AccountSnapShot.data}');
                   return ListTile(
+                    leading: new CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage('assets/images/bank_account_icon.png')),
+                    ),
                     title: Text(accounts),
                     onTap: () {
                       accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
@@ -1197,32 +1268,57 @@ class BookService extends StatelessWidget {
                               Text('Service Delivery Account : ${GlobalVariables().serviceAccount}'),
                               Text('Payment Account : ${GlobalVariables().lianAccount}'),
                               Text('Prefered Time : ${GlobalVariables().timeSlot}'),
-                              Checkbox(
-                                value: _enabled,
-                                onChanged: (bool value){
-                                 /* setState((){
-                                    _enabled = value;
-                                  });*/
-                                },
-                              ),
+                              /*Material(
+                                child: Checkbox(
+                                  value: _enabled,
+                                  onChanged: (bool value){
+                                    setState((){
+                                      _enabled = value;
+                                    });
+                                  },
+                                ),
+                              ),*/
                             ],
                           ),
-                          actions: <Widget>[
+                          /*actions: <Widget>[
                             RaisedButton(
-                              /*onPressed: () {
+                              onPressed: () {
                                 Navigator.of(context).pop(false);
-                              },*/
-                              onPressed: _onPressed,
+                                bookService();
+                              },
                               child: Text(
                                 'Confirm',
                                 style: TextStyle(
                                     color: Colors.blue, fontWeight: FontWeight.bold),
                               ),
                             ),
+                          ],*/
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    color: Colors.red, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            FlatButton(
+                              onPressed: ()  {
+                                Navigator.of(context).pop();
+                                bookService();
+                              },
+                              child: Text(
+                                'Confirm',
+                                style:
+                                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ],
                         ),
                       );
-                      bookService();
+//                      bookService();
                     },
                   );
                 }
@@ -1295,6 +1391,7 @@ class BookService extends StatelessWidget {
   }
 
   void dispose() {
+    super.dispose();
     myBookServiceBloc.close();
   }
 }

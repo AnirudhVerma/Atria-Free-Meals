@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DSB Customer',
+//      title: 'DSB Customer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -64,15 +64,15 @@ class MyApp extends StatelessWidget {
 //          builder: (context) => SignInBloc(),
 //          child: MyHomePage(title: 'DSB Customer')),
           builder: (context) => SignInBloc(),
-          child: MyHomePage(title: 'DSB Customer')),
+          child: MyHomePage()),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key}) : super(key: key);
 
-  final String title;
+//  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -96,68 +96,73 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: true,
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
+      resizeToAvoidBottomInset: false,
+      /*appBar: AppBar(
         title: Text(widget.title),
-      ),
+      ),*/
       body: /*buildCenterInitial(),*/ Center(
-        child: BlocBuilder<SignInBloc, SignInState>(
-            bloc: mySignInBloc,
-            builder: (context, state) {
-              if (state is InitialSignInState) {
+        child: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: BlocBuilder<SignInBloc, SignInState>(
+              bloc: mySignInBloc,
+              builder: (context, state) {
+                if (state is InitialSignInState) {
 //            return buildCenterInitialPIN();
 //          return myListView();
-                return buildCenterOTP();
-              }
-              if (state is LoadingSignInState) {
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              }
-              if (state is ErrorSignInState) {
-                return Center(child: Text('Login UnSuccessful'));
-              }
-              if (state is OTPSignInState) {
-                return buildCenterOTP();
-              }
-              if (state is EnterOTPState) {
-                return buildCenterEnterOTP();
-              }
-              if (state is showProgressBar) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              if (state is ErrorState) {
-                var data = state.errorResp;
-                if (state.errorResp == null) {
-                  data = "OOPS, something went wrong";
+                  return buildCenterOTP();
                 }
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(data),
-                      MaterialButton(
-                        color: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
+                if (state is LoadingSignInState) {
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                }
+                if (state is ErrorSignInState) {
+                  return Center(child: Text('Login UnSuccessful'));
+                }
+                if (state is OTPSignInState) {
+                  return buildCenterOTP();
+                }
+                if (state is EnterOTPState) {
+                  return buildCenterEnterOTP();
+                }
+                if (state is showProgressBar) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (state is ErrorState) {
+                  var data = state.errorResp;
+                  if (state.errorResp == null) {
+                    data = "OOPS, something went wrong";
+                  }
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(data),
+                        MaterialButton(
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(18.0),
+                          ),
+                          child: Text(
+                            'Retry',
+                            style: TextStyle(
+                                color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            mySignInBloc.add(DoSignInwithOTP());
+                          },
                         ),
-                        child: Text(
-                          'Retry',
-                          style: TextStyle(
-                              color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          mySignInBloc.add(DoSignInwithOTP());
-                        },
-                      ),
-                    ],
-                );
-              }
-              return null;
-            }),
+                      ],
+                  );
+                }
+                return null;
+              }),
+        ),
       ),
     );
   }
@@ -1037,7 +1042,7 @@ class _MyHomePageState extends State<MyHomePage> {
               GlobalVariables().myPortalLogin = loginResponse;            // TODO: fetch mobile number from from login response instead of creating a separate variable
               CommonMethods().toast(context, loginResponse.eRRORMSG);
               print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
-              print("THE ACCESS TOKEN IS + ${loginResponse.oUTPUT.token.accessToken}");
+              print("THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
               print('');
 
               if (loginResponse.eRRORCODE == "00") {
@@ -1053,11 +1058,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     CupertinoPageRoute(
                         builder: (context) => MyMainPage(
-                              title: 'Welcome $userName!',
+                              /*title: 'Welcome $userName!',
                               phoneNumber: phoneNumber,
                               userid: loginResponse.oUTPUT.user.userid,  // TODO: stop sending userid from one widget to other
                               accessToken:
-                                  loginResponse.oUTPUT.token.accessToken,
+                                  loginResponse.oUTPUT.token.accessToken,*/
                             )));
               } else {
                 Fluttertoast.showToast(
