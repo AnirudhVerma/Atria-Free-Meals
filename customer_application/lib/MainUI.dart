@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'CompletedServicesDialog.dart';
 import 'OnGoingServiceDialog.dart';
 import 'SizeConfig.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
@@ -92,12 +93,7 @@ class _MyMainPageState extends State<MyMainPage> {
   };
 
   Map<int, Widget> icons = <int, Widget>{
-    0: Center(
-      child: FlutterLogo(
-        colors: Colors.red,
-        size: 200.0,
-      ),
-    ),
+    0: new CompletedServicesDialog(),
     1: /*Center(
       child: Center(child: Center(child: new OnGoingServiceDialog())),),*/
     new OnGoingServiceDialog(),
@@ -250,45 +246,47 @@ class _MyMainPageState extends State<MyMainPage> {
               {
                 output = servicesSnapShot.data[index];
                 print('project snapshot data is: ${servicesSnapShot.data}');
-                return ListTile(
-                  title: Text(output.servicename),
-                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                  leading: CircleAvatar(
-                    child: new Image(
-                        image: new AssetImage(getIconPath(output.servicecode))),
+                return Card(
+                  child: ListTile(
+                    title: Text(output.servicename),
+                    subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                    leading: CircleAvatar(
+                      child: new Image(
+                          image: new AssetImage(getIconPath(output.servicecode))),
+                    ),
+                    onTap: () {
+                      output = servicesSnapShot.data[index];
+                      /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                      GlobalVariables().serviceid = output.serviceid;
+                      GlobalVariables().servicename = output.servicename;
+                      GlobalVariables().servicetype = output.servicetype;
+                      GlobalVariables().servicecategory = output.servicecategory;
+                      GlobalVariables().serviceCharge = output.serviceCharge;
+                      GlobalVariables().servicecode = output.servicecode;
+                      CommonMethods().toast(context, output.servicecode);
+                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      String servicename;
+                      if (output.servicecode == 'ACCSTMT'){
+                        showDialog(context: context,
+                            builder: (_){
+                              return MyDialog();
+                            });
+                      }
+                      else if(output.servicecode == 'CHQCTL'){
+                        showDialog(context: context,
+                            builder: (_){
+                              return MyChequeDialog();
+                            });
+                      }
+                      /*Navigator.push(
+                          context,
+                          new CupertinoPageRoute(
+                              builder: (context) =>
+                                  BookService( )));*/
+                    },
                   ),
-                  onTap: () {
-                    output = servicesSnapShot.data[index];
-                    /*print('******************** THE OUTPUT IS ${output.toString()}');
-                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
-                    GlobalVariables().serviceid = output.serviceid;
-                    GlobalVariables().servicename = output.servicename;
-                    GlobalVariables().servicetype = output.servicetype;
-                    GlobalVariables().servicecategory = output.servicecategory;
-                    GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;
-                    CommonMethods().toast(context, output.servicecode);
-                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                    String servicename;
-                    if (output.servicecode == 'ACCSTMT'){
-                      showDialog(context: context,
-                          builder: (_){
-                            return MyDialog();
-                          });
-                    }
-                    else if(output.servicecode == 'CHQCTL'){
-                      showDialog(context: context,
-                          builder: (_){
-                            return MyChequeDialog();
-                          });
-                    }
-                    /*Navigator.push(
-                        context,
-                        new CupertinoPageRoute(
-                            builder: (context) =>
-                                BookService( )));*/
-                  },
-                );
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),);
               }
             },
           );
@@ -500,8 +498,8 @@ class _MyMainPageState extends State<MyMainPage> {
                         ),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            vertical: 64.0,
-                            horizontal: 16.0,
+                            vertical: 10.0,
+                            horizontal: 10.0,
                           ),
                           decoration: BoxDecoration(
                             color: CupertinoColors.white,

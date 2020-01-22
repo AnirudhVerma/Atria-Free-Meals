@@ -10,12 +10,12 @@ import 'GlobalVariables.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'networkConfig.dart';
 
-class OnGoingServiceDialog extends StatefulWidget {
+class CompletedServicesDialog extends StatefulWidget {
   @override
-  _OnGoingServiceDialogState createState() => new _OnGoingServiceDialogState();
+  _CompletedServicesDialogState createState() => new _CompletedServicesDialogState();
 }
 
-class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
+class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
 
   @override
   Widget build(BuildContext context) {
@@ -43,64 +43,34 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
               {
                 output = servicesSnapShot.data[index];
                 print('project snapshot data is: ${servicesSnapShot.data}');
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: new Image(
-                          image: new AssetImage(getIconPath(output.serviceName))),
-                    ),
-                    title: Text(output.serviceName, style: TextStyle(color: Colors.blue),),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(output.preferreddate ),
-                            Text(output.slottime),
-                          ],
-                        ),
-                        Text('Booking Id: ${output.bookingid}'),
-                        Text('Status: ${output.sTATUS}'),
-                      ],
-                    ),trailing: Icon(Icons.arrow_forward_ios),
+                return ListTile(
+                  title: Text(output.serviceName),
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                    onTap: () {
-                      output = servicesSnapShot.data[index];
-                      /*print('******************** THE OUTPUT IS ${output.toString()}');
-                      GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
-                      /*GlobalVariables().serviceid = output.serviceid;
-                      GlobalVariables().servicename = output.servicename;
-                      GlobalVariables().servicetype = output.servicetype;
-                      GlobalVariables().servicecategory = output.servicecategory;
-                      GlobalVariables().serviceCharge = output.serviceCharge;
-                      GlobalVariables().servicecode = output.servicecode;*/
-                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                      String servicename;
-                     /* Navigator.push(
-                          context,
-                          new CupertinoPageRoute(
-                              builder: (context) =>
-                                  BookService()));*/
-                    },
-                  ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-                elevation: 5.0,
-                margin: EdgeInsets.all(2.0),);
+                  onTap: () {
+                    output = servicesSnapShot.data[index];
+                    /*print('******************** THE OUTPUT IS ${output.toString()}');
+                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                    /*GlobalVariables().serviceid = output.serviceid;
+                    GlobalVariables().servicename = output.servicename;
+                    GlobalVariables().servicetype = output.servicetype;
+                    GlobalVariables().servicecategory = output.servicecategory;
+                    GlobalVariables().serviceCharge = output.serviceCharge;
+                    GlobalVariables().servicecode = output.servicecode;*/
+                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    String servicename;
+                    /* Navigator.push(
+                        context,
+                        new CupertinoPageRoute(
+                            builder: (context) =>
+                                BookService()));*/
+                  },
+                );
               }
             },
           );
         }
       },
     );
-  }
-
-  String getIconPath(String serviceName){
-    if (serviceName == 'Pickup Cheque instrument'){
-      return 'assets/images/cheque.png';
-    }
-    if (serviceName == 'Request Account Statement'){
-      return 'assets/images/bank-statement.png';
-    }
   }
 
   Future<void> getBookingHistory() async {
@@ -125,7 +95,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 
     Response getBookingHistoryResponse = await NetworkCommon()
         .myDio
-        .post("/getBookingList", data: getBookingHistoryString);
+        .post("/getBookingHistory", data: getBookingHistoryString);
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);

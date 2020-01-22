@@ -36,9 +36,9 @@ class NetworkCommon {
     Dio dio = new Dio();
 
 //    dio.interceptors.add(alice.getDioInterceptor());
-    dio.options.baseUrl = 'http://111.125.203.226:30001/doorstep'; // public server
+//    dio.options.baseUrl = 'http://111.125.203.226:30001/doorstep'; // public server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
-//    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
+    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
 
     // handle timeouts
     dio.options.connectTimeout = 50000; //5s
