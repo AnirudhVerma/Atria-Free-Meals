@@ -10,7 +10,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'OnGoingServiceDialog.dart';
 import 'SizeConfig.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -89,15 +91,16 @@ class _MyMainPageState extends State<MyMainPage> {
     1: Text('On-Going'),
   };
 
-  final Map<int, Widget> icons = <int, Widget>{
+  Map<int, Widget> icons = <int, Widget>{
     0: Center(
       child: FlutterLogo(
         colors: Colors.red,
         size: 200.0,
       ),
     ),
-    1: Center(
-      child: Center(child: Center(child: bookingHistoryWidget())),),
+    1: /*Center(
+      child: Center(child: Center(child: new OnGoingServiceDialog())),),*/
+    new OnGoingServiceDialog(),
     2: Center(
       child: FlutterLogo(
         colors: Colors.cyan,
@@ -267,11 +270,23 @@ class _MyMainPageState extends State<MyMainPage> {
                     CommonMethods().toast(context, output.servicecode);
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
-                    Navigator.push(
+                    if (output.servicecode == 'ACCSTMT'){
+                      showDialog(context: context,
+                          builder: (_){
+                            return MyDialog();
+                          });
+                    }
+                    else if(output.servicecode == 'CHQCTL'){
+                      showDialog(context: context,
+                          builder: (_){
+                            return MyChequeDialog();
+                          });
+                    }
+                    /*Navigator.push(
                         context,
                         new CupertinoPageRoute(
                             builder: (context) =>
-                                BookService( )));
+                                BookService( )));*/
                   },
                 );
               }
@@ -313,7 +328,7 @@ class _MyMainPageState extends State<MyMainPage> {
     var getServicesResponseString = jsonDecode(getServicesResponse.toString());
     var getServicesResponseObject =
         ServiceList.fromJson(getServicesResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    print("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
     // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
     print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
@@ -746,5 +761,515 @@ class _MyMainPageState extends State<MyMainPage> {
               title: Text("Profile"))
         ],
       ),*/
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+class OnGoingServiceDialog extends StatefulWidget {
+  @override
+  _OnGoingServiceDialogState createState() => new _OnGoingServiceDialogState();
+}
+
+class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
+
+  @override
+  Widget build(BuildContext context) {
+    var output;
+    return FutureBuilder(
+      future: getBookingHistory(),
+      builder: (context, servicesSnapShot) {
+        if (servicesSnapShot.data == null) {
+          print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+//          print('The data is loaded!!!!');
+          return ListView.builder(
+            itemCount: servicesSnapShot.data.length,
+            itemBuilder: (context, index) {
+              {
+                output = servicesSnapShot.data[index];
+                print('project snapshot data is: ${servicesSnapShot.data}');
+                return ListTile(
+                  title: Text(output.servicename),
+                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                  onTap: () {
+                    output = servicesSnapShot.data[index];
+                    */
+/*print('******************** THE OUTPUT IS ${output.toString()}');
+                    GlobalVariables().userSelectedService = output;*//*
+                   //unable to instantiate the userSelecteeService
+                    */
+/*GlobalVariables().serviceid = output.serviceid;
+                    GlobalVariables().servicename = output.servicename;
+                    GlobalVariables().servicetype = output.servicetype;
+                    GlobalVariables().servicecategory = output.servicecategory;
+                    GlobalVariables().serviceCharge = output.serviceCharge;
+                    GlobalVariables().servicecode = output.servicecode;*//*
+
+                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    String servicename;
+                    Navigator.push(
+                        context,
+                        new CupertinoPageRoute(
+                            builder: (context) =>
+                                BookService()));
+                  },
+                );
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> getBookingHistory() async {
+    String getBookingHistoryString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "username":"${GlobalVariables().phoneNumber}",
+    "DEVICEID": "",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "startindex":1,
+   	"limit":10
+    }""";
+
+    Response getBookingHistoryResponse = await NetworkCommon()
+        .myDio
+        .post("/getBookingHistory", data: getBookingHistoryString);
+    var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
+    var getBookingHistoryResponseObject =
+    ServiceList.fromJson(getBookingHistoryResponseString);
+    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+
+    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+
+    var output = getBookingHistoryResponseObject.oUTPUT;
+
+    List services = [];
+
+    for (int i = 0; i < output.length; i++) {
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      services.add(output[i].servicename);
+    }
+
+    print('             THE SERVICES OFFERED ARE $services                 ');
+
+    return output;
+    //print(accessToken);
+  }
+
+}
+*/
+
+class MyDialog extends StatefulWidget {
+  @override
+  _MyDialogState createState() => new _MyDialogState();
+}  //TODO: Use Imported Class instead
+
+class _MyDialogState extends State<MyDialog> {
+
+  String _date = "Not set";
+  String _toDate = 'Not Set';
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      // title: Text('Request Account Statement',  style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(side: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(6))),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(height: 15,),
+          Text('Request Account Statement', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
+          SizedBox(height: 15,),
+          Center(
+            //padding: EdgeInsets.all(15.0),
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        elevation: 4.0,
+                        onPressed: () {
+                          DatePicker.showDatePicker(context,
+
+                            theme: DatePickerTheme(
+                              containerHeight: 210.0,
+                            ),
+                            onChanged: (date) {
+                              print('confirm $date');
+                              _date = '${date.year} - ${date.month} - ${date.day}';
+                              setState(() {
+                                _date = '${date.year} - ${date.month} - ${date.day}';
+                              });
+                            },
+                            showTitleActions: true,
+                            minTime: DateTime(2000, 1, 1),
+                            maxTime: DateTime(2022, 12, 31),
+                            onConfirm: (date) {
+                              print('confirm $date');
+                              _date = '${date.year} - ${date.month} - ${date.day}';
+                              setState(() {
+                                _date = '${date.year} - ${date.month} - ${date.day}';
+                              });
+                            },
+                            currentTime: DateTime.now(),
+                            locale: LocaleType.en,
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                " From",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.date_range,
+                                          size: 18.0,
+                                          color: Colors.blue,
+                                        ),
+                                        Text(
+                                          " $_date",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18.0),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        height: 20.0,width: 500,
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        elevation: 4.0,
+                        onPressed: () {
+                          DatePicker.showDatePicker(context,
+                              theme: DatePickerTheme(
+                                containerHeight: 210.0,
+                              ),
+                              showTitleActions: true,
+                              minTime: DateTime(2000, 1, 1),
+                              maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
+                                print('confirm $date');
+                                _toDate = '${date.year} - ${date.month} - ${date.day}';
+                                setState(() {});
+                              }, currentTime: DateTime.now(), locale: LocaleType.en);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                " To",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.date_range,
+                                          size: 18.0,
+                                          color: Colors.blue,
+                                        ),
+                                        Text(
+                                          " $_toDate",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18.0),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              MaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                minWidth: 100,
+                child: Text('CANCEL', style: TextStyle(color: Colors.blue, ),),
+                onPressed: () {
+                  Navigator.pop(context);
+                  /* ... */ },
+              ),
+              MaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                minWidth: 100,
+                color: Colors.blue,
+                child: Text('PROCEED', style: TextStyle(color: Colors.white, ),),
+                onPressed: () {
+                  if(_date == 'Not set' || _toDate == 'Not set'){
+                    CommonMethods().toast(context, 'Please Select Date');
+                  }
+                  else{
+                  Navigator.push(
+                      context,
+                      new CupertinoPageRoute(
+                          builder: (context) =>
+                              BookService( )));
+                  }
+                  /* ... */ },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class MyChequeDialog extends StatefulWidget {
+  @override
+  _MyChequeDialogState createState() => new _MyChequeDialogState();
+}
+
+class _MyChequeDialogState extends State<MyChequeDialog> {
+
+  String _date = "Not set";
+  String _toDate = 'Not Set';
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      // title: Text('Request Account Statement',  style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(side: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(6))),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(height: 15,),
+          Text('Pickup Cheque Instrument', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
+          SizedBox(height: 15,),
+          Center(
+            //padding: EdgeInsets.all(15.0),
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text('      Leaf Count'),
+                          dropDown(),
+                        ],
+                      ),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text('Credit Slip Filled', ),
+                          booleanDropDown(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              MaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                minWidth: 100,
+                child: Text('CANCEL', style: TextStyle(color: Colors.blue, ),),
+                onPressed: () {
+                  Navigator.pop(context);
+                  /* ... */ },
+              ),
+              MaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                minWidth: 100,
+                color: Colors.blue,
+                child: Text('PROCEED', style: TextStyle(color: Colors.white, ),),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new CupertinoPageRoute(
+                          builder: (context) =>
+                              BookService( )));
+                  /* ... */ },
+              ),
+              /*MaterialButton(
+                minWidth:120,
+                color: Colors.blue,
+                child: Text('PROCEED', style: TextStyle(color: Colors.white),),
+              ),*/
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String dropdownValue = myItems[1];
+  static var myItems = [
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five'
+  ];
+
+  Widget dropDown() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: DropdownButton<String>(
+          value: dropdownValue,
+          icon: Icon(Icons.arrow_downward),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: Colors.blue),
+          isExpanded: false,
+          underline: Container(
+            height: 2,
+            color: Colors.blue,
+          ),
+          onChanged: (String newValue) {
+            setState(() {
+              dropdownValue = newValue;
+            });
+          },
+          items: myItems.map<DropdownMenuItem<String>>((String value1) {
+            return DropdownMenuItem<String>(
+              value: value1,
+              child: Text(value1),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  String slipValue = yesNO[1];
+  static var yesNO = [
+    'Yes',
+    'No',
+  ];
+
+  Widget booleanDropDown() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: DropdownButton<String>(
+          value: slipValue,
+          icon: Icon(Icons.arrow_downward),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: Colors.blue),
+          isExpanded: false,
+          underline: Container(
+            height: 2,
+            color: Colors.blue,
+          ),
+          onChanged: (String newValue) {
+            setState(() {
+              slipValue = newValue;
+            });
+          },
+          items: yesNO.map<DropdownMenuItem<String>>((String value1) {
+            return DropdownMenuItem<String>(
+              value: value1,
+              child: Text(value1),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
 
 }

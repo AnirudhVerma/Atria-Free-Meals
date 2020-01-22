@@ -8,6 +8,7 @@ import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
 import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
+import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:customer_application/MainUI.dart';
 import 'package:customer_application/bloc.dart';
