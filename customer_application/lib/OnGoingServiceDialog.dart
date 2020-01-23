@@ -77,8 +77,8 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                       GlobalVariables().servicecategory = output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;*/
-                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => OnGoingServiceDetail()));
+                      //print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => OnGoingServiceDetail(bookingID: output.bookingid,)));
                       String servicename;
                      /* Navigator.push(
                           context,
@@ -130,7 +130,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     Response getBookingHistoryResponse = await NetworkCommon()
         .myDio
         .post("/getBookingList", data: getBookingHistoryString);
-    print('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
+    //print('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);

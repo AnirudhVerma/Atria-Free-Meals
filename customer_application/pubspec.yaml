@@ -123,6 +123,7 @@ flutter:
     - assets/images/bank_account_icon.png
     - assets/images/branch_icon.png
     - assets/images/fogg-booking-history-1.png
+    - assets/images/service-details.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
