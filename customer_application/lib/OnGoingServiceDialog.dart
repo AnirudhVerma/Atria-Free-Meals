@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.dart';
+import 'package:customer_application/OnGoingServiceDetail.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,13 +50,14 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                       child: new Image(
                           image: new AssetImage(getIconPath(output.serviceName))),
                     ),
-                    title: Text(output.serviceName, style: TextStyle(color: Colors.blue),),
+                    title: Text(output.serviceName, style: TextStyle(color: Colors.blue[800]),),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Row(
                           children: <Widget>[
                             Text(output.preferreddate ),
+                            SizedBox(width: 10,),
                             Text(output.slottime),
                           ],
                         ),
@@ -63,6 +65,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                         Text('Status: ${output.sTATUS}'),
                       ],
                     ),trailing: Icon(Icons.arrow_forward_ios),
+                    dense: true,
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     onTap: () {
                       output = servicesSnapShot.data[index];
@@ -75,6 +78,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;*/
                       print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => OnGoingServiceDetail()));
                       String servicename;
                      /* Navigator.push(
                           context,
@@ -84,7 +88,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                     },
                   ),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-                elevation: 5.0,
+                elevation: 2.0,
                 margin: EdgeInsets.all(2.0),);
               }
             },
@@ -126,6 +130,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     Response getBookingHistoryResponse = await NetworkCommon()
         .myDio
         .post("/getBookingList", data: getBookingHistoryString);
+    print('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);

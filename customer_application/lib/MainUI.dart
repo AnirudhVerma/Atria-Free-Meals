@@ -97,12 +97,12 @@ class _MyMainPageState extends State<MyMainPage> {
     1: /*Center(
       child: Center(child: Center(child: new OnGoingServiceDialog())),),*/
     new OnGoingServiceDialog(),
-    2: Center(
+    /*2: Center(
       child: FlutterLogo(
         colors: Colors.cyan,
         size: 200.0,
       ),
-    ),
+    ),*/
   };
 
   int currentValue = 0;
