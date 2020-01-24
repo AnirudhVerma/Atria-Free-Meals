@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/JSONResponseClasses/ValidateOTP.dart';
+import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -157,11 +159,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
         // previous-10   0.8     SizeConfig.blockSizeHorizontal
         child: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
               //previous-36     SizeConfig.blockSizeHorizontal * 1.5
               child: Form(
                 key: _formKey1,
@@ -236,11 +238,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
         // previous-10   0.8     SizeConfig.blockSizeHorizontal
         child: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
               //previous-36     SizeConfig.blockSizeHorizontal * 1.5
               child: Form(
                 key: _formKey1,
@@ -322,11 +324,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             elevation: 20,
-            margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+            margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
             // previous-10   0.8     SizeConfig.blockSizeHorizontal
             child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
                   //previous-36     SizeConfig.blockSizeHorizontal * 1.5
                   child: Form(
                     key: _registrationFormKey,
@@ -358,6 +360,10 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         dropDown(),
                         SizedBox(height: 10,),
                         securityAnswerInput(),
+                        SizedBox(height: 10,),
+                        CupertinoButton(child: Text('Open Maps'), onPressed: () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
+                        },),
                         SizedBox(height: 10,),
                         signUpButton(),
                       ],

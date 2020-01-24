@@ -5,6 +5,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/MainUI.dart';
+import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/SignUpUI.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
@@ -1227,7 +1228,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minWidth: SizeConfig.blockSizeHorizontal * 70,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            _validateInputs();
+//            _validateInputs();
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
 
             /*return showDialog(
               context: context,

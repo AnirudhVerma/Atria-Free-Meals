@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'GlobalVariables.dart';
+import 'Timeline.dart';
 import 'networkConfig.dart';
 
 class OnGoingServiceDetail extends StatelessWidget {
@@ -185,6 +186,22 @@ class OnGoingServiceDetail extends StatelessWidget {
                         ),
                       ),
                       elevation: 3,),
+                    Timeline(
+                      children: <Widget>[
+                        Container(height: 100, child: Center(child: Text('Scheduled', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+                        Container(height: 100, child: Center(child: Text('Started', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+                        Container(height: 100, child: Center(child: Text('Document Picked', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+                        Container(height: 100, child: Center(child: Text('Document Submitted', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+                        Container(height: 100, child: Center(child: Text('Completed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+                      ],
+                      indicators: <Widget>[
+                        Icon(Icons.schedule, color: Colors.blue,),
+                        Icon(Icons.play_arrow),
+                        Icon(Icons.mail),
+                        Icon(Icons.check),
+                        Icon(Icons.done_all),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -221,13 +238,8 @@ class OnGoingServiceDetail extends StatelessWidget {
     var getServiceDetailsResponseString = jsonDecode(getServiceDetailsResponse.toString());
     var getServiceDetailsResponseObject =
     IndividualServiceDetails.fromJson(getServiceDetailsResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
-
-    String id = getServiceDetailsResponseObject.serviceinfo[0].bookingid;
 
     return getServiceDetailsResponseObject;
-    //print(accessToken);
   }
 
 }
