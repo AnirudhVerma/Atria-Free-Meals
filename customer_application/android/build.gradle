@@ -13,6 +13,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.google.com' }
     }
 }
 
@@ -26,4 +27,111 @@ subprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+subprojects{
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.core'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.interpolator'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.coordinatorlayout'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+//            if (details.requested.group == 'androidx.lifecycle'
+//                    && !details.requested.name.contains('multidex')) {
+//                details.useVersion "1.0.0"
+//            }
+            if (details.requested.group == 'androidx.fragment'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.documentfile'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.drawerlayout'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.documentfile'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+            if (details.requested.group == 'androidx.localbroadcastmanager'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.loader'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.slidingpanelayout'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.versionedparcelable'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+            if (details.requested.group == 'androidx.customview'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.legacy'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.cursoradapter'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.*'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.print'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.slidingpanelayout'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+
+            if (details.requested.group == 'androidx.cursoradapter'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.asynclayoutinflater'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+            if (details.requested.group == 'androidx.swiperefreshlayout'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+            if (details.requested.group == 'androidx.annotation'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+            if (details.requested.group == 'androidx.viewpager'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "1.0.0"
+            }
+
+        }
+    }
+
 }
