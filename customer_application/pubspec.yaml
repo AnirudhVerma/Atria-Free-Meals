@@ -33,8 +33,9 @@ dependencies:
   google_maps_flutter: ^0.5.21+15
   argon_buttons_flutter: ^1.0.2
   flutter_custom_clippers: ^0.1.6
-  flutter_spinkit: "^4.1.1"
+  flutter_spinkit: ^4.1.1
   flutter_datetime_picker: 1.3.4
+  geolocator: ^5.1.4+2
 
 
   # The following adds the Cupertino Icons font to your application.
