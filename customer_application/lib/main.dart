@@ -1228,8 +1228,7 @@ class _MyHomePageState extends State<MyHomePage> {
           minWidth: SizeConfig.blockSizeHorizontal * 70,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-//            _validateInputs();
-            Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
+            _validateInputs();
 
             /*return showDialog(
               context: context,

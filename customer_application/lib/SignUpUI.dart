@@ -361,7 +361,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         SizedBox(height: 10,),
                         securityAnswerInput(),
                         SizedBox(height: 10,),
-                        CupertinoButton(child: Text('Open Maps'), onPressed: () {
+                        CupertinoButton(child: Text('Add Address'), onPressed: () {
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
                         },),
                         SizedBox(height: 10,),
