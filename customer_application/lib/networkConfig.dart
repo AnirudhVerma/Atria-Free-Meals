@@ -1,10 +1,17 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
+
+  BuildContext myContext;
+
+  initializeContext(BuildContext context){
+    myContext = context;
+  }
 
   factory NetworkCommon() {
     return _singleton;
