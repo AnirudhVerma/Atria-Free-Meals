@@ -5,9 +5,18 @@ import 'package:meta/meta.dart';
 abstract class SignUpEvent extends Equatable{}
 
 class GetOTP extends SignUpEvent {
+
+
+  GetOTP();
+
+  @override
+  List<Object> get props => null;
+}
+
+class DoOTPSignUP extends SignUpEvent {
   final String phoneNumber;
 
-  GetOTP({this.phoneNumber});
+  DoOTPSignUP({this.phoneNumber});
 
   @override
   List<Object> get props => [phoneNumber];
@@ -25,4 +34,12 @@ class RegistrationForm extends SignUpEvent{
   RegistrationForm();
   @override
   List<Object> get props => null;
+}
+
+class DoOTPSignUp extends SignUpEvent{
+  final String phoneNumber;
+  final String otp;
+  DoOTPSignUp({this.phoneNumber, this.otp});
+  @override
+  List<Object> get props => [phoneNumber,otp];
 }

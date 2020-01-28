@@ -52,10 +52,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static final navKey = new GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
+    //NetworkCommon().netWorkInitilize(context);
+  //  GlobalVariables().myContext = context;
     return MaterialApp(
 //      title: 'DSB Customer',
+      navigatorKey: MyApp.navKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -74,7 +78,7 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
 //  final String title;
-
+  static final navKey = new GlobalKey<NavigatorState>();
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -90,6 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String thePhoneNumber;
   String userName;
   var _myFocusNode = new FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    GlobalVariables().myContext = MyApp.navKey.currentState.overlay.context;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -402,7 +413,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  Center(
+               /*   Center(
                     child: Text(
                       " -OR- ",
                       style: TextStyle(
@@ -429,7 +440,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontWeight: FontWeight.normal),
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
@@ -534,7 +545,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         loader: (timeLeft) {
                           return Text(
-                            "Wait | $timeLeft",
+                            "Wait | $timeLeft  ",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -554,6 +565,7 @@ class _MyHomePageState extends State<MyHomePage> {
                              },
                              "mobilenumber":"${GlobalVariables().phoneNumber}"
                              }""";
+  //                          NetworkCommon().netWorkInitilize(context);
                             NetworkCommon()
                                   .myDio
                                   .post("/generateOTP", data: generateOTPJSON);
@@ -751,53 +763,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }*/
 
-  /*DELETE myStack*/
 
-  Widget myStack() {
-    return new Stack(
-      children: <Widget>[
-        Text("Hi"),
-        buildCenterInitialPIN(),
-        new Container(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-//                Padding(padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 47)),
-            SizedBox(
-              height: 820,
-            ),
-            Center(
-              child: Text(
-                " -OR- ",
-                style: TextStyle(
-                    fontSize: SizeConfig.permanentBlockSize * 1.5,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  mySignInBloc.add(DoSignInwithOTP());
-                },
-                child: Text(
-                  " Sign-in with OTP ",
-                  style: TextStyle(
-                      fontSize: SizeConfig.permanentBlockSize * 1.5,
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal),
-                ),
-              ),
-            ),
-//                loginButton(),
-          ],
-        ))
-      ],
-    );
-  }
 
   Row workingRow() {
     return Row(
@@ -846,11 +812,13 @@ class _MyHomePageState extends State<MyHomePage> {
     "type":"login"
     }""";
 
-      print("Resquest :: " + fetchUserDetailsString);
+
+      print('Context is not null ${context.toString()}');
+      print("Resquest111 :: " + fetchUserDetailsString);
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
-
+     // NetworkCommon().netWorkInitilize(context);
       Response response1 =
           await NetworkCommon().myDio.post("/fetchUserDetails", data: fetchUserDetailsString);
 
@@ -919,6 +887,20 @@ class _MyHomePageState extends State<MyHomePage> {
           textColor: Colors.white);
     } catch (e) {
       print(e);
+      showDialog(context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error in Main'),
+            content: Text(e.toString()),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text('OK'),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  }
+
+              ),
+            ],
+          ));
     }
   }
 

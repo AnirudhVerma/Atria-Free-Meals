@@ -23,3 +23,30 @@ class EnterOTPSignUpState extends SignUpState{
   @override
   List<Object> get props => null;
 }
+
+class showProgressBarSignUp extends SignUpState{
+  @override
+  List<Object> get props => null;
+}
+
+class ErrorStateSignUp extends SignUpState{
+
+  final String errorResp;
+
+  ErrorStateSignUp({this.errorResp});
+
+  @override
+  List<Object> get props => [errorResp];
+
+}
+class ErrorStateSignUpOtp extends SignUpState{
+
+  final String errorResp;
+
+  ErrorStateSignUpOtp({this.errorResp});
+
+  @override
+  List<Object> get props => [errorResp];
+
+}
+

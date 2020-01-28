@@ -3,6 +3,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:dio/dio.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
+import 'JSONResponseClasses/ValidateOTP.dart';
 import 'networkConfig.dart';
 
 class Repository {
@@ -51,22 +52,17 @@ class Repository {
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
 
+      NetworkCommon().netWorkInitilize(GlobalVariables().myContext);
       Response response1 = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: fetchUserDetailsString);
       print("THE Fetch User RESPONSE IS :: $response1");
-      Map<String, dynamic> map = jsonDecode(response1.toString());
+
+
       var myVar = jsonDecode(response1.toString());
-      var firstResponse = FirstResponse.fromJson(myVar);
 
-      FirstResponse fr1 = FirstResponse.fromJson(myVar);
-      GlobalVariables().firstResponse = fr1;
+      GlobalVariables().firstResponse = FirstResponse.fromJson(myVar);
 
-      FirstResponse fr = new FirstResponse();
-      fr = FirstResponse.fromJson(myVar);
-
-//      FirstResponse().myFirstResponse = FirstResponse.fromJson(myVar);
-      var userName = firstResponse.oUTPUTOBJECT.firstname;
 
       String generateOTPJSON = """{
         "additionalData":
@@ -80,8 +76,8 @@ class Repository {
     "mobilenumber":"$phoneNumber"
     }""";
 
-      print("RESPONSE CODE :: ${firstResponse.eRRORCODE}");
-      if (firstResponse.eRRORCODE == "00") {
+      print("RESPONSE CODE :: ${GlobalVariables().firstResponse.eRRORCODE}");
+      if (GlobalVariables().firstResponse.eRRORCODE == "00") {
         Response response2 = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
@@ -129,6 +125,136 @@ class Repository {
         resp = response1.toString();
         return response1.toString();
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+  getOTPSignUp(String phoneNumber) async {
+    try {
+      String fetchUserJSON = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+
+    },
+    "mobilenumber":"$phoneNumber",
+    "type":"signup",
+    "usertype":"C"
+    }""";
+
+      String generateOTPJSON = """{
+        "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"$phoneNumber"
+    }""";
+
+//      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
+//      print(response);
+      Response fetchUserResonse = await NetworkCommon()
+          .myDio
+          .post("/fetchUserDetails", data: fetchUserJSON);
+
+      var myFetchRespVar = jsonDecode(fetchUserResonse.toString());
+
+      GlobalVariables().firstResponse = FirstResponse.fromJson(myFetchRespVar);
+
+
+      print(fetchUserResonse.toString());
+      print(GlobalVariables().firstResponse.eRRORCODE);
+      print(GlobalVariables().firstResponse.eRRORMSG);
+      if(GlobalVariables().firstResponse.oUTPUTOBJECT!=null)
+        print(GlobalVariables().firstResponse.oUTPUTOBJECT.firstname);
+
+      print(GlobalVariables().firstResponse.toJson());
+
+      if (GlobalVariables().firstResponse.eRRORCODE == "00") {
+
+        Response generateOTPResponse = await NetworkCommon()
+            .myDio
+            .post("/generateOTP", data: generateOTPJSON);
+        var myOTPVar = jsonDecode(generateOTPResponse.toString());
+        var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
+        if (oTPResponse.eRRORCODE == "00") {
+
+          resp = "Success";
+          return "Success";
+        }else {
+          print('Something went wrong');
+          print("Response :: " + fetchUserResonse.toString());
+          resp = fetchUserResonse.toString();
+          return fetchUserResonse.toString();
+        }
+        print(fetchUserResonse.toString());
+//      displayToast(fetchUserResonse.toString());
+
+      }else {
+        print('Something went wrong');
+        print("Response :: " + fetchUserResonse.toString());
+        resp = fetchUserResonse.toString();
+        return fetchUserResonse.toString();
+      }
+
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  doOTPSignUp(String phoneNumber, String otp) async {
+    try {
+
+
+
+      String validateOTPJSON = """{
+                "additionalData":
+            {
+            "client_app_ver":"1.0.0",
+            "client_apptype":"DSB",
+            "platform":"ANDROID",
+            "vendorid":"17",
+            "ClientAppName":"ANIOSCUST"
+            },
+            "mobilenumber":"$phoneNumber",
+            "otp":"$otp"
+            }""";
+
+      Response validateOTPResponse = await NetworkCommon().myDio.post(
+        "/validateOTP",
+        data: validateOTPJSON,
+      );
+      print('The OTP user sent is $otp');
+      var myOTPResponse = jsonDecode(validateOTPResponse.toString());
+      var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
+
+      if (validateOTPObject.eRRORCODE == "00") {
+
+
+      //  mySignUpBloc.add(RegistrationForm());
+
+
+        resp = "Success";
+        return "Success";
+      }else {
+        print('Something went wrong');
+        print("Response :: " + validateOTPResponse.toString());
+        resp = validateOTPResponse.toString();
+        return validateOTPResponse.toString();
+      }
+
+
+
     } catch (e) {
       print(e);
     }

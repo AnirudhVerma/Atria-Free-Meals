@@ -1,16 +1,33 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:customer_application/CommonMethods.dart';
+import 'package:customer_application/GlobalVariables.dart';
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
+  List<int> certificateChainBytes =null;
+
+  BuildContext mContext;
 
   factory NetworkCommon() {
     return _singleton;
   }
 
   NetworkCommon._internal();
+
+  void netWorkInitilize(BuildContext context){
+    mContext = context;
+    print('Context is initilized******* ${context.toString()}');
+
+  }
 
   final JsonDecoder _decoder = new JsonDecoder();
 
@@ -31,41 +48,93 @@ class NetworkCommon {
     }
   }
 
+  readFile() async {
+
+
+    certificateChainBytes =
+        (await rootBundle.load('assets/certificate.pem')).buffer.asInt8List();
+
+
+
+  }
+
   // global configuration
   Dio get myDio {
     Dio dio = new Dio();
 
 //    dio.interceptors.add(alice.getDioInterceptor());
+//    dio.options.baseUrl = 'https://111.125.203.226:30001/doorstep'; // public server
 //    dio.options.baseUrl = 'http://111.125.203.226:30001/doorstep'; // public server
+
+
+//    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
     dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
 
-    // handle timeouts
+    // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s
     dio.options.receiveTimeout = 50000;
 
+    //dio.httpClientAdapter = new DefaultHttpClientAdapter();
+
+
+/*
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+      SecurityContext sc = new SecurityContext();
+      //file is the path of certificate
+
+//      final List<int> certificateChainBytes =
+//      (await rootBundle.load('assets/certificate.pem')).buffer.asInt8List();
+
+
+      sc.setTrustedCertificates(File("assets/certificate.pem").path, password: "DSB@2019");
+      //  sc.setTrustedCertificatesBytes(certificateChainBytes,password: "DSB@2019");
+      HttpClient httpClient = new HttpClient(context: sc);
+      return httpClient;
+    };
+*/
+
+    dio.options.contentType = Headers.jsonContentType;
+    // dio.httpClientAdapter = new BrowserHttpClientAdapter();
+    // dio.httpClientAdapter = new DefaultHttpClientAdapter();
+
+    /*(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+      SecurityContext sc = new SecurityContext();
+      //file is the path of certificate
+
+//      final List<int> certificateChainBytes =
+//      (await rootBundle.load('assets/certificate.pem')).buffer.asInt8List();
+
+
+      sc.setTrustedCertificates(File("assets/cert/certificate.pem").path, password: "DSB@2019");
+      //  sc.setTrustedCertificatesBytes(certificateChainBytes,password: "DSB@2019");
+      HttpClient httpClient = new HttpClient(context: sc);
+      return httpClient;
+    };*/
+
     dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+        .add(InterceptorsWrapper(
+        onRequest: (RequestOptions options) async {
 
-      // set the token
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('token');
-      if (token != null) {
-        options.headers["Authorization"] = "Bearer " + token;
-      }
+          // set the token
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String token = prefs.getString('token');
+          if (token != null) {
+            options.headers["Authorization"] = "Bearer " + token;
+          }
 
-      // set accept language
-      String lang = prefs.getString("lang");
-      if (lang != null) {
-        options.headers["Accept-Language"] = lang;
-      }
+          // set accept language
+          String lang = prefs.getString("lang");
+          if (lang != null) {
+            options.headers["Accept-Language"] = lang;
+          }
 
-      // print requests
-      print("Pre request:${options.method},${options.baseUrl}${options.path}");
-      print("Pre request:${options.headers.toString()}");
+          // print requests
+          print("Pre request:${options.method},${options.baseUrl}${options.path}");
+          print("Pre request:${options.headers.toString()}");
 
-      return options; //continue
-    }, onResponse: (Response response) async {
+          return options; //continue
+        }, onResponse: (Response response) async {
 
       final int statusCode = response.statusCode;
 
@@ -102,6 +171,36 @@ class NetworkCommon {
           print('response : ${response.toString()}');
           prefs.setString("user", _encoder.convert((resultContainer as Map)));
         }
+        if (response.request.path == "fetchUserDetails") {
+
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          final JsonDecoder _decoder = new JsonDecoder();
+          final JsonEncoder _encoder = new JsonEncoder();
+          final resultContainer = _decoder.convert(response.toString());
+          print('response : ${response.toString()}');
+          prefs.setString("user", _encoder.convert((resultContainer as Map)));
+        }
+
+      }else{
+
+        showDialog(context: mContext,
+            builder: (Context) => AlertDialog(
+              title: Text('Error'),
+              content: Text(
+                  '${response.statusCode}:'
+                  '${response.statusMessage}\n'
+
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text('OK'),
+                    onPressed: (){
+                      Navigator.pop(Context);
+                    }
+
+                ),
+              ],
+            ));
       }
 
       // log response
@@ -109,6 +208,55 @@ class NetworkCommon {
           "Response From:${response.request.method},${response.request.baseUrl}${response.request.path}");
       print("Response From:${response.toString()}");
       return response; // continue
+    }, onError: (DioError dioError){
+
+      print(
+          "<-- ${dioError.message} ${(dioError.response?.request != null ? (dioError.response.request.baseUrl + dioError.response.request.path) : 'URL')}");
+      print(
+          "${dioError.response != null ? dioError.response.data : 'Unknown Error'}");
+
+      String errMsg = "Error";
+      if(dioError.type == DioErrorType.CONNECT_TIMEOUT){
+        errMsg = "Connection Timed Out";
+      }else if(dioError.type == DioErrorType.RECEIVE_TIMEOUT){
+        errMsg = "RECEIVE_TIMEOUT";
+      }else if(dioError.type == DioErrorType.SEND_TIMEOUT){
+        errMsg = "SEND_TIMEOUT";
+      }else if(dioError.type == DioErrorType.CANCEL) {
+        errMsg = "CANCEL";
+      } else{
+        errMsg = "${dioError.response != null ? dioError.response.data : 'Unknown Error'}";
+      }
+
+      if(mContext!=null){
+        showDialog(context: mContext,
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              /*content: Text('${dioError.toString()} \n '
+                  '${dioError.type} \n'
+                  '$errMsg \n'
+                  '${dioError.response.toString()} \n'
+                  '${dioError.request.toString()} \n'),*/
+              content: Text('${dioError.type.toString()} \n'
+                  '$errMsg \n'),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text('OK'),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    }
+
+                ),
+              ],
+            ));
+      }else{
+        print('Context is ${mContext}');
+      }
+
+      print(
+          "Response From:${dioError.request.method},${dioError.request.baseUrl}${dioError.request.path}");
+      print("Response From:${dioError.toString()}");
+
     }
     ));
     return dio;

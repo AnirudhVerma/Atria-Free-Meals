@@ -82,6 +82,65 @@ class _MySignUpPageState extends State<MySignUpPage> {
               if (state is EnterOTPSignUpState) {
                 return enterOTPUI();
               }
+              if (state is showProgressBarSignUp) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is ErrorStateSignUp) {
+                var data = state.errorResp;
+                if (state.errorResp == null) {
+                  data = "OOPS, something went wrong";
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(data),
+                    MaterialButton(
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(18.0),
+                      ),
+                      child: Text(
+                        'Retry',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        mySignUpBloc.add(GetOTP());
+                      },
+                    ),
+                  ],
+                );
+              }
+              if (state is ErrorStateSignUpOtp) {
+                var data = state.errorResp;
+                if (state.errorResp == null) {
+                  data = "OOPS, something went wrong";
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(data),
+                    MaterialButton(
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(18.0),
+                      ),
+                      child: Text(
+                        'Retry',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        mySignUpBloc.add(EnterSignUpOTP());
+                      },
+                    ),
+                  ],
+                );
+              }
               return null;
             }),
       ),
@@ -728,57 +787,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
           onPressed: () async {
             //Implement Logic
 
-            String validateOTPJSON = """{
-                "additionalData":
-            {
-            "client_app_ver":"1.0.0",
-            "client_apptype":"DSB",
-            "platform":"ANDROID",
-            "vendorid":"17",
-            "ClientAppName":"ANIOSCUST"
-            },
-            "mobilenumber":"${myController.text}",
-            "otp":"${myOTPController.text}"
-            }""";
+            mySignUpBloc.add(DoOTPSignUp(phoneNumber:myController.text, otp: myOTPController.text ));
 
-            Response validateOTPResponse = await NetworkCommon().myDio.post(
-                  "/validateOTP",
-                  data: validateOTPJSON,
-                );
-            print('The OTP user sent is ${myOTPController.text}');
-            var myOTPResponse = jsonDecode(validateOTPResponse.toString());
-            var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
 
-            if (validateOTPObject.eRRORCODE == "00") {
-              /*
-          Response response3 = await NetworkCommon()
-              .myDio
-              .post("/validateOTP", data: validateOTPJSON);
-          print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
 
-              mySignUpBloc.add(RegistrationForm());
-            } else {
-              CommonMethods().toast(context, validateOTPObject.eRRORMSG);
-              /*Fluttertoast.showToast(
-                  msg: "${validateOTPObject.eRRORMSG}",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIos: 1,
-                  backgroundColor: Colors.blue,
-                  textColor: Colors.white);*/
-            }
 
-//            if (myController.text.length == 10) {
-//              getOTP(myController.text);
-//            }
-//            else{
-//              displayToast("Please Enter Valid Number");
-//            }
-
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(builder: (context) => MyApp2()),
-//            );
           },
           child: Text(
             "Verify OTP",
@@ -788,60 +801,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
         ));
   }
 
-  void getOTP(String phoneNumber) async {
-    try {
-      String fetchUserJSON = """{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
 
-    },
-    "mobilenumber":"$phoneNumber",
-    "type":"signup"
-    }""";
-
-      String generateOTPJSON = """{
-        "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    },
-    "mobilenumber":"$phoneNumber"
-    }""";
-
-//      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
-      Response fetchUserResonse = await NetworkCommon()
-          .myDio
-          .post("/fetchUserDetails", data: fetchUserJSON);
-      Response generateOTPResponse = await NetworkCommon()
-          .myDio
-          .post("/generateOTP", data: generateOTPJSON);
-      var myOTPVar = jsonDecode(generateOTPResponse.toString());
-      var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
-      if (oTPResponse.eRRORCODE == "00") {
-        /*
-          Response response3 = await NetworkCommon()
-              .myDio
-              .post("/validateOTP", data: validateOTPJSON);
-          print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
-
-//        final SignUpBloc = BlocProvider.of<SignUpBloc>(context);
-        mySignUpBloc.add(EnterSignUpOTP());
-      }
-      print(fetchUserResonse.toString());
-      displayToast(fetchUserResonse.toString());
-    } catch (e) {
-      print(e);
-    }
-  }
 
   void registerCustomer(String phoneNumber, String name, String password, String email, String securityQuestion, String securityAnswer, String alternatemob, String address, String latitude, String longitude, String pincode) async {
       String registerUserJSON = '''{
@@ -911,48 +871,15 @@ class _MySignUpPageState extends State<MySignUpPage> {
   void _validateInputs() {
     if (_formKey1.currentState.validate()) {
 //    If all data are correct then save data to out variables
-      getOTP(myController.text);
+//      getOTP(myController.text);
+      mySignUpBloc.add(DoOTPSignUP(phoneNumber: myController.text));
+
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {});
     }
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("My Title"),
-      ),
-      body: Row(
-        mainAxisAlignment : MainAxisAlignment.start,
-        mainAxisSize : MainAxisSize.max,
-        crossAxisAlignment : CrossAxisAlignment.center,
-
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              hintText: "Name"
-            ),
-          ),
-        ],
-      ),
-
-      */ /*floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),*/ /* // This trailing comma makes auto-formatting nicer for build methods.here!!!!!
-    );
-  }*/
 
   Future<bool> _onBackPressed() {
     Navigator.of(context).pop(true);
