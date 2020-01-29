@@ -3,6 +3,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:dio/dio.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
+import 'JSONResponseClasses/PortalLogin.dart';
 import 'JSONResponseClasses/ValidateOTP.dart';
 import 'networkConfig.dart';
 
@@ -253,6 +254,50 @@ class Repository {
         return validateOTPResponse.toString();
       }
 
+
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  doOTPLogin(String phoneNumber, String otp) async {
+    try {
+
+
+
+      String enteredOTP = otp;
+
+      String portalLogin2 =
+      """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}"}""";
+
+      Response response3 = await NetworkCommon().myDio.post(
+        "/portallogin",
+        data: portalLogin2,
+      );
+      print("The JSON request is :: $portalLogin2");
+      print("THE PORTAL LOGIN RESPONSE IS :: $response3");
+
+      var myResponse = jsonDecode(response3.toString());
+      var loginResponse = PortalLogin.fromJson(myResponse);
+
+
+      if(loginResponse.eRRORCODE=="00"){
+        GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
+        GlobalVariables().myPortalLogin = loginResponse;
+        print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
+        print("THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
+        resp = "Success";
+        return "Success";
+
+      }else {
+
+
+        print('Something went wrong');
+        print("Response :: " + response3.toString());
+        resp = response3.toString();
+        return response3.toString();
+      }
 
 
     } catch (e) {

@@ -48,7 +48,27 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       }
       else{
-        yield ErrorState(errorResp: Repository().resp ); // print the toast message
+
+        yield ErrorState(errorResp: Repository().resp, stateScreen: "1"); // print the toast message
+      }
+
+    }
+
+    if (event is ValidateOTPSignIN) {
+
+      yield showProgressBar(); //Comment this
+
+      String resp = await Repository().doOTPLogin(event.phoneNumber,event.otp);
+      print('repository().resp : ${Repository().resp }');
+      print('resp : $resp ');
+
+      if(Repository().resp == 'Success'){
+
+        yield LoginSuccessState();
+
+      }
+      else{
+        yield ErrorState(errorResp: Repository().resp, stateScreen:"2" ); // print the toast message
       }
 
     }

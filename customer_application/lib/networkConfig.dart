@@ -57,6 +57,9 @@ class NetworkCommon {
 
 
   }
+  static bool _certificateCheck(X509Certificate cert, String host, int port){
+    return host == 'local.domain.ext';
+  }
 
   // global configuration
   Dio get myDio {
@@ -69,11 +72,13 @@ class NetworkCommon {
 
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
+//    dio.options.baseUrl = 'http://10.10.20.62:30000/doorstep';    //office local server
     dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
 
     // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s
     dio.options.receiveTimeout = 50000;
+
 
     //dio.httpClientAdapter = new DefaultHttpClientAdapter();
 
@@ -110,6 +115,20 @@ class NetworkCommon {
       //  sc.setTrustedCertificatesBytes(certificateChainBytes,password: "DSB@2019");
       HttpClient httpClient = new HttpClient(context: sc);
       return httpClient;
+    };*/
+
+   /* (dio.httpClientAdapter as  DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+      SecurityContext sc = new SecurityContext();
+      //file is the path of certificate
+
+      HttpClient httpClient = new HttpClient()..badCertificateCallback = (_certificateCheck);
+      return httpClient;
+    };*/
+
+   /* (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+      print('onHttpClientCreate entered...');  // this code is never reached
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      return client;
     };*/
 
     dio.interceptors

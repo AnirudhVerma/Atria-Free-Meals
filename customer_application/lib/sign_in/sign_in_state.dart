@@ -31,6 +31,11 @@ class EnterOTPState extends SignInState{
   List<Object> get props => null;
 }
 
+class LoginSuccessState extends SignInState{
+  @override
+  List<Object> get props => null;
+}
+
 
 class showProgressBar extends SignInState{
   @override
@@ -40,11 +45,12 @@ class showProgressBar extends SignInState{
 class ErrorState extends SignInState{
 
   final String errorResp;
+  final String stateScreen;
 
-  ErrorState({this.errorResp});
+  ErrorState({this.errorResp, this.stateScreen});
 
   @override
-  List<Object> get props => [errorResp];
+  List<Object> get props => [errorResp,stateScreen];
 
 }
 

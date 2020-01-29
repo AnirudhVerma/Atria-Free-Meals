@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
@@ -11,6 +12,7 @@ import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -46,17 +48,29 @@ import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
   }
 }*/
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    HttpClient client = super.createHttpClient(context); //<<--- notice 'super'
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    return client;
+  }
+}
+
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   static final navKey = new GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     //NetworkCommon().netWorkInitilize(context);
-  //  GlobalVariables().myContext = context;
+    //  GlobalVariables().myContext = context;
     return MaterialApp(
 //      title: 'DSB Customer',
       navigatorKey: MyApp.navKey,
@@ -79,6 +93,7 @@ class MyHomePage extends StatefulWidget {
 
 //  final String title;
   static final navKey = new GlobalKey<NavigatorState>();
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -87,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _autoValidate = false;
   bool notVisible = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formOTPKey = GlobalKey<FormState>();
   final myController = TextEditingController();
   final myOTPController = TextEditingController();
   final nonDigit = new RegExp(r"(\D+)");
@@ -101,6 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
     GlobalVariables().myContext = MyApp.navKey.currentState.overlay.context;
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,63 +135,89 @@ class _MyHomePageState extends State<MyHomePage> {
           onWillPop: () async {
             return false;
           },
-          child: BlocBuilder<SignInBloc, SignInState>(
-              bloc: mySignInBloc,
-              builder: (context, state) {
-                if (state is InitialSignInState) {
+          child: BlocListener<SignInBloc, SignInState>(
+            bloc: mySignInBloc,
+            listener: (context, state) {
+              if (state is LoginSuccessState) {
+                Fluttertoast.showToast(
+                    msg: "Login Successful!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => MyMainPage()));
+              }
+            },
+            child: BlocBuilder<SignInBloc, SignInState>(
+                bloc: mySignInBloc,
+                builder: (context, state) {
+                  if (state is InitialSignInState) {
 //            return buildCenterInitialPIN();
 //          return myListView();
-                  return buildCenterOTP();
-                }
-                if (state is LoadingSignInState) {
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                }
-                if (state is ErrorSignInState) {
-                  return Center(child: Text('Login UnSuccessful'));
-                }
-                if (state is OTPSignInState) {
-                  return buildCenterOTP();
-                }
-                if (state is EnterOTPState) {
-                  return buildCenterEnterOTP();
-                }
-                if (state is showProgressBar) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (state is ErrorState) {
-                  var data = state.errorResp;
-                  if (state.errorResp == null) {
-                    data = "OOPS, something went wrong";
+                    return buildCenterOTP();
                   }
-                  return Column(
+                  if (state is LoadingSignInState) {
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  }
+                  if (state is ErrorSignInState) {
+                    return Center(child: Text('Login UnSuccessful'));
+                  }
+                  if (state is OTPSignInState) {
+                    return buildCenterOTP();
+                  }
+                  if (state is EnterOTPState) {
+                    return buildCenterEnterOTP();
+                  }
+                  if (state is showProgressBar) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is LoginSuccessState) {
+                    return Center(
+                      child: Text('This is blocbuilder screen'),
+                    );
+                  }
+
+                  if (state is ErrorState) {
+                    var data = state.errorResp;
+                    if (state.errorResp == null) {
+                      data = "OOPS, something went wrong";
+                    }
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(data),
                         MaterialButton(
                           color: Colors.blue,
                           shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(18.0),
+                            borderRadius: new BorderRadius.circular(18.0),
                           ),
                           child: Text(
                             'Retry',
                             style: TextStyle(
                                 color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold),
                           ),
                           onPressed: () {
-                            mySignInBloc.add(DoSignInwithOTP());
+                            if (state.stateScreen == "1") {
+                              mySignInBloc.add(DoSignInwithOTP());
+                            } else if (state.stateScreen == "2") {
+                              mySignInBloc.add(EnterOTP());
+                            }
                           },
                         ),
                       ],
-                  );
-                }
-                return null;
-              }),
+                    );
+                  }
+                  return null;
+                }),
+          ),
         ),
       ),
     );
@@ -261,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 15.0,
                       child: Container(
 //                      color: Colors.blue,
-                          ),
+                      ),
                     ),
                     pinInput(),
                     SizedBox(
@@ -287,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         " -OR- ",
                         style: TextStyle(
-                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                          //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.normal),
@@ -305,7 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           " Sign-in with OTP ",
                           style: TextStyle(
-                              //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
                               color: Colors.black,
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.normal),
@@ -352,11 +396,13 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.circular(16.0),
         ),
         elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),  // previous 2
+        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+        // previous 2
         // previous-10   0.8     SizeConfig.blockSizeHorizontal
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4), // previous 2.5
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+            // previous 2.5
             //previous-36     SizeConfig.blockSizeHorizontal * 1.5
             child: Form(
               key: _formKey,
@@ -413,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 20.0,
                   ),
-               /*   Center(
+                  /*   Center(
                     child: Text(
                       " -OR- ",
                       style: TextStyle(
@@ -489,7 +535,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
               //previous-36     SizeConfig.blockSizeHorizontal * 1.5
               child: Form(
-                key: _formKey,
+                key: _formOTPKey,
                 autovalidate: _autoValidate,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -537,7 +583,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: 30.0,
                         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                         child: Text(
-                          "Resend OTP",
+                          'Resend OTP',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -565,10 +611,10 @@ class _MyHomePageState extends State<MyHomePage> {
                              },
                              "mobilenumber":"${GlobalVariables().phoneNumber}"
                              }""";
-  //                          NetworkCommon().netWorkInitilize(context);
+                            //                          NetworkCommon().netWorkInitilize(context);
                             NetworkCommon()
-                                  .myDio
-                                  .post("/generateOTP", data: generateOTPJSON);
+                                .myDio
+                                .post("/generateOTP", data: generateOTPJSON);
 //                            generateOTP(myController.text);
                           }
                         },
@@ -603,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           " Sign-in with PIN ",
                           style: TextStyle(
-                              //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
                               color: Colors.black,
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.normal),
@@ -763,8 +809,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }*/
 
-
-
   Row workingRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -812,15 +856,15 @@ class _MyHomePageState extends State<MyHomePage> {
     "type":"login"
     }""";
 
-
       print('Context is not null ${context.toString()}');
       print("Resquest111 :: " + fetchUserDetailsString);
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
-     // NetworkCommon().netWorkInitilize(context);
-      Response response1 =
-          await NetworkCommon().myDio.post("/fetchUserDetails", data: fetchUserDetailsString);
+      // NetworkCommon().netWorkInitilize(context);
+      Response response1 = await NetworkCommon()
+          .myDio
+          .post("/fetchUserDetails", data: fetchUserDetailsString);
 
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
@@ -838,7 +882,6 @@ class _MyHomePageState extends State<MyHomePage> {
     },
     "mobilenumber":"$phoneNumber"
     }""";
-
 
       print("RESPONSE CODE :: ${firstResponse.eRRORCODE}");
       if (firstResponse.eRRORCODE == "00") {
@@ -887,18 +930,17 @@ class _MyHomePageState extends State<MyHomePage> {
           textColor: Colors.white);
     } catch (e) {
       print(e);
-      showDialog(context: context,
+      showDialog(
+          context: context,
           builder: (context) => AlertDialog(
             title: Text('Error in Main'),
             content: Text(e.toString()),
             actions: <Widget>[
               FlatButton(
                   child: Text('OK'),
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pop(context);
-                  }
-
-              ),
+                  }),
             ],
           ));
     }
@@ -917,7 +959,7 @@ class _MyHomePageState extends State<MyHomePage> {
     "mobilenumber":"$phoneNumber"
     }""";
     Response response2 =
-        await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
+    await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
     print('GENERATE OTP RESPONSE IS $response2');
   }
 
@@ -931,11 +973,11 @@ class _MyHomePageState extends State<MyHomePage> {
       maxLength: 10,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
-        onChanged: (phoneNumber){
-        if(phoneNumber.length == 10){
+      onChanged: (phoneNumber) {
+        if (phoneNumber.length == 10) {
           FocusScope.of(context).requestFocus(_myFocusNode);
         }
-        },
+      },
       validator: (phoneNumber) {
         if (phoneNumber.length < 10) {
           return 'Please enter a valid Phone Number!';
@@ -951,14 +993,14 @@ class _MyHomePageState extends State<MyHomePage> {
           contentPadding: EdgeInsets.all(16.0),
           prefixText: '+91 ',
           prefixStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           hintText: "Phone Number",
           suffixIcon: Icon(
             Icons.phone,
             color: Colors.blue,
           ),
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
     );
   }
 
@@ -967,14 +1009,17 @@ class _MyHomePageState extends State<MyHomePage> {
       maxLength: 6,
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
-      onChanged: (OTP){
-        if(OTP.length == 6){
+      onChanged: (OTP) {
+        if (OTP.length == 6) {
           FocusScope.of(context).requestFocus(_myFocusNode);
         }
       },
       validator: (OTP) {
         if (nonDigit.hasMatch(OTP)) {
           return 'Please enter only Numbers!';
+        }
+        if (OTP.length < 6){
+          return 'Please Enter 6 digits OTP';
         }
         return null;
       },
@@ -983,7 +1028,7 @@ class _MyHomePageState extends State<MyHomePage> {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(16.0),
           prefixStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           hintText: "Enter OTP",
           suffixIcon: IconButton(
             icon: Icon(
@@ -991,89 +1036,20 @@ class _MyHomePageState extends State<MyHomePage> {
               Icons.send,
               color: Colors.blue,
             ),
-            onPressed: () async {
-              String phoneNumber = myController.text;
+            onPressed: () {
+              _validateOTPInput();
+
+          /*    String phoneNumber = myController.text;
               String OTP = myOTPController.text;
-              String validateOTPJSON = """{
-                    "additionalData":
-                {
-                "client_app_ver":"1.0.0",
-                "client_apptype":"DSB",
-                "platform":"ANDROID",
-                "vendorid":"17",
-                "ClientAppName":"ANIOSCUST"
-                },
-                "mobilenumber":"$phoneNumber",
-                "otp":"${myOTPController.text}"
-                }""";
 
-              String enteredOTP = myOTPController.text;
+              mySignInBloc
+                  .add(ValidateOTPSignIN(phoneNumber: phoneNumber, otp: OTP));*/
 
-              String portalLogin2 =
-                  """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}"}""";
 
-              Response response3 = await NetworkCommon().myDio.post(
-                    "/portallogin",
-                    data: portalLogin2,
-                  );
-              print("The JSON request is :: $portalLogin2");
-              print("THE PORTAL LOGIN RESPONSE IS :: $response3");
-
-              var myResponse = jsonDecode(response3.toString());
-              var loginResponse = PortalLogin.fromJson(myResponse);
-              GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
-              GlobalVariables().myPortalLogin = loginResponse;            // TODO: fetch mobile number from from login response instead of creating a separate variable
-              CommonMethods().toast(context, loginResponse.eRRORMSG);
-              print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
-              print("THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
-              print('');
-
-              if (loginResponse.eRRORCODE == "00") {
-                Fluttertoast.showToast(
-                    msg: "Login Successful!",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => MyMainPage(
-                              /*title: 'Welcome $userName!',
-                              phoneNumber: phoneNumber,
-                              userid: loginResponse.oUTPUT.user.userid,  // TODO: stop sending userid from one widget to other
-                              accessToken:
-                                  loginResponse.oUTPUT.token.accessToken,*/
-                            )));
-              } else {
-                Fluttertoast.showToast(
-                    msg: "Login not Successful ${loginResponse.eRRORMSG}",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-
-              /*var myOTPValidation = jsonDecode(response3.toString());
-              var oTPResponse = ValidateOTP.fromJson(myOTPValidation);
-              print("THE VALIDATION RESPONSE IS + ${oTPResponse.eRRORCODE}");
-              if (oTPResponse.eRRORCODE == "00") {
-                Fluttertoast.showToast(
-                    msg: "LOGIN SUCCESSFUL!",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.blue,
-                    textColor: Colors.white);
-              }*/
             },
           ),
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
     );
   }
 
@@ -1118,7 +1094,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
     );
   }
 
@@ -1220,10 +1196,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             );*/
-
           },
           child: Text(
-            "Get OTP",
+            'GET OTP',
             style: TextStyle(color: Colors.white, fontSize: 18),
             textAlign: TextAlign.center,
           ),
@@ -1232,18 +1207,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget enterArgonOTPButton() {
     return ArgonButton(
+
       elevation: 5.0,
       minWidth: SizeConfig.blockSizeHorizontal * 70,
       borderRadius: 30.0,
       color: Colors.blue,
       padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
       child: Text(
-        "Get OTP",
+        'Get OTP',
         style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w700
-        ),
+            color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
       ),
       loader: Container(
         padding: EdgeInsets.all(10),
@@ -1254,11 +1227,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       onTap: (startLoading, stopLoading, btnState) {
         startLoading();
-        _validateInputs();
+
+       mySignInBloc.add(DoOTPSignIN(phoneNumber: myController.text));
       },
     );
   }
-
 
   Widget loginWithPINRow() {
     return Row(
@@ -1346,7 +1319,7 @@ class _MyHomePageState extends State<MyHomePage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Text(
-          "  Sign-In to Continue",
+          "  Sign In to Continue",
           style: TextStyle(
               fontSize: 16,
               fontFamily: 'HelveticaNeue',
@@ -1380,12 +1353,43 @@ class _MyHomePageState extends State<MyHomePage> {
       String phoneNumber = myController.text;
       mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
 
+
 //      _formKey.currentState.save();
-    } else {
+    }
+
+    else {
 //    If all data are not valid then start auto validation.
       setState(() {
         _autoValidate = true;
       });
+
+
+    }
+  }
+
+  void _validateOTPInput() {
+    if (_formOTPKey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+
+
+    //  mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
+
+      String phoneNumber = myController.text;
+      String OTP = myOTPController.text;
+
+      mySignInBloc
+          .add(ValidateOTPSignIN(phoneNumber: phoneNumber, otp: OTP));
+
+//      _formKey.currentState.save();
+    }
+
+    else {
+//    If all data are not valid then start auto validation.
+      setState(() {
+        _autoValidate = true;
+      });
+
+
     }
   }
 
@@ -1394,5 +1398,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
     myController.dispose();
     mySignInBloc.close();
+
   }
 }

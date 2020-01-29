@@ -452,7 +452,8 @@ class _MyMainPageState extends State<MyMainPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Welcome ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}!'),
+          title: Text(
+              'Welcome ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}!'),
           automaticallyImplyLeading: false,
         ),
         body: SizedBox.expand(
@@ -465,73 +466,81 @@ class _MyMainPageState extends State<MyMainPage> {
               Container(
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 15,),
-                    Text('Select a Service',style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Select a Service',
+                      style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Expanded(child: servicesWidget()),
                   ],
                 ),
               ),
               Container(
-                child: Column(
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
+                  child: Column(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  SizedBox(
+                    width: 500.0,
+                    child: CupertinoSegmentedControl<int>(
+                      children: services,
+                      onValueChanged: (int val) {
+                        setState(() {
+                          currentValue = val;
+                        });
+                      },
+                      groupValue: currentValue,
                     ),
-                    SizedBox(
-                      width: 500.0,
-                      child: CupertinoSegmentedControl<int>(
-                        children: services,
-                        onValueChanged: (int val) {
-                          setState(() {
-                            currentValue = val;
-                          });
-                        },
-                        groupValue: currentValue,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 32.0,
+                        horizontal: 16.0,
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
+                      child: Container(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 32.0,
-                          horizontal: 16.0,
+                          vertical: 10.0,
+                          horizontal: 10.0,
                         ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 10.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: CupertinoColors.white,
-                            borderRadius: BorderRadius.circular(3.0),
-                            boxShadow: const <BoxShadow>[
-                              BoxShadow(
-                                offset: Offset(0.0, 3.0),
-                                blurRadius: 5.0,
-                                spreadRadius: -1.0,
-                                color: _colorOne,
-                              ),
-                              BoxShadow(
-                                offset: Offset(0.0, 6.0),
-                                blurRadius: 10.0,
-                                spreadRadius: 0.0,
-                                color: _colorTwo,
-                              ),
-                              BoxShadow(
-                                offset: Offset(0.0, 1.0),
-                                blurRadius: 18.0,
-                                spreadRadius: 0.0,
-                                color: _colorThree,
-                              ),
-                            ],
-                          ),
-                          child: icons[currentValue],
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.white,
+                          borderRadius: BorderRadius.circular(3.0),
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(
+                              offset: Offset(0.0, 3.0),
+                              blurRadius: 5.0,
+                              spreadRadius: -1.0,
+                              color: _colorOne,
+                            ),
+                            BoxShadow(
+                              offset: Offset(0.0, 6.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 0.0,
+                              color: _colorTwo,
+                            ),
+                            BoxShadow(
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 18.0,
+                              spreadRadius: 0.0,
+                              color: _colorThree,
+                            ),
+                          ],
                         ),
+                        child: icons[currentValue],
                       ),
                     ),
-                  ],
-                )
-                /*CupertinoSegmentedControl<int>(
+                  ),
+                ],
+              )
+                  /*CupertinoSegmentedControl<int>(
                   children: services,
                   onValueChanged: (int val){
                     setState(() {
@@ -540,7 +549,7 @@ class _MyMainPageState extends State<MyMainPage> {
                   },
                   groupValue: currentValue,
                 ),*/
-              ),
+                  ),
               Container(
                 color: Colors.blue,
                 child: ListView(
@@ -639,10 +648,13 @@ class _MyMainPageState extends State<MyMainPage> {
                       ),
                     ),
                     Center(
-                        child: RaisedButton(child: Text('LOGOUT',),
-                        textColor: Colors.white,
-                        onPressed: logout,
-                        color: Colors.blue,
+                        child: RaisedButton(
+                      child: Text(
+                        'LOGOUT',
+                      ),
+                      textColor: Colors.white,
+                      onPressed: logout,
+                      color: Colors.blue,
                     )),
                   ],
                 ),
@@ -662,6 +674,7 @@ class _MyMainPageState extends State<MyMainPage> {
                 activeColor: Colors.blueGrey,
                 inactiveColor: Colors.blue,
                 icon: Icon(Icons.home)),
+
             BottomNavyBarItem(
                 title: Text('My Services'),
                 activeColor: Colors.red,

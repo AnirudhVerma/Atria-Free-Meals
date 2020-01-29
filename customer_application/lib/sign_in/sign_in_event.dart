@@ -24,6 +24,7 @@ class DoSignInwithOTP extends SignInEvent{
 
 }
 
+
 class EnterOTP extends SignInEvent{
   EnterOTP();
   @override
@@ -35,4 +36,12 @@ class DoOTPSignIN extends SignInEvent{
   DoOTPSignIN({this.phoneNumber});
   @override
   List<Object> get props => [phoneNumber];
+}
+
+class ValidateOTPSignIN extends SignInEvent{
+  final String phoneNumber;
+  final String otp;
+  ValidateOTPSignIN({this.phoneNumber,this.otp});
+  @override
+  List<Object> get props => [phoneNumber,otp];
 }
