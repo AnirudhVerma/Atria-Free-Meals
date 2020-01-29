@@ -5,6 +5,7 @@ import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/JSONResponseClasses/SelectedService.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
 class GlobalVariables{
   String accessToken = '90';
@@ -37,6 +38,8 @@ class GlobalVariables{
   String longitude;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
+
+  BuildContext myContext;
 
   factory GlobalVariables() {
     return myGlobalVariables;
