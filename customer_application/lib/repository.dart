@@ -59,11 +59,9 @@ class Repository {
           .post("/fetchUserDetails", data: fetchUserDetailsString);
       print("THE Fetch User RESPONSE IS :: $response1");
 
-
       var myVar = jsonDecode(response1.toString());
 
       GlobalVariables().firstResponse = FirstResponse.fromJson(myVar);
-
 
       String generateOTPJSON = """{
         "additionalData":
@@ -119,8 +117,7 @@ class Repository {
           resp = response2.toString();
           return response2.toString();
         }
-      }
-      else {
+      } else {
         print('Something went wrong');
         print("Response :: " + response1.toString());
         resp = response1.toString();
@@ -130,7 +127,6 @@ class Repository {
       print(e);
     }
   }
-
 
   getOTPSignUp(String phoneNumber) async {
     try {
@@ -171,27 +167,24 @@ class Repository {
 
       GlobalVariables().firstResponse = FirstResponse.fromJson(myFetchRespVar);
 
-
       print(fetchUserResonse.toString());
       print(GlobalVariables().firstResponse.eRRORCODE);
       print(GlobalVariables().firstResponse.eRRORMSG);
-      if(GlobalVariables().firstResponse.oUTPUTOBJECT!=null)
+      if (GlobalVariables().firstResponse.oUTPUTOBJECT != null)
         print(GlobalVariables().firstResponse.oUTPUTOBJECT.firstname);
 
       print(GlobalVariables().firstResponse.toJson());
 
       if (GlobalVariables().firstResponse.eRRORCODE == "00") {
-
         Response generateOTPResponse = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
         var myOTPVar = jsonDecode(generateOTPResponse.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
         if (oTPResponse.eRRORCODE == "00") {
-
           resp = "Success";
           return "Success";
-        }else {
+        } else {
           print('Something went wrong');
           print("Response :: " + fetchUserResonse.toString());
           resp = fetchUserResonse.toString();
@@ -200,14 +193,12 @@ class Repository {
         print(fetchUserResonse.toString());
 //      displayToast(fetchUserResonse.toString());
 
-      }else {
+      } else {
         print('Something went wrong');
         print("Response :: " + fetchUserResonse.toString());
         resp = fetchUserResonse.toString();
         return fetchUserResonse.toString();
       }
-
-
     } catch (e) {
       print(e);
     }
@@ -215,9 +206,6 @@ class Repository {
 
   doOTPSignUp(String phoneNumber, String otp) async {
     try {
-
-
-
       String validateOTPJSON = """{
                 "additionalData":
             {
@@ -232,30 +220,65 @@ class Repository {
             }""";
 
       Response validateOTPResponse = await NetworkCommon().myDio.post(
-        "/validateOTP",
-        data: validateOTPJSON,
-      );
+            "/validateOTP",
+            data: validateOTPJSON,
+          );
       print('The OTP user sent is $otp');
       var myOTPResponse = jsonDecode(validateOTPResponse.toString());
       var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
 
       if (validateOTPObject.eRRORCODE == "00") {
-
-
-      //  mySignUpBloc.add(RegistrationForm());
-
+        //  mySignUpBloc.add(RegistrationForm());
 
         resp = "Success";
         return "Success";
-      }else {
+      } else {
         print('Something went wrong');
         print("Response :: " + validateOTPResponse.toString());
         resp = validateOTPResponse.toString();
         return validateOTPResponse.toString();
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String> resendOTP(String phoneNumber) async {
+    try {
 
 
 
+      String generateOTPJSON = """{
+                                 "additionalData":
+                             {
+                             "client_app_ver":"1.0.0",
+                             "client_apptype":"DSB",
+                             "platform":"ANDROID",
+                             "vendorid":"17",
+                             "ClientAppName":"ANIOSCUST"
+                             },
+                             "mobilenumber":"$phoneNumber"
+                             }""";
+
+
+
+
+      Response resendOTPResponse = await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
+
+
+      var myOTPResponse = jsonDecode(resendOTPResponse.toString());
+      var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
+
+      if (validateOTPObject.eRRORCODE == "00") {
+
+        resp = "Success";
+        return "Success";
+      } else {
+        print('Something went wrong');
+        print("Response :: " + resendOTPResponse.toString());
+        resp = resendOTPResponse.toString();
+        return resendOTPResponse.toString();
+      }
     } catch (e) {
       print(e);
     }
@@ -263,43 +286,35 @@ class Repository {
 
   doOTPLogin(String phoneNumber, String otp) async {
     try {
-
-
-
       String enteredOTP = otp;
 
       String portalLogin2 =
-      """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}"}""";
+          """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}"}""";
 
       Response response3 = await NetworkCommon().myDio.post(
-        "/portallogin",
-        data: portalLogin2,
-      );
+            "/portallogin",
+            data: portalLogin2,
+          );
       print("The JSON request is :: $portalLogin2");
       print("THE PORTAL LOGIN RESPONSE IS :: $response3");
 
       var myResponse = jsonDecode(response3.toString());
       var loginResponse = PortalLogin.fromJson(myResponse);
 
-
-      if(loginResponse.eRRORCODE=="00"){
+      if (loginResponse.eRRORCODE == "00") {
         GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
         GlobalVariables().myPortalLogin = loginResponse;
         print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
-        print("THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
+        print(
+            "THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
         resp = "Success";
         return "Success";
-
-      }else {
-
-
+      } else {
         print('Something went wrong');
         print("Response :: " + response3.toString());
         resp = response3.toString();
         return response3.toString();
       }
-
-
     } catch (e) {
       print(e);
     }

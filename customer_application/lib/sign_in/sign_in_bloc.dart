@@ -1,3 +1,4 @@
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/repository.dart';
 import '../CommonMethods.dart';
 import '../bloc.dart';
@@ -53,6 +54,29 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       }
 
     }
+    if (event is EventResendOTP) {
+
+//      yield showProgressBar(); //Comment this
+
+      String resp = await Repository().resendOTP(event.phoneNumber);
+      print('repository().resp : ${Repository().resp }');
+      print('resp : $resp ');
+
+      if(Repository().resp == 'Success'){
+
+
+        CommonMethods().toast(GlobalVariables().myContext, 'Resend OTP Request Sent');
+
+
+      }
+      else{
+
+       // yield ErrorState(errorResp: Repository().resp, stateScreen: "1");
+        CommonMethods().toast(GlobalVariables().myContext, Repository().resp);
+      }
+
+    }
+
 
     if (event is ValidateOTPSignIN) {
 

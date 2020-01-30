@@ -31,6 +31,16 @@ class EnterOTP extends SignInEvent{
   List<Object> get props => null;
 }
 
+
+
+
+class EventResendOTP extends SignInEvent{
+  final String phoneNumber;
+  EventResendOTP({this.phoneNumber});
+  @override
+  List<Object> get props => [phoneNumber];
+}
+
 class DoOTPSignIN extends SignInEvent{
   final String phoneNumber;
   DoOTPSignIN({this.phoneNumber});

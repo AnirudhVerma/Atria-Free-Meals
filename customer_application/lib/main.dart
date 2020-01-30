@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
@@ -9,6 +10,7 @@ import 'package:customer_application/MainUI.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/SignUpUI.dart';
 import 'package:customer_application/bloc.dart';
+import 'package:customer_application/repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String thePhoneNumber;
   String userName;
   var _myFocusNode = new FocusNode();
+  var _timeLeft;
 
   @override
   void initState() {
@@ -223,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Container buildCenterInitialPIN() {
+  /*Container buildCenterInitialPIN() {
     return Container(
       alignment: Alignment.center,
       //  color: Colors.grey[200],
@@ -286,13 +289,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    /*Text(
+                    *//*Text(
                         "DOOR-STEP BANKING",
 
                         style: TextStyle(fontSize: SizeConfig.permanentBlockSize * 2.5 ,
                             color: Colors.blue,
                             fontWeight: FontWeight.normal),
-                      ),*/
+                      ),*//*
                     SizedBox(
                       height: 10.0,
                     ),
@@ -362,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-  }
+  }*/
 
   Container buildCenterOTP() {
     return Container(
@@ -572,7 +575,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     //loginWithOTPRow(),
                     Center(
-                      child: ArgonTimerButton(
+                      child:GestureDetector(child: Text('Resend OTP', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),),onTap: () async {
+
+//                          mySignInBloc.add(EventResendOTP(phoneNumber: myController.text));
+
+                          String response = await Repository().resendOTP(myController.text);
+                          if(response == 'Success'){
+                            CommonMethods().toast(context, 'Resend OTP request sent');
+                          }
+                          else{
+                            CommonMethods().toast(context, 'Unable to send request');
+                          }
+                      },
+                      ),
+                      /*ArgonTimerButton(
                         elevation: 5.0,
                         color: Colors.redAccent,
                         initialTimer: 30,
@@ -589,9 +605,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        loader: (timeLeft) {
+                        loader: (_timeLeft) {
                           return Text(
-                            "Wait | $timeLeft  ",
+                            "Wait | $_timeLeft  ",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -609,22 +625,81 @@ class _MyHomePageState extends State<MyHomePage> {
                              "vendorid":"17",
                              "ClientAppName":"ANIOSCUST"
                              },
-                             "mobilenumber":"${GlobalVariables().phoneNumber}"
+                             "mobilenumber":"$myController.text"
                              }""";
-                            //                          NetworkCommon().netWorkInitilize(context);
                             NetworkCommon()
                                 .myDio
                                 .post("/generateOTP", data: generateOTPJSON);
-//                            generateOTP(myController.text);
+                            startTimer();
+                          }
+                          if(btnState == ButtonState.Busy){
+                            CommonMethods().toast(context, 'Please wait to resend OTP');
                           }
                         },
-                      ),
+                      ),*/
                     ),
                     SizedBox(
                       height: 15.0,
                     ),
+                    Center(
+                      child:GestureDetector(child: Text('CANCEL', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),onTap: () async {
+
+                        mySignInBloc.add(DoSignInwithOTP());
+
+                      },
+                      ),
+                      /*ArgonTimerButton(
+                        elevation: 5.0,
+                        color: Colors.redAccent,
+                        initialTimer: 30,
+                        // Optional
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        minWidth: MediaQuery.of(context).size.width * 0.30,
+                        borderRadius: 30.0,
+                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        child: Text(
+                          'Resend OTP',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        loader: (_timeLeft) {
+                          return Text(
+                            "Wait | $_timeLeft  ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          );
+                        },
+                        onTap: (startTimer, btnState) {
+                          if (btnState == ButtonState.Idle) {
+                            String generateOTPJSON = """{
+                                 "additionalData":
+                             {
+                             "client_app_ver":"1.0.0",
+                             "client_apptype":"DSB",
+                             "platform":"ANDROID",
+                             "vendorid":"17",
+                             "ClientAppName":"ANIOSCUST"
+                             },
+                             "mobilenumber":"$myController.text"
+                             }""";
+                            NetworkCommon()
+                                .myDio
+                                .post("/generateOTP", data: generateOTPJSON);
+                            startTimer();
+                          }
+                          if(btnState == ButtonState.Busy){
+                            CommonMethods().toast(context, 'Please wait to resend OTP');
+                          }
+                        },
+                      ),*/
+                    ),
 //                  signUpRow(),
-                    workingRow(),
+                    /*workingRow(),
                     SizedBox(
                       height: 20.0,
                     ),
@@ -655,7 +730,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontWeight: FontWeight.normal),
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               )),
@@ -1205,7 +1280,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget enterArgonOTPButton() {
+  /*Widget enterArgonOTPButton() {
     return ArgonButton(
 
       elevation: 5.0,
@@ -1228,10 +1303,10 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: (startLoading, stopLoading, btnState) {
         startLoading();
 
-       mySignInBloc.add(DoOTPSignIN(phoneNumber: myController.text));
+        mySignInBloc.add(DoOTPSignIN(phoneNumber: myController.text));
       },
     );
-  }
+  }*/
 
   Widget loginWithPINRow() {
     return Row(
@@ -1349,21 +1424,15 @@ class _MyHomePageState extends State<MyHomePage> {
   void _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
-
       String phoneNumber = myController.text;
       mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
-
-
 //      _formKey.currentState.save();
     }
-
     else {
 //    If all data are not valid then start auto validation.
       setState(() {
         _autoValidate = true;
       });
-
-
     }
   }
 

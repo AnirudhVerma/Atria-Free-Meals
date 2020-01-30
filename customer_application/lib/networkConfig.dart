@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
-  List<int> certificateChainBytes =null;
+  List<int> certificateChainBytes = null;
 
   BuildContext mContext;
 
