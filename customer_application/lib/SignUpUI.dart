@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
-import 'package:customer_application/JSONResponseClasses/ValidateOTP.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
-import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'SizeConfig.dart';
-import 'networkConfig.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:crypto/crypto.dart';
 
 /*void main() => runApp(MyApp());
 
@@ -43,6 +37,7 @@ class MySignUpPage extends StatefulWidget {
 }
 
 class _MySignUpPageState extends State<MySignUpPage> {
+
   final myController = TextEditingController();
   final myPINController = TextEditingController();
   final myNameController = TextEditingController();
@@ -150,7 +145,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
             }),
       ),
     );
-
     /*return Container(
       child: Column(
         children: <Widget>[
@@ -221,7 +215,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
                     SizedBox(height: 10),
                     OTPButton(),
                     SizedBox(height: 10),
-
                     /*nameInput(),
                     SizedBox(height: 10),
                     addressInput(),
@@ -249,14 +242,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
           fit: BoxFit.cover,
         ),
         gradient: RadialGradient(
-          // Where t/*decoration: BoxDecoration(
-          //            image: DecorationImage(
-          //              image: AssetImage('assets/images/myBackground.png'),
-          //              fit: BoxFit.cover,
-          //            ),*/he linear gradient begins and ends
-//            begin: Alignment.topRight,
-//            end: Alignment.bottomLeft,
-          // Add one stop for each color. Stops should increase from 0 to 1
           radius: 0.1,
           stops: [0.1, 0.5, 0.7, 0.9],
           colors: [
@@ -316,7 +301,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
                     SizedBox(height: 10),
                     validateOTPButton(),
                     SizedBox(height: 10),
-
                     /*nameInput(),
                     SizedBox(height: 10),
                     addressInput(),
@@ -397,7 +381,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         SizedBox(height: 10,),
                         securityAnswerInput(),
                         SizedBox(height: 10,),
-                        CupertinoButton(child: Text('Add Address'), onPressed: () {
+                        CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
                         },),
                         SizedBox(height: 10,),
@@ -411,15 +395,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
   }
 
   String dropdownValue = myItems[1];
-
-  @override
-  Widget build1(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: dropDown(),
-      ),
-    );
-  }
 
   Widget dropDown() {
     return Padding(
@@ -740,18 +715,17 @@ class _MySignUpPageState extends State<MySignUpPage> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
             _validateInputs();
+          /*  if (myController.text.length == 10) {
+              getOTP(myController.text);
+            }
+            else{
+              displayToast("Please Enter Valid Number");
+            }
 
-//            if (myController.text.length == 10) {
-//              getOTP(myController.text);
-//            }
-//            else{
-//              displayToast("Please Enter Valid Number");
-//            }
-
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(builder: (context) => MyApp2()),
-//            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp2()),
+            );*/
           },
           child: Text(
             "GET OTP",
@@ -771,12 +745,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () async {
             //Implement Logic
-
             mySignUpBloc.add(DoOTPSignUp(phoneNumber:myController.text, otp: myOTPController.text ));
-
-
-
-
           },
           child: Text(
             "Verify OTP",
@@ -785,10 +754,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
           ),
         ));
   }
-
-
-
-
 
   Widget signUpButton() {
     return Material(
@@ -799,14 +764,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
           minWidth: SizeConfig.blockSizeHorizontal * 70,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-
-            //Replace with registrationFormValidate inputs
-
-
-
               _validateRegistrationForm();
-
-
           },
           child: Text(
             "Sign-Up!",
@@ -833,16 +791,12 @@ class _MySignUpPageState extends State<MySignUpPage> {
       CommonMethods().toast(context, 'Please Choose an address');
     }
     if(_registrationFormKey.currentState.validate()){
-      Repository().registerCustomer(myController.text, myNameController.text, myPINController.text, myEmailController.text, 'SecurityQuestion', mySecurityAnswer.text, myAlternatePhoneNumberController.text, myAddressController.text, GlobalVariables().latitude, GlobalVariables().longitude, myPINController.text);
+      Repository().registerCustomer(myController.text, myNameController.text, myPINController.text, myEmailController.text, dropdownValue, mySecurityAnswer.text, myAlternatePhoneNumberController.text, myAddressController.text, GlobalVariables().latitude, GlobalVariables().longitude, myPINController.text);
       //  make register user api call
       //  registerCustomer(phoneNumber, name, password, email, securityQuestion, securityAnswer, alternatemob, address, latitude, longitude, pincode);
        }
     else{
       setState(() {});
     }
-  }
-
-  Future<bool> _onBackPressed() {
-    Navigator.of(context).pop(true);
   }
 }

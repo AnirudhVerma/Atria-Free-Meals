@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/SignUpUI.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,8 +38,6 @@ class _MyMapsAppState extends State<MyMapsApp> {
 
     List<Placemark> placemark = await Geolocator().placemarkFromPosition(currentLocation);
     print('Latitude is ${currentLocation.latitude}');
-
-
 
     setState(() {
       _markers.clear();
@@ -116,7 +115,12 @@ class _MyMapsAppState extends State<MyMapsApp> {
                           onPressed: () {
                             GlobalVariables().registrationLatitude = rLatitude;
                             GlobalVariables().registrationLongitude = rLongitude;
+                            if(GlobalVariables().registrationLatitude == null && GlobalVariables().registrationLongitude == null){
                           Navigator.pop(context);
+                            }
+                            else{
+                              CommonMethods().toast(context, "Please Select an Address");
+                            }
                             },
                           child: Text(
                             "Select this Address",
