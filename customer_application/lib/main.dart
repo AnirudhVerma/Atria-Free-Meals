@@ -130,10 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: false,
-      /*appBar: AppBar(
-        title: Text(widget.title),
-      ),*/
-      body: /*buildCenterInitial(),*/ Center(
+      body:  Center(
         child: WillPopScope(
           onWillPop: () async {
             return false;
@@ -912,7 +909,6 @@ class _MyHomePageState extends State<MyHomePage> {
     "client_apptype":"DSB",
     "platform":"ANDROID",
     "vendorid":"17"
-
     },
     "mobilenumber":"$phoneNumber"
     }""";
@@ -1019,7 +1015,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ));
     }
-  }
+  }  // Delete
 
   generateOTP(String phoneNumber) async {
     String generateOTPJSON = """{
@@ -1036,12 +1032,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Response response2 =
     await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
     print('GENERATE OTP RESPONSE IS $response2');
-  }
+  }   // Delete
 
   Future navigateTosignUp(context) async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MySignUpPage()));
-  }
+  }   // Delete
 
   Widget phoneNumberInput() {
     return TextFormField(
@@ -1113,14 +1109,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             onPressed: () {
               _validateOTPInput();
-
           /*    String phoneNumber = myController.text;
               String OTP = myOTPController.text;
 
               mySignInBloc
                   .add(ValidateOTPSignIN(phoneNumber: phoneNumber, otp: OTP));*/
-
-
             },
           ),
           border:

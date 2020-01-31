@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/ValidateOTP.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/bloc.dart';
+import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +46,9 @@ class _MySignUpPageState extends State<MySignUpPage> {
   final myController = TextEditingController();
   final myPINController = TextEditingController();
   final myNameController = TextEditingController();
+  final myEmailController = TextEditingController();
+  final mySecurityAnswer = TextEditingController();
+  final myAlternatePhoneNumberController = TextEditingController();
   final myAddressController = TextEditingController();
   final myOTPController = TextEditingController();
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
@@ -144,14 +149,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
               return null;
             }),
       ),
-//      floatingActionButton: FloatingActionButton(onPressed: () {},
-//        child: loginButton(),
-//      ),
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: null,
-//        tooltip: 'Increment',
-//        child: Icon(Icons.add),
-//      ), // This trailing comma makes auto-formatting nicer for build methods.here!!!!!
     );
 
     /*return Container(
@@ -167,20 +164,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                 return getOTPUI();
               }
               return null;
-                 */ /*return Scaffold(
-                   appBar: AppBar(
-                     title: Text("Default UI"),
-                ),
-              );*/ /*
-
-            }),
-          ),
-          Center(
-            child: Text("Centre Text"),
-          )
-        ],
-      ),
-    );*/
+                 */
   }
 
   Container getOTPUI() {
@@ -192,13 +176,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
           fit: BoxFit.cover,
         ),
         gradient: RadialGradient(
-          // Where t/*decoration: BoxDecoration(
-          //            image: DecorationImage(
-          //              image: AssetImage('assets/images/myBackground.png'),
-          //              fit: BoxFit.cover,
-          //            ),*/he linear gradient begins and ends
-//            begin: Alignment.topRight,
-//            end: Alignment.bottomLeft,
           // Add one stop for each color. Stops should increase from 0 to 1
           radius: 0.1,
           stops: [0.1, 0.5, 0.7, 0.9],
@@ -484,6 +461,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
 
   Widget emailInput() {
     return TextField(
+      controller: myEmailController,
       obscureText: false,
 
 //      style: style,
@@ -506,10 +484,12 @@ class _MySignUpPageState extends State<MySignUpPage> {
         if (nonAlphabet.hasMatch(name)) {
           return 'Please enter only Alphabets!';
         }
+        if (name.length == 0){
+          return 'Please provide a name';
+        }
         return null;
       },
-
-//      style: style,
+      controller: myNameController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(16.0),
           hintText: "Name",
@@ -526,13 +506,13 @@ class _MySignUpPageState extends State<MySignUpPage> {
     return TextFormField(
       obscureText: false,
         keyboardType: TextInputType.numberWithOptions(),
-      validator: (name) {
-        if (nonAlphabet.hasMatch(name)) {
-          return 'Please enter only Alphabets!';
+      validator: (answer) {
+        if (answer.length == 0) {
+          return 'This field cannot be left empty';
         }
         return null;
       },
-
+      controller: mySecurityAnswer,
 //      style: style,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(16.0),
@@ -550,6 +530,13 @@ class _MySignUpPageState extends State<MySignUpPage> {
     return TextFormField(
       obscureText: false,
 //      style: style,
+      validator: (address) {
+        if (address.length == 0){
+          return 'Please provide an address';
+        }
+        return null;
+      },
+      controller: myAddressController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(16.0),
           hintText: "Address",
@@ -639,9 +626,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
       obscureText: false,
       keyboardType: TextInputType.numberWithOptions(),
       validator: (phoneNumber) {
-        if (phoneNumber.length < 10) {
-          return 'Please enter a valid Phone Number!';
-        }
         if (nonDigit.hasMatch(phoneNumber)) {
           return 'Please enter only Numbers!';
         }
@@ -650,6 +634,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
         }
         return null;
       },
+      controller: myAlternatePhoneNumberController,
 //      style: style,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(16.0),
@@ -735,7 +720,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
     );
   }
 
-  void displayToast(String msg) {
+ /* void displayToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
@@ -743,7 +728,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
         timeInSecForIos: 1,
         backgroundColor: Colors.blue,
         textColor: Colors.white);
-  }
+  }*/
 
   Widget OTPButton() {
     return Material(
@@ -803,39 +788,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
 
 
 
-  void registerCustomer(String phoneNumber, String name, String password, String email, String securityQuestion, String securityAnswer, String alternatemob, String address, String latitude, String longitude, String pincode) async {
-      String registerUserJSON = '''{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
 
-    },
-    "username":"$phoneNumber",
-	  "password":"$password",
-	  "name":"$name",
-	  "email":"$email",
-	  "mobilenumber":"$phoneNumber",
-	  "securityq":"$securityQuestion",
-	  "securitya":"$securityAnswer",
-	  "alteratemob":"$alternatemob",
-	  "address": "$address",
-    "latitude": "$latitude",
-    "longitude": "$longitude",
-    "pincode":"$pincode"
-
-    }''';
-
-//      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
-      Response registerUserResponse = await NetworkCommon()
-          .myDio
-          .post("/customerRegistration", data: registerUserJSON);
-
-  }
 
   Widget signUpButton() {
     return Material(
@@ -849,15 +802,10 @@ class _MySignUpPageState extends State<MySignUpPage> {
 
             //Replace with registrationFormValidate inputs
 
-            _validateInputs();
 
-            if(_registrationFormKey.currentState.validate()){
-            //  make register user api call
-            //  registerCustomer(phoneNumber, name, password, email, securityQuestion, securityAnswer, alternatemob, address, latitude, longitude, pincode);
-            }
-            else{
-              setState(() {});
-            }
+
+              _validateRegistrationForm();
+
 
           },
           child: Text(
@@ -880,6 +828,19 @@ class _MySignUpPageState extends State<MySignUpPage> {
     }
   }
 
+  void _validateRegistrationForm() {
+    if(GlobalVariables().latitude == null && GlobalVariables().longitude == null){
+      CommonMethods().toast(context, 'Please Choose an address');
+    }
+    if(_registrationFormKey.currentState.validate()){
+      Repository().registerCustomer(myController.text, myNameController.text, myPINController.text, myEmailController.text, 'SecurityQuestion', mySecurityAnswer.text, myAlternatePhoneNumberController.text, myAddressController.text, GlobalVariables().latitude, GlobalVariables().longitude, myPINController.text);
+      //  make register user api call
+      //  registerCustomer(phoneNumber, name, password, email, securityQuestion, securityAnswer, alternatemob, address, latitude, longitude, pincode);
+       }
+    else{
+      setState(() {});
+    }
+  }
 
   Future<bool> _onBackPressed() {
     Navigator.of(context).pop(true);

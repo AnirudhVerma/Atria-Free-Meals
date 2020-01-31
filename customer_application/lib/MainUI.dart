@@ -42,18 +42,17 @@ class MyApp extends StatelessWidget {
 }
 
 class MyMainPage extends StatefulWidget {
-  MyMainPage(
-      {Key key, title})
-      : super(key: key);
+  MyMainPage({Key key, title}) : super(key: key);
 
-  final String title = 'Welcome ${GlobalVariables().myPortalLogin.oUTPUT.user.name}!';
+  final String title =
+      'Welcome ${GlobalVariables().myPortalLogin.oUTPUT.user.name}!';
   final int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
   final String phoneNumber = GlobalVariables().phoneNumber;
-  final String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
+  final String accessToken =
+      GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
 
   @override
-  _MyMainPageState createState() =>
-      _MyMainPageState();
+  _MyMainPageState createState() => _MyMainPageState();
 }
 
 class _MyMainPageState extends State<MyMainPage> {
@@ -63,6 +62,7 @@ class _MyMainPageState extends State<MyMainPage> {
   String phoneNumber = GlobalVariables().phoneNumber;
   String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
   int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
+
 //  FirstResponse myUserData = FirstResponse().myFirstResponse;
   FirstResponse fr = new FirstResponse();
 
@@ -97,7 +97,7 @@ class _MyMainPageState extends State<MyMainPage> {
     0: new CompletedServicesDialog(),
     1: /*Center(
       child: Center(child: Center(child: new OnGoingServiceDialog())),),*/
-    new OnGoingServiceDialog(),
+        new OnGoingServiceDialog(),
     /*2: Center(
       child: FlutterLogo(
         colors: Colors.cyan,
@@ -154,7 +154,8 @@ class _MyMainPageState extends State<MyMainPage> {
 //                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
                   }
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()));
                 },
                 child: Text(
                   'Logout',
@@ -233,60 +234,63 @@ class _MyMainPageState extends State<MyMainPage> {
     return FutureBuilder(
       future: Repository().getServices(),
       builder: (context, servicesSnapShot) {
-
         if (servicesSnapShot.data == "Something went wrong") {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
-            child: Text('/*${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
+            child:
+                Text('/*${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
             //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
           );
-        }else if (servicesSnapShot.data == null ) {
+        } else if (servicesSnapShot.data == null) {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
-        }
-
-        else {
+        } else {
 //          print('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.oUTPUT.length,
             itemBuilder: (context, index) {
               {
                 output = servicesSnapShot.data.oUTPUT[index];
-                print('project snapshot data is: ${servicesSnapShot.data.oUTPUT}');
+                print(
+                    'project snapshot data is: ${servicesSnapShot.data.oUTPUT}');
                 return Card(
                   child: ListTile(
                     title: Text(output.servicename),
                     subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     leading: CircleAvatar(
                       child: new Image(
-                          image: new AssetImage(getIconPath(output.servicecode))),
+                          image:
+                              new AssetImage(getIconPath(output.servicecode))),
                     ),
                     onTap: () {
                       output = servicesSnapShot.data.oUTPUT[index];
                       /*print('******************** THE OUTPUT IS ${output.toString()}');
-                      GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                      GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
                       GlobalVariables().serviceid = output.serviceid;
                       GlobalVariables().servicename = output.servicename;
                       GlobalVariables().servicetype = output.servicetype;
-                      GlobalVariables().servicecategory = output.servicecategory;
+                      GlobalVariables().servicecategory =
+                          output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;
                       CommonMethods().toast(context, output.servicecode);
-                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      print(
+                          '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       String servicename;
-                      if (output.servicecode == 'ACCSTMT'){
-                        showDialog(context: context,
-                            builder: (_){
+                      if (output.servicecode == 'ACCSTMT') {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
                               return MyDialog();
                             });
-                      }
-                      else if(output.servicecode == 'CHQCTL'){
-                        showDialog(context: context,
-                            builder: (_){
+                      } else if (output.servicecode == 'CHQCTL') {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
                               return MyChequeDialog();
                             });
                       }
@@ -297,7 +301,9 @@ class _MyMainPageState extends State<MyMainPage> {
                                   BookService( )));*/
                     },
                   ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),);
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                );
               }
             },
           );
@@ -306,11 +312,11 @@ class _MyMainPageState extends State<MyMainPage> {
     );
   }
 
-  String getIconPath(String serviceCode){
-    if (serviceCode == 'CHQCTL'){
+  String getIconPath(String serviceCode) {
+    if (serviceCode == 'CHQCTL') {
       return 'assets/images/cheque.png';
     }
-    if (serviceCode == 'ACCSTMT'){
+    if (serviceCode == 'ACCSTMT') {
       return 'assets/images/bank-statement.png';
     }
   }
@@ -359,7 +365,7 @@ class _MyMainPageState extends State<MyMainPage> {
     print(getServicesResponse);
   }*/
 
-  static Widget bookingHistoryWidget() {
+  /*static Widget bookingHistoryWidget() {
     var output;
     return FutureBuilder(
       future: getBookingHistory(),
@@ -383,14 +389,14 @@ class _MyMainPageState extends State<MyMainPage> {
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
                     output = servicesSnapShot.data[index];
-                    /*print('******************** THE OUTPUT IS ${output.toString()}');
-                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
-                    /*GlobalVariables().serviceid = output.serviceid;
+                    */ /*print('******************** THE OUTPUT IS ${output.toString()}');
+                    GlobalVariables().userSelectedService = output;*/ /*                   //unable to instantiate the userSelectedService
+                    */ /*GlobalVariables().serviceid = output.serviceid;
                     GlobalVariables().servicename = output.servicename;
                     GlobalVariables().servicetype = output.servicetype;
                     GlobalVariables().servicecategory = output.servicecategory;
                     GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;*/
+                    GlobalVariables().servicecode = output.servicecode;*/ /*
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(
@@ -453,7 +459,7 @@ class _MyMainPageState extends State<MyMainPage> {
 
     return output;
     //print(accessToken);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -685,7 +691,6 @@ class _MyMainPageState extends State<MyMainPage> {
                 activeColor: Colors.blueGrey,
                 inactiveColor: Colors.blue,
                 icon: Icon(Icons.home)),
-
             BottomNavyBarItem(
                 title: Text('My Services'),
                 activeColor: Colors.red,
@@ -786,25 +791,6 @@ class _MyMainPageState extends State<MyMainPage> {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 class OnGoingServiceDialog extends StatefulWidget {
   @override
@@ -840,7 +826,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                     output = servicesSnapShot.data[index];
                     */
 /*print('******************** THE OUTPUT IS ${output.toString()}');
-                    GlobalVariables().userSelectedService = output;*//*
+                    GlobalVariables().userSelectedService = output;*/ /*
                    //unable to instantiate the userSelecteeService
                     */
 /*GlobalVariables().serviceid = output.serviceid;
@@ -848,7 +834,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                     GlobalVariables().servicetype = output.servicetype;
                     GlobalVariables().servicecategory = output.servicecategory;
                     GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;*//*
+                    GlobalVariables().servicecode = output.servicecode;*/ /*
 
                     print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
@@ -920,10 +906,9 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 class MyDialog extends StatefulWidget {
   @override
   _MyDialogState createState() => new _MyDialogState();
-}  //TODO: Use Imported Class instead
+} //TODO: Use Imported Class instead
 
 class _MyDialogState extends State<MyDialog> {
-
   String _date = "Not set";
   String _toDate = 'Not Set';
 
@@ -932,13 +917,23 @@ class _MyDialogState extends State<MyDialog> {
     return AlertDialog(
       // title: Text('Request Account Statement',  style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
       elevation: 5.0,
-      shape: RoundedRectangleBorder(side: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(6))),
+      shape: RoundedRectangleBorder(
+          side: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(6))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: 15,),
-          Text('Request Account Statement', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            'Request Account Statement',
+            style: TextStyle(
+                color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 15,
+          ),
           Center(
             //padding: EdgeInsets.all(15.0),
             child: Container(
@@ -954,16 +949,18 @@ class _MyDialogState extends State<MyDialog> {
                             borderRadius: BorderRadius.circular(5.0)),
                         elevation: 4.0,
                         onPressed: () {
-                          DatePicker.showDatePicker(context,
-
+                          DatePicker.showDatePicker(
+                            context,
                             theme: DatePickerTheme(
                               containerHeight: 210.0,
                             ),
                             onChanged: (date) {
                               print('confirm $date');
-                              _date = '${date.year} - ${date.month} - ${date.day}';
+                              _date =
+                                  '${date.year} - ${date.month} - ${date.day}';
                               setState(() {
-                                _date = '${date.year} - ${date.month} - ${date.day}';
+                                _date =
+                                    '${date.year} - ${date.month} - ${date.day}';
                               });
                             },
                             showTitleActions: true,
@@ -971,9 +968,11 @@ class _MyDialogState extends State<MyDialog> {
                             maxTime: DateTime(2022, 12, 31),
                             onConfirm: (date) {
                               print('confirm $date');
-                              _date = '${date.year} - ${date.month} - ${date.day}';
+                              _date =
+                                  '${date.year} - ${date.month} - ${date.day}';
                               setState(() {
-                                _date = '${date.year} - ${date.month} - ${date.day}';
+                                _date =
+                                    '${date.year} - ${date.month} - ${date.day}';
                               });
                             },
                             currentTime: DateTime.now(),
@@ -1021,7 +1020,8 @@ class _MyDialogState extends State<MyDialog> {
                         color: Colors.white,
                       ),
                       SizedBox(
-                        height: 20.0,width: 500,
+                        height: 20.0,
+                        width: 500,
                       ),
                       RaisedButton(
                         shape: RoundedRectangleBorder(
@@ -1034,11 +1034,15 @@ class _MyDialogState extends State<MyDialog> {
                               ),
                               showTitleActions: true,
                               minTime: DateTime(2000, 1, 1),
-                              maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                                print('confirm $date');
-                                _toDate = '${date.year} - ${date.month} - ${date.day}';
-                                setState(() {});
-                              }, currentTime: DateTime.now(), locale: LocaleType.en);
+                              maxTime: DateTime(2022, 12, 31),
+                              onConfirm: (date) {
+                            print('confirm $date');
+                            _toDate =
+                                '${date.year} - ${date.month} - ${date.day}';
+                            setState(() {});
+                          },
+                              currentTime: DateTime.now(),
+                              locale: LocaleType.en);
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -1094,30 +1098,42 @@ class _MyDialogState extends State<MyDialog> {
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               MaterialButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
                 minWidth: 100,
-                child: Text('CANCEL', style: TextStyle(color: Colors.blue, ),),
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
-                  /* ... */ },
+                  /* ... */
+                },
               ),
               MaterialButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
                 minWidth: 100,
                 color: Colors.blue,
-                child: Text('PROCEED', style: TextStyle(color: Colors.white, ),),
+                child: Text(
+                  'PROCEED',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 onPressed: () {
-                  if(_date == 'Not set' || _toDate == 'Not set'){
+                  if (_date == 'Not set' || _toDate == 'Not set') {
                     CommonMethods().toast(context, 'Please Select Date');
+                  } else {
+                    Navigator.push(
+                        context,
+                        new CupertinoPageRoute(
+                            builder: (context) => BookService()));
                   }
-                  else{
-                  Navigator.push(
-                      context,
-                      new CupertinoPageRoute(
-                          builder: (context) =>
-                              BookService( )));
-                  }
-                  /* ... */ },
+                  /* ... */
+                },
               ),
             ],
           ),
@@ -1127,14 +1143,12 @@ class _MyDialogState extends State<MyDialog> {
   }
 }
 
-
 class MyChequeDialog extends StatefulWidget {
   @override
   _MyChequeDialogState createState() => new _MyChequeDialogState();
 }
 
 class _MyChequeDialogState extends State<MyChequeDialog> {
-
   String _date = "Not set";
   String _toDate = 'Not Set';
 
@@ -1143,13 +1157,23 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
     return AlertDialog(
       // title: Text('Request Account Statement',  style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
       elevation: 5.0,
-      shape: RoundedRectangleBorder(side: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(6))),
+      shape: RoundedRectangleBorder(
+          side: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(6))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: 15,),
-          Text('Pickup Cheque Instrument', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            'Pickup Cheque Instrument',
+            style: TextStyle(
+                color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 15,
+          ),
           Center(
             //padding: EdgeInsets.all(15.0),
             child: Container(
@@ -1159,15 +1183,19 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text('      Leaf Count'),
                           dropDown(),
                         ],
                       ),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text('Credit Slip Filled', ),
+                          Text(
+                            'Credit Slip Filled',
+                          ),
                           booleanDropDown(),
                         ],
                       ),
@@ -1185,25 +1213,38 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               MaterialButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
                 minWidth: 100,
-                child: Text('CANCEL', style: TextStyle(color: Colors.blue, ),),
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
-                  /* ... */ },
+                  /* ... */
+                },
               ),
               MaterialButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
                 minWidth: 100,
                 color: Colors.blue,
-                child: Text('PROCEED', style: TextStyle(color: Colors.white, ),),
+                child: Text(
+                  'PROCEED',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.push(
                       context,
                       new CupertinoPageRoute(
-                          builder: (context) =>
-                              BookService( )));
-                  /* ... */ },
+                          builder: (context) => BookService()));
+                  /* ... */
+                },
               ),
               /*MaterialButton(
                 minWidth:120,
@@ -1218,13 +1259,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
   }
 
   String dropdownValue = myItems[1];
-  static var myItems = [
-    'One',
-    'Two',
-    'Three',
-    'Four',
-    'Five'
-  ];
+  static var myItems = ['One', 'Two', 'Three', 'Four', 'Five'];
 
   Widget dropDown() {
     return Padding(
@@ -1293,5 +1328,4 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
       ),
     );
   }
-
 }

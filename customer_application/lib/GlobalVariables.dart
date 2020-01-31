@@ -36,6 +36,8 @@ class GlobalVariables{
   String address;
   String latitude;
   String longitude;
+  String registrationLongitude;
+  String registrationLatitude;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

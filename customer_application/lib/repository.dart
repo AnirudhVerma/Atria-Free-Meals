@@ -385,4 +385,42 @@ class Repository {
   return getServicesResponseObject;
   }
 
+  registerCustomer(String phoneNumber, String name, String password, String email, String securityQuestion, String securityAnswer, String alternatemob, String address, String latitude, String longitude, String pincode) async {
+
+    String registerUserJSON = '''{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "username":"$phoneNumber",
+	  "password":"$password",
+	  "name":"$name",
+	  "email":"$email",
+	  "mobilenumber":"$phoneNumber",
+	  "securityq":"$securityQuestion",
+	  "securitya":"$securityAnswer",
+	  "alteratemob":"$alternatemob",
+	  "address": "$address",
+    "latitude": "$latitude",
+    "longitude": "$longitude",
+    "pincode":"$pincode"
+    }''';
+
+//      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
+//      print(response);
+    Response registerUserResponse = await NetworkCommon()
+        .myDio
+        .post("/customerRegistration", data: registerUserJSON);
+    if(registerUserResponse.toString().contains('"ERRORCODE": "00"')){
+      return('Registration Successful');
+    }
+    else{
+      return ('Couldn\'t Register');
+    }
+  }
+
 }

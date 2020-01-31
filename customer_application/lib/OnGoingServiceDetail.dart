@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:customer_application/JSONResponseClasses/IndividualServiceDetails.dart';
+import 'package:customer_application/OnGoingServiceDetailTimeline.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'GlobalVariables.dart';
-import 'Timeline.dart';
 import 'networkConfig.dart';
 
 class OnGoingServiceDetail extends StatelessWidget {
@@ -53,6 +53,8 @@ class OnGoingServiceDetail extends StatelessWidget {
                         OutlineButton(
                           child: Text('View Details', style: TextStyle(color: Colors.blue),),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          onPressed: () => Navigator.push(context,
+                              CupertinoPageRoute(builder: (context) => OnGoingServiceDetailTimeline(bookingID: bookingDetailSnapShot.data.serviceinfo[0].bookingid,)))
                         ),
                       ],
                     ),
@@ -186,22 +188,6 @@ class OnGoingServiceDetail extends StatelessWidget {
                         ),
                       ),
                       elevation: 3,),
-                    Timeline(
-                      children: <Widget>[
-                        Container(height: 100, child: Center(child: Text('Scheduled', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-                        Container(height: 100, child: Center(child: Text('Started', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-                        Container(height: 100, child: Center(child: Text('Document Picked', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-                        Container(height: 100, child: Center(child: Text('Document Submitted', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-                        Container(height: 100, child: Center(child: Text('Completed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-                      ],
-                      indicators: <Widget>[
-                        Icon(Icons.schedule, color: Colors.blue,),
-                        Icon(Icons.play_arrow),
-                        Icon(Icons.mail),
-                        Icon(Icons.check),
-                        Icon(Icons.done_all),
-                      ],
-                    ),
                   ],
                 ),
               ),
