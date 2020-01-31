@@ -136,11 +136,6 @@ class _BookServiceState extends State<BookService> {
 
       List address = [];
 
-//    for (int i = 0; i < output.length; i++) {
-//      print('                SERVICE NAME IS $i : ${output[i].servicename}             ');
-//      address.add(output[i].servicename);
-//    }
-
       print('             THE ADDRESSES ARE $address                 ');
 
       return output;

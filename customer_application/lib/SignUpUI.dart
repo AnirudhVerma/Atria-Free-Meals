@@ -70,79 +70,84 @@ class _MySignUpPageState extends State<MySignUpPage> {
         title: Text('Sign-Up!'),
       ),
       body: /*buildCenterInitial(),*/ Center(
-        child: BlocBuilder<SignUpBloc, SignUpState>(
-            bloc: mySignUpBloc,
-            builder: (context, state) {
-              if (state is InitialSignUpState) {
-                return getOTPUI();
-              }
-              if (state is RegistrationFormState) {
-                return registrationFormUI();
-              }
-              if (state is EnterOTPSignUpState) {
-                return enterOTPUI();
-              }
-              if (state is showProgressBarSignUp) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is ErrorStateSignUp) {
-                var data = state.errorResp;
-                if (state.errorResp == null) {
-                  data = "OOPS, something went wrong";
+        child: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: BlocBuilder<SignUpBloc, SignUpState>(
+              bloc: mySignUpBloc,
+              builder: (context, state) {
+                if (state is InitialSignUpState) {
+                  return getOTPUI();
                 }
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(data),
-                    MaterialButton(
-                      color: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0),
-                      ),
-                      child: Text(
-                        'Retry',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () {
-                        mySignUpBloc.add(GetOTP());
-                      },
-                    ),
-                  ],
-                );
-              }
-              if (state is ErrorStateSignUpOtp) {
-                var data = state.errorResp;
-                if (state.errorResp == null) {
-                  data = "OOPS, something went wrong";
+                if (state is RegistrationFormState) {
+                  return registrationFormUI();
                 }
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(data),
-                    MaterialButton(
-                      color: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0),
+                if (state is EnterOTPSignUpState) {
+                  return enterOTPUI();
+                }
+                if (state is showProgressBarSignUp) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is ErrorStateSignUp) {
+                  var data = state.errorResp;
+                  if (state.errorResp == null) {
+                    data = "OOPS, something went wrong";
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(data),
+                      MaterialButton(
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(18.0),
+                        ),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          mySignUpBloc.add(GetOTP());
+                        },
                       ),
-                      child: Text(
-                        'Retry',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                    ],
+                  );
+                }
+                if (state is ErrorStateSignUpOtp) {
+                  var data = state.errorResp;
+                  if (state.errorResp == null) {
+                    data = "OOPS, something went wrong";
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(data),
+                      MaterialButton(
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(18.0),
+                        ),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          mySignUpBloc.add(EnterSignUpOTP());
+                        },
                       ),
-                      onPressed: () {
-                        mySignUpBloc.add(EnterSignUpOTP());
-                      },
-                    ),
-                  ],
-                );
-              }
-              return null;
-            }),
+                    ],
+                  );
+                }
+                return null;
+              }),
+        ),
       ),
     );
     /*return Container(
