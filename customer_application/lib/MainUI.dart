@@ -6,6 +6,7 @@ import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:customer_application/main.dart';
+import 'package:customer_application/repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -230,22 +231,32 @@ class _MyMainPageState extends State<MyMainPage> {
   Widget servicesWidget() {
     var output;
     return FutureBuilder(
-      future: getServices(),
+      future: Repository().getServices(),
       builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null) {
+
+        if (servicesSnapShot.data == "Something went wrong") {
+          print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
+          return Center(
+            child: Text('/*${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
+            //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+          );
+        }else if (servicesSnapShot.data == null ) {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else {
+        }
+
+        else {
 //          print('The data is loaded!!!!');
           return ListView.builder(
-            itemCount: servicesSnapShot.data.length,
+            itemCount: servicesSnapShot.data.oUTPUT.length,
             itemBuilder: (context, index) {
               {
-                output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
+                output = servicesSnapShot.data.oUTPUT[index];
+                print('project snapshot data is: ${servicesSnapShot.data.oUTPUT}');
                 return Card(
                   child: ListTile(
                     title: Text(output.servicename),
@@ -255,7 +266,7 @@ class _MyMainPageState extends State<MyMainPage> {
                           image: new AssetImage(getIconPath(output.servicecode))),
                     ),
                     onTap: () {
-                      output = servicesSnapShot.data[index];
+                      output = servicesSnapShot.data.oUTPUT[index];
                       /*print('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                       GlobalVariables().serviceid = output.serviceid;
@@ -304,7 +315,7 @@ class _MyMainPageState extends State<MyMainPage> {
     }
   }
 
-  Future<void> getServices() async {
+  /*Future<void> getServices() async {
     String getServicesString = """{
           "additionalData":
     {
@@ -314,10 +325,10 @@ class _MyMainPageState extends State<MyMainPage> {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "mobilenumber":"$phoneNumber",
+    "mobilenumber":"${GlobalVariables().phoneNumber}",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
-    "authorization":"$accessToken",
-    "username":"$phoneNumber"
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}"
 
     }""";
     Response getServicesResponse = await NetworkCommon()
@@ -346,7 +357,7 @@ class _MyMainPageState extends State<MyMainPage> {
     return output;
     print(accessToken);
     print(getServicesResponse);
-  }
+  }*/
 
   static Widget bookingHistoryWidget() {
     var output;

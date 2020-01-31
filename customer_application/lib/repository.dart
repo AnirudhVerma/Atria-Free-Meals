@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'JSONResponseClasses/PortalLogin.dart';
+import 'JSONResponseClasses/ServiceList.dart';
 import 'JSONResponseClasses/ValidateOTP.dart';
 import 'networkConfig.dart';
 
@@ -319,4 +320,69 @@ class Repository {
       print(e);
     }
   }
+
+  Future<void> getServices() async {
+
+    //TODO need to change
+    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
+
+
+    String getServicesString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${GlobalVariables().phoneNumber}",
+
+    "ts": "$ts",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}"
+
+    }""";
+    Response getServicesResponse = await NetworkCommon()
+        .myDio
+        .post("/getServiceList", data: getServicesString);
+    var getServicesResponseString = jsonDecode(getServicesResponse.toString());
+    var getServicesResponseObject =
+    ServiceList.fromJson(getServicesResponseString);
+    print("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+
+
+
+
+    if (getServicesResponseObject == null) {
+
+
+      return 'Something went wrong';
+
+    } else {
+      print("THE Get Service RESPONSE IS + ${getServicesResponseObject.eRRORCODE}");
+      return getServicesResponseObject;
+    }
+
+
+
+    print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+
+    var output = getServicesResponseObject.oUTPUT;
+
+    List services = [];
+
+    for (int i = 0; i < output.length; i++) {
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      services.add(output[i].servicename);
+    }
+
+    print('             THE SERVICES OFFERED ARE $services                 ');
+
+//    return output;
+  return getServicesResponseObject;
+  }
+
 }
