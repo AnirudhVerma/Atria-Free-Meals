@@ -24,7 +24,7 @@ class OnGoingServiceDetail extends StatelessWidget {
       body: FutureBuilder(
         future: getBookingDetails(),
         builder: (context, bookingDetailSnapShot) {
-          if (bookingDetailSnapShot.data == null) {
+          if (bookingDetailSnapShot.data == null &&  bookingDetailSnapShot.connectionState == ConnectionState.waiting) {
             print('The data is in loading state');
             print('project snapshot data is: ${bookingDetailSnapShot.data}');
             return Container(
@@ -35,9 +35,23 @@ class OnGoingServiceDetail extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              //child: CircularProgressIndicator(),
+              child: Center(child: CircularProgressIndicator()),
             );
-          } else {
+          }
+          else if (bookingDetailSnapShot.data == null &&  bookingDetailSnapShot.connectionState != ConnectionState.waiting) {
+            print('The data is in loading state');
+            print('project snapshot data is: ${bookingDetailSnapShot.data}');
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/fogg-booking-history-1.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Center(child: Text('Couldn\'t connect to servers, please retry', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))),
+            );
+          }
+          else {
 //          print('The data is loaded!!!!');
             return SingleChildScrollView(
               child: Padding(

@@ -4,6 +4,7 @@ import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -249,18 +250,19 @@ class NetworkCommon {
 
       if(mContext!=null){
         showDialog(context: mContext,
-            builder: (context) => AlertDialog(
-              title: Text('Error'),
+            builder: (context) => CupertinoAlertDialog(
+              title: Text(' Connection Error'),
               /*content: Text('${dioError.toString()} \n '
                   '${dioError.type} \n'
                   '$errMsg \n'
                   '${dioError.response.toString()} \n'
                   '${dioError.request.toString()} \n'),*/
-              content: Text('${dioError.type.toString()} \n'
-                  '$errMsg \n'),
+              content: Text(//'${dioError.type.toString()} \n'
+                  //'$errMsg \n'
+                  'We\'re unable to connect at the moment, make sure the device is connected to internet and try again'),
               actions: <Widget>[
                 FlatButton(
-                    child: Text('OK'),
+                    child: Text('OK', style: TextStyle(color: Colors.blue),),
                     onPressed: (){
                       Navigator.pop(context);
                     }

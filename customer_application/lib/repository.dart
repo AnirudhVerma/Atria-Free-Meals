@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:dio/dio.dart';
+import 'JSONResponseClasses/Address.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'JSONResponseClasses/PortalLogin.dart';
@@ -421,6 +422,39 @@ class Repository {
     else{
       return ('Couldn\'t Register');
     }
+  }
+
+  Future<void> getAddress() async {
+    String getBankString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    }""";
+    Response getAddressResponse = await NetworkCommon()
+        .myDio
+        .post("/getAddressList", data: getBankString);
+    var getAddressResponseString = jsonDecode(getAddressResponse.toString());
+    var getAddressResponseObject =
+    Address.fromJson(getAddressResponseString); // replace with PODO class
+
+    print("THE ADDRESS RESPONSE IS $getAddressResponseObject");
+
+    var output = getAddressResponseObject.oUTPUT;
+
+    List address = [];
+
+    print('             THE ADDRESSES ARE $address                 ');
+
+    return output;
   }
 
 }

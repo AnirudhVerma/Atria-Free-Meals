@@ -796,7 +796,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
       CommonMethods().toast(context, 'Please Choose an address');
     }
     if(_registrationFormKey.currentState.validate()){
-      Repository().registerCustomer(myController.text, myNameController.text, myPINController.text, myEmailController.text, dropdownValue, mySecurityAnswer.text, myAlternatePhoneNumberController.text, myAddressController.text, GlobalVariables().latitude, GlobalVariables().longitude, myPINController.text);
+      String registrationResponse = Repository().registerCustomer(myController.text, myNameController.text, myPINController.text, myEmailController.text, dropdownValue, mySecurityAnswer.text, myAlternatePhoneNumberController.text, myAddressController.text, GlobalVariables().latitude, GlobalVariables().longitude, myPINController.text);
+      CommonMethods().toast(context, registrationResponse);
       //  make register user api call
       //  registerCustomer(phoneNumber, name, password, email, securityQuestion, securityAnswer, alternatemob, address, latitude, longitude, pincode);
        }

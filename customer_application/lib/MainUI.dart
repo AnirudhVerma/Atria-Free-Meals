@@ -4,12 +4,14 @@ import 'package:customer_application/BookService.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
+import 'package:customer_application/ManageAddress.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:customer_application/main.dart';
 import 'package:customer_application/repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -234,15 +236,16 @@ class _MyMainPageState extends State<MyMainPage> {
     return FutureBuilder(
       future: Repository().getServices(),
       builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == "Something went wrong") {
-          print('The data is in loading state');
+        if (servicesSnapShot.hasError) {
+          print('some error occured');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
-            child:
-                Text('/*${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
+            child: Text(
+                '/*ERROR OCCURED, Please retry ${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
             //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
           );
-        } else if (servicesSnapShot.data == null) {
+        } else if (servicesSnapShot.data == null &&
+            servicesSnapShot.connectionState == ConnectionState.waiting) {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
@@ -638,42 +641,184 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),
               ),
               Container(
-                color: Colors.purple,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 20,
-                    ),
-                    new Container(
-                        width: 190.0,
-                        height: 190.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: new NetworkImage(
-                                    "https://i.imgur.com/BoN9kdC.png")))),
-                    Container(
-                      margin: const EdgeInsets.all(30.0),
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
+                //color: Colors.purple,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
                       ),
-                      child: Text(
-                        "Name",
-                        style: TextStyle(fontSize: 30.0),
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/blue_door.png'),
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'DoorStep Banking',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+
+                                fontSize: 18),
+                          ),
+                        ],
                       ),
-                    ),
-                    Center(
-                        child: RaisedButton(
-                      child: Text(
-                        'LOGOUT',
+                      SizedBox(
+                        height: 20,
                       ),
-                      textColor: Colors.white,
-                      onPressed: logout,
-                      color: Colors.blue,
-                    )),
-                  ],
+                      Container(
+                          width: 150.0,
+                          height: 150.0,
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: new NetworkImage(
+                                      "https://i.imgur.com/BoN9kdC.png")))),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Card(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.person,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5,),
+                              Text('Name'),
+                              Spacer(flex: 1,),
+                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.name}', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Spacer(flex: 1,),
+                            ],
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                      Card(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.phone,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5,),
+                              Text('Phone Number'),
+                              Spacer(flex: 1,),
+                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.mobilenumber}', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Spacer(flex: 1,),
+                            ],
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                      Card(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.phone,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5,),
+                              Text('Alternate PhoneNumber'),
+                              Spacer(flex: 1,),
+                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.alternatenumber}', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Spacer(flex: 1,),
+                            ],
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                      Card(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.mail,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5,),
+                              Text('Email'),
+                              Spacer(flex: 1,),
+                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.email}', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Spacer(flex: 1,),
+                            ],
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                      Card(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  CupertinoPageRoute(builder: (context) => ManageAddress()));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.blue,
+                                ),
+                                SizedBox(width: 5,),
+                                Text('Address'),
+                                Spacer(flex: 1,),
+                                Text('Manage Address', style: TextStyle(fontWeight: FontWeight.bold),),
+                                Spacer(flex: 1,),
+                              ],
+                            ),
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                      SizedBox(height: 5,),
+                      Center(
+                          child: CupertinoButton(
+                        child: Text(
+                          'LOGOUT',style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: logout,
+                        color: Colors.red,
+                      )),
+                      Center(
+                          child: CupertinoButton(
+                            child: Text(
+                              'LOGOUT',style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: logout,
+
+                          )),
+                    ],
+                  ),
                 ),
               )
             ],

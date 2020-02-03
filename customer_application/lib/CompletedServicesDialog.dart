@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'BookService.dart';
 import 'GlobalVariables.dart';
 import 'JSONResponseClasses/ServiceList.dart';
@@ -23,7 +21,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
     return FutureBuilder(
       future: getBookingHistory(),
       builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null) {
+        if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Container(
@@ -33,9 +31,23 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
                 fit: BoxFit.cover,
               ),
             ),
-            //child: CircularProgressIndicator(),
+            child: Center(child: CircularProgressIndicator(),),
           );
-        } else {
+        }
+        else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
+          print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/fogg-booking-history-1.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Text('Mm, Looks like you don\'t have any Completed Services',style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+          );
+        }
+        else {
 //          print('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,

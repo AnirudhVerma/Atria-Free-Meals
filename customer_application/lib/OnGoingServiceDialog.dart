@@ -24,7 +24,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     return FutureBuilder(
       future: getBookingHistory(),
       builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null) {
+        if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
           print('The data is in loading state');
           print('project snapshot data is: ${servicesSnapShot.data}');
           return Container(
@@ -34,9 +34,23 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                 fit: BoxFit.cover,
               ),
             ),
-            //child: CircularProgressIndicator(),
+            child: Center(child: CircularProgressIndicator()),
           );
-        } else {
+        }
+        else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
+          print('The data is in loading state');
+          print('project snapshot data is: ${servicesSnapShot.data}');
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/fogg-booking-history-1.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Text('Looks like you don\'t have any On-Going Services'),
+          );
+        }
+        else {
 //          print('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,
