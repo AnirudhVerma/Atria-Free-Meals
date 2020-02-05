@@ -258,8 +258,6 @@ class _MyMainPageState extends State<MyMainPage> {
             itemBuilder: (context, index) {
               {
                 output = servicesSnapShot.data.oUTPUT[index];
-                print(
-                    'project snapshot data is: ${servicesSnapShot.data.oUTPUT}');
                 return Card(
                   child: ListTile(
                     title: Text(output.servicename),
@@ -280,7 +278,6 @@ class _MyMainPageState extends State<MyMainPage> {
                           output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;
-                      CommonMethods().toast(context, output.servicecode);
                       print(
                           '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       String servicename;
@@ -669,7 +666,6 @@ class _MyMainPageState extends State<MyMainPage> {
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
-
                                 fontSize: 18),
                           ),
                         ],
@@ -680,6 +676,10 @@ class _MyMainPageState extends State<MyMainPage> {
                       Container(
                           width: 150.0,
                           height: 150.0,
+                          /*child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/images/1716885.png',
+                        image: 'https://i.imgur.com/BoN9kdC.png',
+                      ),*/
                           decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
@@ -690,7 +690,8 @@ class _MyMainPageState extends State<MyMainPage> {
                         height: 20,
                       ),
                       Card(
-                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Row(
@@ -700,18 +701,28 @@ class _MyMainPageState extends State<MyMainPage> {
                                 Icons.person,
                                 color: Colors.blue,
                               ),
-                              SizedBox(width: 5,),
-                              Text('Name'),
-                              Spacer(flex: 1,),
-                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.name}', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Spacer(flex: 1,),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Name                 '),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Text(
+                                '${GlobalVariables().myPortalLogin.oUTPUT.user.name}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
                             ],
                           ),
                         ),
                         elevation: 1,
                       ),
                       Card(
-                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Row(
@@ -721,18 +732,28 @@ class _MyMainPageState extends State<MyMainPage> {
                                 Icons.phone,
                                 color: Colors.blue,
                               ),
-                              SizedBox(width: 5,),
-                              Text('Phone Number'),
-                              Spacer(flex: 1,),
-                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.mobilenumber}', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Spacer(flex: 1,),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Phone Number          '),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Text(
+                                '${GlobalVariables().myPortalLogin.oUTPUT.user.mobilenumber}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
                             ],
                           ),
                         ),
                         elevation: 1,
                       ),
                       Card(
-                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Row(
@@ -742,18 +763,28 @@ class _MyMainPageState extends State<MyMainPage> {
                                 Icons.phone,
                                 color: Colors.blue,
                               ),
-                              SizedBox(width: 5,),
+                              SizedBox(
+                                width: 5,
+                              ),
                               Text('Alternate PhoneNumber'),
-                              Spacer(flex: 1,),
-                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.alternatenumber}', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Spacer(flex: 1,),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Text(
+                                '${GlobalVariables().myPortalLogin.oUTPUT.user.alternatenumber}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
                             ],
                           ),
                         ),
                         elevation: 1,
                       ),
                       Card(
-                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Row(
@@ -763,24 +794,36 @@ class _MyMainPageState extends State<MyMainPage> {
                                 Icons.mail,
                                 color: Colors.blue,
                               ),
-                              SizedBox(width: 5,),
-                              Text('Email'),
-                              Spacer(flex: 1,),
-                              Text('${GlobalVariables().myPortalLogin.oUTPUT.user.email}', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Spacer(flex: 1,),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Email                '),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Text(
+                                '${GlobalVariables().myPortalLogin.oUTPUT.user.email}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
                             ],
                           ),
                         ),
                         elevation: 1,
                       ),
                       Card(
-                        margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context,
-                                  CupertinoPageRoute(builder: (context) => ManageAddress()));
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => ManageAddress()));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -789,34 +832,47 @@ class _MyMainPageState extends State<MyMainPage> {
                                   Icons.location_on,
                                   color: Colors.blue,
                                 ),
-                                SizedBox(width: 5,),
-                                Text('Address'),
-                                Spacer(flex: 1,),
-                                Text('Manage Address', style: TextStyle(fontWeight: FontWeight.bold),),
-                                Spacer(flex: 1,),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text('Address              '),
+                                Spacer(
+                                  flex: 1,
+                                ),
+                                Text(
+                                  'Manage Address',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(
+                                  flex: 1,
+                                ),
                               ],
                             ),
                           ),
                         ),
                         elevation: 1,
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Center(
                           child: CupertinoButton(
                         child: Text(
-                          'LOGOUT',style: TextStyle(color: Colors.white),
+                          'LOGOUT',
+                          style: TextStyle(color: Colors.white),
                         ),
                         onPressed: logout,
                         color: Colors.red,
                       )),
-                      Center(
+                      SizedBox(height: 10,),
+                      /*Center(
                           child: CupertinoButton(
                             child: Text(
                               'LOGOUT',style: TextStyle(color: Colors.red),
                             ),
                             onPressed: logout,
 
-                          )),
+                          )),*/
                     ],
                   ),
                 ),
@@ -832,14 +888,14 @@ class _MyMainPageState extends State<MyMainPage> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-                title: Text('Home'),
-                activeColor: Colors.blueGrey,
-                inactiveColor: Colors.blue,
+                title: Text('   Home'),
+                activeColor: Colors.blue,
+                inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.home)),
             BottomNavyBarItem(
-                title: Text('My Services'),
-                activeColor: Colors.red,
-                inactiveColor: Colors.blue,
+                title: Text(' My Services'),
+                activeColor: Colors.blue,
+                inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.apps)),
             /*BottomNavyBarItem(
                 title: Text('OnGoing Services'),
@@ -847,14 +903,14 @@ class _MyMainPageState extends State<MyMainPage> {
                 inactiveColor: Colors.blue,
                 icon: Icon(Icons.chat_bubble)),*/
             BottomNavyBarItem(
-                title: Text('Support'),
+                title: Text('  Support'),
                 activeColor: Colors.blue,
-                inactiveColor: Colors.blue,
+                inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.help)),
             BottomNavyBarItem(
-                title: Text('Profile'),
-                activeColor: Colors.purple,
-                inactiveColor: Colors.blue,
+                title: Text('   Profile'),
+                activeColor: Colors.blue,
+                inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.person)),
           ],
         ),
@@ -1101,11 +1157,10 @@ class _MyDialogState extends State<MyDialog> {
                             ),
                             onChanged: (date) {
                               print('confirm $date');
-                              _date =
-                                  '${date.year} - ${date.month} - ${date.day}';
+                              _date = '${date.year}-${date.month}-${date.day}';
                               setState(() {
                                 _date =
-                                    '${date.year} - ${date.month} - ${date.day}';
+                                    '${date.year}-${date.month}-${date.day}';
                               });
                             },
                             showTitleActions: true,
@@ -1113,11 +1168,10 @@ class _MyDialogState extends State<MyDialog> {
                             maxTime: DateTime(2022, 12, 31),
                             onConfirm: (date) {
                               print('confirm $date');
-                              _date =
-                                  '${date.year} - ${date.month} - ${date.day}';
+                              _date = '${date.year}-${date.month}-${date.day}';
                               setState(() {
                                 _date =
-                                    '${date.year} - ${date.month} - ${date.day}';
+                                    '${date.year}-${date.month}-${date.day}';
                               });
                             },
                             currentTime: DateTime.now(),
@@ -1182,9 +1236,11 @@ class _MyDialogState extends State<MyDialog> {
                               maxTime: DateTime(2022, 12, 31),
                               onConfirm: (date) {
                             print('confirm $date');
-                            _toDate =
-                                '${date.year} - ${date.month} - ${date.day}';
-                            setState(() {});
+                            _toDate = '${date.year}-${date.month}-${date.day}';
+                            setState(() {
+                              _toDate =
+                                  '${date.year}-${date.month}-${date.day}';
+                            });
                           },
                               currentTime: DateTime.now(),
                               locale: LocaleType.en);
@@ -1272,6 +1328,7 @@ class _MyDialogState extends State<MyDialog> {
                   if (_date == 'Not set' || _toDate == 'Not set') {
                     CommonMethods().toast(context, 'Please Select Date');
                   } else {
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         new CupertinoPageRoute(
@@ -1384,6 +1441,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                   ),
                 ),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       new CupertinoPageRoute(

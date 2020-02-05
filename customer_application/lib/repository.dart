@@ -327,7 +327,6 @@ class Repository {
     //TODO need to change
     String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
 
-
     String getServicesString = """{
           "additionalData":
     {
@@ -352,23 +351,13 @@ class Repository {
     ServiceList.fromJson(getServicesResponseString);
     print("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
     // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
-
-
-
-
     if (getServicesResponseObject == null) {
-
-
       return 'Something went wrong';
-
     } else {
       print("THE Get Service RESPONSE IS + ${getServicesResponseObject.eRRORCODE}");
       return getServicesResponseObject;
     }
-
-
-
-    print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;
 
@@ -383,7 +372,7 @@ class Repository {
     print('             THE SERVICES OFFERED ARE $services                 ');
 
 //    return output;
-  return getServicesResponseObject;
+  return getServicesResponseObject;*/
   }
 
   registerCustomer(String phoneNumber, String name, String password, String email, String securityQuestion, String securityAnswer, String alternatemob, String address, String latitude, String longitude, String pincode) async {
@@ -455,6 +444,52 @@ class Repository {
     print('             THE ADDRESSES ARE $address                 ');
 
     return output;
+  }
+
+  removeAddress(String addressId) async {
+
+    //TODO need to change
+    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
+
+    String getServicesString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${GlobalVariables().phoneNumber}",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+  	"addressid":$addressId
+
+    }""";
+    Response removeAddressResponse = await NetworkCommon()
+        .myDio
+        .post("/removeAddress", data: getServicesString);
+    if (removeAddressResponse.toString().contains('"ERRORCODE": "00"')) {
+      return 'Address Deleted Successfully';
+    } else {
+      return 'Couldn\'t delete address,Please try again';
+    }
+    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+
+    var output = getServicesResponseObject.oUTPUT;
+
+    List services = [];
+
+    for (int i = 0; i < output.length; i++) {
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      services.add(output[i].servicename);
+    }
+
+    print('             THE SERVICES OFFERED ARE $services                 ');
+
+//    return output;
+  return getServicesResponseObject;*/
   }
 
 }

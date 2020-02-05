@@ -38,6 +38,8 @@ class GlobalVariables{
   String longitude;
   String registrationLongitude;
   String registrationLatitude;
+  String pinCodeFromLocation;
+  String addressFromLocation;
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

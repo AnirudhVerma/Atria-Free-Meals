@@ -5,12 +5,19 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/SignUpUI.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoder/geocoder.dart';
 
 import 'main.dart';
 
 class MyMapsApp extends StatefulWidget {
+
+  final int fromPage;
+
+  MyMapsApp(this.fromPage);
+
   @override
   _MyMapsAppState createState() => _MyMapsAppState();
 }
@@ -36,10 +43,28 @@ class _MyMapsAppState extends State<MyMapsApp> {
     var currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
-    List<Placemark> placemark = await Geolocator().placemarkFromPosition(currentLocation);
+    List<Placemark> placemark =
+        await Geolocator().placemarkFromPosition(currentLocation);
     print('Latitude is ${currentLocation.latitude}');
+//    rLatitude = currentLocation.latitude.toString();
+//    rLongitude = currentLocation.longitude.toString();
 
-    setState(() {
+    /*final coordinates = new Coordinates(currentLocation.latitude,currentLocation.longitude);
+      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+
+      GlobalVariables().pinCodeFromLocation = first.postalCode;
+      GlobalVariables().addressFromLocation = first.addressLine;*/
+
+    setState(() async {
+
+      /*final coordinates = new Coordinates(currentLocation.latitude,currentLocation.longitude);
+      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+
+      GlobalVariables().pinCodeFromLocation = first.postalCode;
+      GlobalVariables().addressFromLocation = first.addressLine;*/
+
       _markers.clear();
       final marker = Marker(
         markerId: MarkerId("curr_loc"),
@@ -50,10 +75,9 @@ class _MyMapsAppState extends State<MyMapsApp> {
       _markers["Current Location"] = marker;
 
     });
-      print('The current location is ${_markers["Current Location"]}');
+    print('The current location is ${_markers["Current Location"]}');
     _currentPosition = Position.fromMap(_markers[0]);
 //    _getAddressFromLatLng();
-
   }
 
   _getAddressFromLatLng() async {
@@ -65,7 +89,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
 
       setState(() {
         _currentAddress =
-        "${place.locality}, ${place.postalCode}, ${place.country}";
+            "${place.locality}, ${place.postalCode}, ${place.country}";
       });
     } catch (e) {
       print(e);
@@ -100,38 +124,44 @@ class _MyMapsAppState extends State<MyMapsApp> {
               ),
             ),
             Expanded(
-              flex: 14,
+                flex: 14,
 //              child: MaterialButton(child: Text('Choose', style: TextStyle(color: Colors.white),),color: Colors.blue,),
-              child: Center(
-                child: Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(30.0),
-                    color: Colors.blue,
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(width: 30,),
-                        MaterialButton(
-                          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                          onPressed: () {
-                            GlobalVariables().registrationLatitude = rLatitude;
-                            GlobalVariables().registrationLongitude = rLongitude;
-                            if(GlobalVariables().registrationLatitude == null && GlobalVariables().registrationLongitude == null){
-                          Navigator.pop(context);
-                            }
-                            else{
-                              CommonMethods().toast(context, "Please Select an Address");
-                            }
-                            },
-                          child: Text(
-                            "Select this Address",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                            textAlign: TextAlign.center,
-                          ),
+                child: Center(
+                  child: Material(
+                      elevation: 5.0,
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: Colors.blue,
+                      child: MaterialButton(
+                        padding:
+                        EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        onPressed: () {
+                          GlobalVariables().registrationLatitude =
+                              rLatitude;
+                          GlobalVariables().registrationLongitude =
+                              rLongitude;
+//                          print('*******************Latitide is $rLatitude');
+                          if (GlobalVariables().registrationLatitude ==
+                              null &&
+                              GlobalVariables().registrationLongitude ==
+                                  null) {
+                            CommonMethods()
+                                .toast(context, "Please Select an Address");
+                          } else {
+                            CommonMethods()
+                                .toast(context, "Success, address Marked");
+                            Navigator.pop(context);
+                            if(widget.fromPage == 2)
+                              Navigator.pop(context);
+                          }
+                        },
+                        child: Text(
+                          "Add this Address",
+                          style:
+                          TextStyle(color: Colors.white, fontSize: 18),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    )),
-              )
-            )
+                      )),
+                ))
           ],
         ),
       ),

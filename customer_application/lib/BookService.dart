@@ -42,14 +42,17 @@ class _BookServiceState extends State<BookService> {
   final String title = GlobalVariables().servicename;
   final int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
   final int serviceid = int.parse(GlobalVariables().serviceid);
-  final String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
+  final String accessToken =
+      GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
   final String userName = GlobalVariables().phoneNumber;
+  bool _autoValidate = false;
   final myBookServiceBloc = new BookServiceBloc();
   final nonDigit = new RegExp(r"(\D+)");
+  final GlobalKey<FormState> _phoneNumberKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _OTPKey = GlobalKey<FormState>();
   final myBankPhoneNumberController =
       TextEditingController(text: '${GlobalVariables().phoneNumber}');
-  final myBankOTPController =
-      TextEditingController();
+  final myBankOTPController = TextEditingController();
   var _myFocusNode = new FocusNode();
   var _onPressed;
   bool _enabled = false;
@@ -60,9 +63,8 @@ class _BookServiceState extends State<BookService> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(_enabled){
-      _onPressed = (){
+    if (_enabled) {
+      _onPressed = () {
         Navigator.of(context).pop(false);
         bookService();
       };
@@ -89,19 +91,22 @@ class _BookServiceState extends State<BookService> {
               if (state is EnterBankOTPState) {
                 return enterOTPUI(context);
               }
-              if (state is AccountListState){
+              if (state is AccountListState) {
                 return userAccountDetailsUI(context);
               }
-              if (state is BranchListState){
+              if (state is BranchListState) {
                 return branchListUI(context);
               }
-              if (state is TimeSlotState){
+              if (state is TimeSlotState) {
                 return selectTimeSlotUI(context);
               }
-              if (state is LiamAccountListState){
+              if (state is LiamAccountListState) {
                 return selectLiamAccountUI(context);
               }
-              return Container(height: 0.0, width: 0.0,);
+              return Container(
+                height: 0.0,
+                width: 0.0,
+              );
             }),
       ),
     );
@@ -151,7 +156,7 @@ class _BookServiceState extends State<BookService> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
 //            itemCount: int.parse(addressSnapShot.data.length),
               shrinkWrap: true,
               itemCount: addressSnapShot.data.length,
@@ -162,7 +167,8 @@ class _BookServiceState extends State<BookService> {
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
-                          image: new AssetImage('assets/images/address_icon.png')),
+                          image:
+                              new AssetImage('assets/images/address_icon.png')),
                     ),
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.addressid.toString()),
@@ -173,12 +179,16 @@ class _BookServiceState extends State<BookService> {
                       GlobalVariables().longitude = addressOutput.longitude;
                       GlobalVariables().addressid = addressOutput.addressid;
                       GlobalVariables().address = addressOutput.address;
-                      CommonMethods().toast(
-                          context, 'You tapped on ${addressOutput.address}');
                       myBookServiceBloc.add(FetchBankList());
                     },
                   );
                 }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  indent: 16,
+                  endIndent: 16,
+                );
               },
             );
           }
@@ -274,7 +284,6 @@ class _BookServiceState extends State<BookService> {
 //    return getBankListResponseObject;
     }
 
-
     Widget bankList() {
       var bankOutput;
       return FutureBuilder(
@@ -285,7 +294,7 @@ class _BookServiceState extends State<BookService> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
               itemCount: bankSnapShot.data.length,
@@ -304,13 +313,16 @@ class _BookServiceState extends State<BookService> {
                       bankOutput = bankSnapShot.data[index];
                       GlobalVariables().bankCode = bankOutput.bankCode;
                       GlobalVariables().bankname = bankOutput.bankname;
-                      print('******************  THE BANKCODE IS ${GlobalVariables().bankCode}');
                       myBookServiceBloc.add(RegisteredNumber());
-                      CommonMethods().toast(
-                          context, 'You tapped on ${bankOutput.toString()}');
                     },
                   );
                 }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  indent: 16,
+                  endIndent: 16,
+                );
               },
             );
           }
@@ -374,7 +386,6 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack getPhoneNumberUI(BuildContext context) {
-
     return Stack(
       children: <Widget>[
         ClipPath(
@@ -384,149 +395,169 @@ class _BookServiceState extends State<BookService> {
             height: 200,
           ),
         ),
-        Column(
-          children: <Widget>[
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                CircleAvatar(
-                  child: Text(
-                    '3',
-                    style: TextStyle(color: Colors.blue[900]),
-                  ),
-                  backgroundColor: Colors.blue[100],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Flexible(
-                  child: Text(
-                    'Enter the number linked with your Bank',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+        Form(
+          key: _phoneNumberKey,
+          autovalidate: _autoValidate,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 16,
               ),
-              elevation: 20,
-              margin: EdgeInsets.all(18),
-              child: Column(
+              Row(
                 children: <Widget>[
-                  SizedBox(height: 8),
-                  Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Use Registered Mobile Number?",
-                        style: TextStyle(color: Colors.blue, fontSize: 18),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 16,
                   ),
-                  SizedBox(height: 8),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextFormField(
-                      maxLength: 10,
-                      obscureText: false,
-                      keyboardType: TextInputType.numberWithOptions(),
-                      onChanged: (phoneNumber){
-                        if(phoneNumber.length == 6){
-                          FocusScope.of(context).requestFocus(_myFocusNode);
-                        }
-                      },
-                      validator: (phoneNumber) {
-                        if (phoneNumber.length < 10) {
-                          return 'Please enter a valid Phone Number!';
-                        }
-                        if (nonDigit.hasMatch(phoneNumber)) {
-                          return 'Please enter only Numbers!';
-                        }
-                        return null;
-                      },
-                      controller: myBankPhoneNumberController,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(16.0),
-                        prefixText: '+91 ',
-                        prefixStyle: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                        hintText: "Phone Number",
-                        suffixIcon: Icon(
-                          Icons.phone,
-                          color: Colors.blue,
-                        ),
-                        /*border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
-                      ),
+                  CircleAvatar(
+                    child: Text(
+                      '3',
+                      style: TextStyle(color: Colors.blue[900]),
                     ),
+                    backgroundColor: Colors.blue[100],
                   ),
                   SizedBox(
-                    height: 8,
+                    width: 16,
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ArgonButton(
-                      height: 50,
-                      width: 350,
-                      borderRadius: 5.0,
-                      color: Colors.blue,
-                      child: Text(
-                        "Continue",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      loader: Container(
-                        padding: EdgeInsets.all(10),
-                        child: SpinKitRotatingCircle(
+                  Flexible(
+                    child: Text(
+                      'Enter the number linked with your Bank',
+                      style: TextStyle(
                           color: Colors.white,
-                          // size: loaderWidth ,
-                        ),
-                      ),
-                      onTap: (startLoading, stopLoading, btnState) async {
-                        startLoading();
-                        CommonMethods().toast(context,
-                            'The Phone number is ${GlobalVariables().phoneNumber}');
-                        BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
-                        GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
-                        print('************ the login response is ${myBankOTPResponse.eRRORMSG}');
-                        if (myBankOTPResponse.eRRORMSG == 'SUCCESS') {
-                          myBookServiceBloc.add(EnterBankOTP());
-                        } else {
-                          CommonMethods()
-                              .toast(context, myBankOTPResponse.eRRORMSG);
-                        }
-                        //startLoading();
-                        stopLoading();
-                      },
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
                     ),
                   ),
                   SizedBox(
-                    height: 8,
-                  )
+                    width: 16,
+                  ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: 16,
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                elevation: 20,
+                margin: EdgeInsets.all(18),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Use Registered Mobile Number?",
+                          style: TextStyle(color: Colors.blue, fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextFormField(
+                        maxLength: 10,
+                        obscureText: false,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        onChanged: (phoneNumber) {
+                          if (phoneNumber.length == 10) {
+                            FocusScope.of(context).requestFocus(_myFocusNode);
+                          }
+                        },
+                        validator: (phoneNumber) {
+                          if (phoneNumber.length < 10) {
+                            return 'Please enter a valid Phone Number!';
+                          }
+                          if (nonDigit.hasMatch(phoneNumber)) {
+                            return 'Please enter only Numbers!';
+                          }
+                          return null;
+                        },
+                        controller: myBankPhoneNumberController,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(16.0),
+                          prefixText: '+91 ',
+                          prefixStyle: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                          hintText: "Phone Number",
+                          suffixIcon: Icon(
+                            Icons.phone,
+                            color: Colors.blue,
+                          ),
+                          /*border:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ArgonButton(
+                        height: 50,
+                        width: 350,
+                        borderRadius: 5.0,
+                        color: Colors.blue,
+                        child: Text(
+                          "Continue",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        loader: Container(
+                          padding: EdgeInsets.all(10),
+                          child: SpinKitRotatingCircle(
+                            color: Colors.white,
+                            // size: loaderWidth ,
+                          ),
+                        ),
+                        onTap: (startLoading, stopLoading, btnState) async {
+
+//                          startLoading();
+//                          _validatePhoneNumberInput();
+
+                          /*CommonMethods().toast(context,
+                              'The Phone number is ${GlobalVariables().phoneNumber}');
+                          BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
+                          GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
+                          if (myBankOTPResponse.eRRORMSG == 'SUCCESS') {
+                            myBookServiceBloc.add(EnterBankOTP());
+                          } else {
+                            CommonMethods()
+                                .toast(context, myBankOTPResponse.eRRORMSG);
+                          }*/
+                          //startLoading();
+                          // stopLoading();
+                          _validatePhoneInput1();
+                          if(_validatePhoneInput1() == 0){
+                            startLoading();
+                            CommonMethods().toast(context,
+                              'The Phone number is ${GlobalVariables().phoneNumber}');
+                          BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
+                          GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
+                          if (myBankOTPResponse.eRRORMSG == 'SUCCESS') {
+                            myBookServiceBloc.add(EnterBankOTP());
+                          } else {
+                            CommonMethods()
+                                .toast(context, myBankOTPResponse.eRRORMSG);
+                          }
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -570,145 +601,167 @@ class _BookServiceState extends State<BookService> {
             height: 200,
           ),
         ),
-        Column(
-          children: <Widget>[
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                CircleAvatar(
-                  child: Text(
-                    '4',
-                    style: TextStyle(color: Colors.blue[900]),
-                  ),
-                  backgroundColor: Colors.blue[100],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Flexible(
-                  child: Text(
-                    'An OTP has been sent to ${myBankPhoneNumberController.text}',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+        Form(
+          key: _OTPKey,
+          autovalidate: _autoValidate,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 16,
               ),
-              elevation: 20,
-              margin: EdgeInsets.all(18),
-              child: Column(
+              Row(
                 children: <Widget>[
-                  SizedBox(height: 8),
-                  Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Enter OTP",
-                        style: TextStyle(color: Colors.blue, fontSize: 18),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 16,
                   ),
-                  SizedBox(height: 8),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextFormField(
-                      maxLength: 6,
-                      obscureText: false,
-                      keyboardType: TextInputType.numberWithOptions(),
-                      onChanged: (OTP){
-                        if(OTP.length == 6){
-                          FocusScope.of(context).requestFocus(_myFocusNode);
-                        }
-                      },
-                      validator: (OTP) {
-                        if (OTP.length < 6) {
-                          return 'Please enter a valid Phone Number!';
-                        }
-                        if (nonDigit.hasMatch(OTP)) {
-                          return 'Please enter only Numbers!';
-                        }
-                        return null;
-                      },
-                      controller: myBankOTPController,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(16.0),
-                        prefixText: ' ',
-                        prefixStyle: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                        hintText: "OTP",
-                        suffixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.blue,
-                        ),
-                        /*border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
-                      ),
+                  CircleAvatar(
+                    child: Text(
+                      '4',
+                      style: TextStyle(color: Colors.blue[900]),
                     ),
+                    backgroundColor: Colors.blue[100],
                   ),
                   SizedBox(
-                    height: 8,
+                    width: 16,
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ArgonButton(
-                      height: 50,
-                      width: 350,
-                      borderRadius: 5.0,
-                      color: Colors.blue,
-                      child: Text(
-                        "Proceed",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      loader: Container(
-                        padding: EdgeInsets.all(10),
-                        child: SpinKitRotatingCircle(
+                  Flexible(
+                    child: Text(
+                      'An OTP has been sent to ${myBankPhoneNumberController.text}',
+                      style: TextStyle(
                           color: Colors.white,
-                          // size: loaderWidth ,
-                        ),
-                      ),
-                      onTap: (startLoading1, stopLoading, btnState) async {
-                        CommonMethods().toast(context,
-                            'The Entered OTP is ${myBankOTPController.text}');
-                        startLoading1();
-                        GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
-                        if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
-                          myBookServiceBloc.add(FetchAccountList());
-                        }
-                        else{
-                          CommonMethods().toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
-                        }
-                      },
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
                     ),
                   ),
                   SizedBox(
-                    height: 8,
-                  )
+                    width: 16,
+                  ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: 16,
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                elevation: 20,
+                margin: EdgeInsets.all(18),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Enter OTP",
+                          style: TextStyle(color: Colors.blue, fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextFormField(
+                        maxLength: 6,
+                        obscureText: false,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        onChanged: (OTP) {
+                          if (OTP.length == 6) {
+                            FocusScope.of(context).requestFocus(_myFocusNode);
+                          }
+                        },
+                        validator: (OTP) {
+                          if (OTP.length < 6) {
+                            return 'Please enter 6 digits OTP!';
+                          }
+                          if (nonDigit.hasMatch(OTP)) {
+                            return 'Please enter only Numbers!';
+                          }
+                          return null;
+                        },
+                        controller: myBankOTPController,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(16.0),
+                          prefixText: ' ',
+                          prefixStyle: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                          hintText: "OTP",
+                          suffixIcon: Icon(
+                            Icons.lock,
+                            color: Colors.blue,
+                          ),
+                          /*border:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))*/
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ArgonButton(
+                        height: 50,
+                        width: 350,
+                        borderRadius: 5.0,
+                        color: Colors.blue,
+                        child: Text(
+                          "Proceed",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        loader: Container(
+                          padding: EdgeInsets.all(10),
+                          child: SpinKitRotatingCircle(
+                            color: Colors.white,
+                            // size: loaderWidth ,
+                          ),
+                        ),
+                        onTap: (startLoading, stopLoading, btnState) async {
+
+//                          startLoading();
+//                          _validateOTPInput();
+
+                          _validateOTPInput1();
+                          if(_validateOTPInput1() == 0){
+                            CommonMethods().toast(context,
+                                'The Entered OTP is ${myBankOTPController.text}');
+                            startLoading();
+                            GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
+                            if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
+                              myBookServiceBloc.add(FetchAccountList());
+                            }
+                            else{
+                              CommonMethods().toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
+                            }
+                          }
+                          /*CommonMethods().toast(context,
+                              'The Entered OTP is ${myBankOTPController.text}');
+                          startLoading1();
+                          GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
+                          if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
+                            myBookServiceBloc.add(FetchAccountList());
+                          }
+                          else{
+                            CommonMethods().toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
+                          }*/
+//                          stopLoading();
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -736,9 +789,9 @@ class _BookServiceState extends State<BookService> {
     Response verifyOTPAndGetAccountDetailsResponse = await NetworkCommon()
         .myDio
         .post("/getAccountDetails", data: verifyOTPAndGetAccountDetailsString);
-    var verifyOTPString = jsonDecode(verifyOTPAndGetAccountDetailsResponse.toString());
-    var verifyOTPResponseObject =
-    UserAccountDetails.fromJson(verifyOTPString);
+    var verifyOTPString =
+        jsonDecode(verifyOTPAndGetAccountDetailsResponse.toString());
+    var verifyOTPResponseObject = UserAccountDetails.fromJson(verifyOTPString);
 
     return verifyOTPResponseObject;
   }
@@ -765,15 +818,15 @@ class _BookServiceState extends State<BookService> {
     Response fetchBranchesStringResponse = await NetworkCommon()
         .myDio
         .post("/getBranchList", data: fetchBranchesString);
-    var getBranchesResponseString = jsonDecode(fetchBranchesStringResponse.toString());
-    var branchListObject =
-    Branch.fromJson(getBranchesResponseString);
+    var getBranchesResponseString =
+        jsonDecode(fetchBranchesStringResponse.toString());
+    var branchListObject = Branch.fromJson(getBranchesResponseString);
 
     return branchListObject;
   }
 
   Future<TimeSlot> fetchTimeSlots() async {
-    String date = DateTime.now().toString().substring(0,10);
+    String date = DateTime.now().toString().substring(0, 10);
     String fetchTimeSlotsString = """{
           "additionalData":
     {
@@ -792,17 +845,16 @@ class _BookServiceState extends State<BookService> {
     Response fetchTimeSlotResponse = await NetworkCommon()
         .myDio
         .post("/getAvailableSlot", data: fetchTimeSlotsString);
-    var getTimeSlotResponseString = jsonDecode(fetchTimeSlotResponse.toString());
-    var timeSlotObject =
-    TimeSlot.fromJson(getTimeSlotResponseString);
+    var getTimeSlotResponseString =
+        jsonDecode(fetchTimeSlotResponse.toString());
+    var timeSlotObject = TimeSlot.fromJson(getTimeSlotResponseString);
 
     return timeSlotObject;
   }
 
   Future<BookServiceResponse> bookService() async {
-
     var requestTime = CommonMethods().getEpochTime();
-    String date = DateTime.now().toString().substring(0,10);
+    String date = DateTime.now().toString().substring(0, 10);
 
     String bookServiceString = """{
           "additionalData":
@@ -860,49 +912,48 @@ class _BookServiceState extends State<BookService> {
         .post("/bookService", data: bookServiceString);
     var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
     GlobalVariables().myBookServiceResponseObject =
-    BookServiceResponse.fromJson(getBranchesResponseString);
+        BookServiceResponse.fromJson(getBranchesResponseString);
 
     if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
       showDialog(
         context: context,
         child: CupertinoAlertDialog(
           title: Text('Success'),
-          content: Text(
-              'Your Booking was Successful'),
+          content: Text('Your Booking was Successful'),
           actions: <Widget>[
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
               },
               child: Text(
                 'OK',
-                style: TextStyle(
-                    color: Colors.blue, fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           ],
         ),
       );
-    }
-
-    else{
+    } else {
       showDialog(
         context: context,
         child: CupertinoAlertDialog(
           title: Text('Sorry'),
-          content: Text(
-              '${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
+          content:
+              Text('${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
           actions: <Widget>[
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
               },
               child: Text(
                 'OK',
-                style: TextStyle(
-                    color: Colors.blue, fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -914,7 +965,6 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack userAccountDetailsUI(BuildContext context) {
-
     Widget accountList() {
       var accounts;
       return FutureBuilder(
@@ -925,7 +975,7 @@ class _BookServiceState extends State<BookService> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
               itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
@@ -936,11 +986,13 @@ class _BookServiceState extends State<BookService> {
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
-                          image: new AssetImage('assets/images/bank_account_icon.png')),
+                          image: new AssetImage(
+                              'assets/images/bank_account_icon.png')),
                     ),
                     title: Text(accounts),
                     onTap: () {
-                      accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                      accounts =
+                          AccountSnapShot.data.oUTPUT.accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().serviceAccount = accounts;
@@ -948,6 +1000,12 @@ class _BookServiceState extends State<BookService> {
                     },
                   );
                 }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  indent: 16,
+                  endIndent: 16,
+                );
               },
             );
           }
@@ -1010,11 +1068,9 @@ class _BookServiceState extends State<BookService> {
         ),
       ],
     );
-
   }
 
-  Stack branchListUI (BuildContext context) {
-
+  Stack branchListUI(BuildContext context) {
     Widget branchList() {
       var branches;
       return FutureBuilder(
@@ -1025,7 +1081,7 @@ class _BookServiceState extends State<BookService> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
               itemCount: branchSnapShot.data.oUTPUT.length,
@@ -1036,19 +1092,26 @@ class _BookServiceState extends State<BookService> {
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
-                          image: new AssetImage('assets/images/branch_icon.png')),
+                          image:
+                              new AssetImage('assets/images/branch_icon.png')),
                     ),
                     title: Text(branches.branchname),
                     onTap: () {
                       branches = branchSnapShot.data.oUTPUT[index];
-                      CommonMethods().toast(
-                          context, 'You tapped on ${branches.branchname.toString()}');
+                      CommonMethods().toast(context,
+                          'You tapped on ${branches.branchname.toString()}');
                       GlobalVariables().branchcode = branches.branchcode;
                       GlobalVariables().branchname = branches.branchname;
                       myBookServiceBloc.add(FetchTimeSlot());
                     },
                   );
                 }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  indent: 16,
+                  endIndent: 16,
+                );
               },
             );
           }
@@ -1114,7 +1177,6 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack selectTimeSlotUI(BuildContext context) {
-
     Widget slotList() {
       var timeSlot;
       return FutureBuilder(
@@ -1139,10 +1201,13 @@ class _BookServiceState extends State<BookService> {
                   print('project snapshot data is: ${timeSlotSnapShot.data}');
                   return MaterialButton(
                     //title: Text(timeSlot),
-                    child: Center(child: Text(timeSlot,style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
+                    child: Center(
+                        child: Text(
+                      timeSlot,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
                     )),
                     color: Colors.blue[400],
                     onPressed: () {
@@ -1210,7 +1275,10 @@ class _BookServiceState extends State<BookService> {
               ),
               elevation: 20,
               margin: EdgeInsets.all(18),
-              child: Padding(child: slotList(), padding: EdgeInsets.all(5.0),),
+              child: Padding(
+                child: slotList(),
+                padding: EdgeInsets.all(5.0),
+              ),
             ),
           ],
         ),
@@ -1219,7 +1287,6 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack selectLiamAccountUI(BuildContext context) {
-
     Widget accountList() {
       var accounts;
       return FutureBuilder(
@@ -1230,7 +1297,7 @@ class _BookServiceState extends State<BookService> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
               itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
@@ -1241,11 +1308,13 @@ class _BookServiceState extends State<BookService> {
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
-                          image: new AssetImage('assets/images/bank_account_icon.png')),
+                          image: new AssetImage(
+                              'assets/images/bank_account_icon.png')),
                     ),
                     title: Text(accounts),
                     onTap: () {
-                      accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                      accounts =
+                          AccountSnapShot.data.oUTPUT.accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().lianAccount = accounts;
@@ -1255,15 +1324,21 @@ class _BookServiceState extends State<BookService> {
                           title: Text('Confirm Booking'),
                           content: Column(
                             children: <Widget>[
-                              Text('Name : ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}'),
-                              Text('Service Type : ${GlobalVariables().servicetype}'),
-                              Text('Service Charge : ${GlobalVariables().serviceCharge}'),
+                              Text(
+                                  'Name : ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}'),
+                              Text(
+                                  'Service Type : ${GlobalVariables().servicetype}'),
+                              Text(
+                                  'Service Charge : ${GlobalVariables().serviceCharge}'),
                               Text('Bank : ${GlobalVariables().bankname}'),
                               Text('Branch : ${GlobalVariables().branchname}'),
                               Text('Address : ${GlobalVariables().address}'),
-                              Text('Service Delivery Account : ${GlobalVariables().serviceAccount}'),
-                              Text('Payment Account : ${GlobalVariables().lianAccount}'),
-                              Text('Prefered Time : ${GlobalVariables().timeSlot}'),
+                              Text(
+                                  'Service Delivery Account : ${GlobalVariables().serviceAccount}'),
+                              Text(
+                                  'Payment Account : ${GlobalVariables().lianAccount}'),
+                              Text(
+                                  'Prefered Time : ${GlobalVariables().timeSlot}'),
                               /*Material(
                                 child: Checkbox(
                                   value: _enabled,
@@ -1297,18 +1372,20 @@ class _BookServiceState extends State<BookService> {
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(
-                                    color: Colors.red, fontWeight: FontWeight.bold),
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             FlatButton(
-                              onPressed: ()  {
+                              onPressed: () {
                                 Navigator.of(context).pop();
                                 bookService();
                               },
                               child: Text(
                                 'Confirm',
-                                style:
-                                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -1318,6 +1395,12 @@ class _BookServiceState extends State<BookService> {
                     },
                   );
                 }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  indent: 16,
+                  endIndent: 16,
+                );
               },
             );
           }
@@ -1383,7 +1466,47 @@ class _BookServiceState extends State<BookService> {
         ),
       ],
     );
+  }
 
+  int _validatePhoneInput1() {
+    if (_phoneNumberKey.currentState.validate()) {
+      return 0;
+    } else {
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
+
+  int _validateOTPInput1(){
+    if (_OTPKey.currentState.validate()) {
+      return 0;
+    }
+    else {
+      setState(() {
+        _autoValidate = true;
+        return 1;
+      });
+    }
+  }
+
+  Future<void> _validateOTPInput() async {
+    if (_OTPKey.currentState.validate()) {
+      CommonMethods()
+          .toast(context, 'The Entered OTP is ${myBankOTPController.text}');
+      GlobalVariables().myUserAccountDetails =
+          await verifyOTPAndGetAccountDetails();
+      if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS') {
+        myBookServiceBloc.add(FetchAccountList());
+      } else {
+        CommonMethods()
+            .toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
+      }
+    } else {
+      setState(() {
+        _autoValidate = true;
+      });
+    }
   }
 
   void dispose() {

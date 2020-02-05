@@ -61,6 +61,27 @@ class _MySignUpPageState extends State<MySignUpPage> {
   ];
   var _myFocusNode = new FocusNode();
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new CupertinoAlertDialog(
+        title: new Text('Confirm Exit'),
+        content: new Text('Do you want to quit Sign-up, the data entered will not be saved'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No', style: TextStyle(color: Colors.blue),),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes', style: TextStyle(color: Colors.red),),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,9 +92,10 @@ class _MySignUpPageState extends State<MySignUpPage> {
       ),
       body: /*buildCenterInitial(),*/ Center(
         child: WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
+          onWillPop: _onWillPop,
+              /*() async {
+            return true;
+          },*/
           child: BlocBuilder<SignUpBloc, SignUpState>(
               bloc: mySignUpBloc,
               builder: (context, state) {
@@ -387,7 +409,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         securityAnswerInput(),
                         SizedBox(height: 10,),
                         CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp(1)));
                         },),
                         SizedBox(height: 10,),
                         signUpButton(),
