@@ -451,7 +451,7 @@ class Repository {
     //TODO need to change
     String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
 
-    String getServicesString = """{
+    String removeAddressString = """{
           "additionalData":
     {
     "client_app_ver":"1.0.0",
@@ -468,11 +468,59 @@ class Repository {
     }""";
     Response removeAddressResponse = await NetworkCommon()
         .myDio
-        .post("/removeAddress", data: getServicesString);
+        .post("/removeAddress", data: removeAddressString);
     if (removeAddressResponse.toString().contains('"ERRORCODE": "00"')) {
       return 'Address Deleted Successfully';
     } else {
       return 'Couldn\'t delete address,Please try again';
+    }
+    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+
+    var output = getServicesResponseObject.oUTPUT;
+
+    List services = [];
+
+    for (int i = 0; i < output.length; i++) {
+      print(
+          '                SERVICE NAME IS $i : ${output[i].servicename}             ');
+      services.add(output[i].servicename);
+    }
+
+    print('             THE SERVICES OFFERED ARE $services                 ');
+
+//    return output;
+  return getServicesResponseObject;*/
+  }
+
+  addAddress(String address, String latitude, String longitude, String pinCode) async {
+
+    //TODO need to change
+    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
+
+    String addAddressString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${GlobalVariables().phoneNumber}",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "address": "$address",
+    "latitude": "$latitude",
+    "longitude": "$longitude",
+    "pincode":"$pinCode"
+    }""";
+    Response addAddressResponse = await NetworkCommon()
+        .myDio
+        .post("/addAddress", data: addAddressString);
+    if (addAddressResponse.toString().contains('"ERRORCODE": "00"')) {
+      return 'Address Added Successfully';
+    } else {
+      return 'Couldn\'t Add address,Please try again';
     }
     /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 

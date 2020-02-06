@@ -13,7 +13,6 @@ import 'package:geocoder/geocoder.dart';
 import 'main.dart';
 
 class MyMapsApp extends StatefulWidget {
-
   final int fromPage;
 
   MyMapsApp(this.fromPage);
@@ -30,6 +29,11 @@ class _MyMapsAppState extends State<MyMapsApp> {
   String rLatitude;
   String rLongitude;
 
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
 
   static const LatLng _center = const LatLng(20.5937, 78.9629);
 
@@ -49,15 +53,14 @@ class _MyMapsAppState extends State<MyMapsApp> {
 //    rLatitude = currentLocation.latitude.toString();
 //    rLongitude = currentLocation.longitude.toString();
 
-    /*final coordinates = new Coordinates(currentLocation.latitude,currentLocation.longitude);
+    final coordinates = new Coordinates(currentLocation.latitude,currentLocation.longitude);
       var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
 
       GlobalVariables().pinCodeFromLocation = first.postalCode;
-      GlobalVariables().addressFromLocation = first.addressLine;*/
+      GlobalVariables().addressFromLocation = first.addressLine;
 
     setState(() async {
-
       /*final coordinates = new Coordinates(currentLocation.latitude,currentLocation.longitude);
       var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
@@ -73,7 +76,6 @@ class _MyMapsAppState extends State<MyMapsApp> {
         draggable: true,
       );
       _markers["Current Location"] = marker;
-
     });
     print('The current location is ${_markers["Current Location"]}');
     _currentPosition = Position.fromMap(_markers[0]);
@@ -102,7 +104,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: _getLocation,
+//          onPressed: _getLocation,
           tooltip: 'Get Current Location',
           child: Icon(Icons.location_on),
         ),
@@ -132,32 +134,25 @@ class _MyMapsAppState extends State<MyMapsApp> {
                       borderRadius: BorderRadius.circular(30.0),
                       color: Colors.blue,
                       child: MaterialButton(
-                        padding:
-                        EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                         onPressed: () {
-                          GlobalVariables().registrationLatitude =
-                              rLatitude;
-                          GlobalVariables().registrationLongitude =
-                              rLongitude;
+                          GlobalVariables().registrationLatitude = rLatitude;
+                          GlobalVariables().registrationLongitude = rLongitude;
 //                          print('*******************Latitide is $rLatitude');
-                          if (GlobalVariables().registrationLatitude ==
-                              null &&
-                              GlobalVariables().registrationLongitude ==
-                                  null) {
+                          if (GlobalVariables().registrationLatitude == null &&
+                              GlobalVariables().registrationLongitude == null) {
                             CommonMethods()
                                 .toast(context, "Please Select an Address");
                           } else {
                             CommonMethods()
                                 .toast(context, "Success, address Marked");
                             Navigator.pop(context);
-                            if(widget.fromPage == 2)
-                              Navigator.pop(context);
+                            if (widget.fromPage == 2) Navigator.pop(context);
                           }
                         },
                         child: Text(
                           "Add this Address",
-                          style:
-                          TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: Colors.white, fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
                       )),

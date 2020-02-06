@@ -7,6 +7,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/MainUI.dart';
+import 'package:customer_application/MapsExperiments.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/SignUpUI.dart';
 import 'package:customer_application/bloc.dart';
@@ -79,10 +80,11 @@ class MyApp extends StatelessWidget {
 //      title: 'DSB Customer',
       navigatorKey: MyApp.navKey,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+      theme: /*ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'HelveticaNeueLight',
-      ),
+      ),*/
+      ThemeData.dark(),
       home: BlocProvider(
 //          builder: (context) => SignInBloc(),
 //          child: MyHomePage(title: 'DSB Customer')),
@@ -1278,7 +1280,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
             _validateInputs();
-
+            //Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsApp()));
             /*return showDialog(
               context: context,
               builder: (context) {

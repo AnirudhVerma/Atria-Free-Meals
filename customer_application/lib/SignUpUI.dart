@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
+import 'package:customer_application/MapsExperiments.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:customer_application/repository.dart';
@@ -409,7 +410,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         securityAnswerInput(),
                         SizedBox(height: 10,),
                         CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp(1)));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(0)));
                         },),
                         SizedBox(height: 10,),
                         signUpButton(),

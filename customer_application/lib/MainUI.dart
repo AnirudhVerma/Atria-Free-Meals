@@ -568,7 +568,7 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),*/
                   ),
               Container(
-                color: Colors.blue,
+               // color: Colors.blue,
                 child: ListView(
                   children: <Widget>[
                     ListTile(
@@ -704,7 +704,7 @@ class _MyMainPageState extends State<MyMainPage> {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text('Name                 '),
+                              Text('Name                          '),
                               Spacer(
                                 flex: 1,
                               ),
@@ -735,7 +735,7 @@ class _MyMainPageState extends State<MyMainPage> {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text('Phone Number          '),
+                              Text('Phone Number             '),
                               Spacer(
                                 flex: 1,
                               ),
@@ -797,7 +797,7 @@ class _MyMainPageState extends State<MyMainPage> {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text('Email                '),
+                              Text('Email                         '),
                               Spacer(
                                 flex: 1,
                               ),
@@ -835,7 +835,7 @@ class _MyMainPageState extends State<MyMainPage> {
                                 SizedBox(
                                   width: 5,
                                 ),
-                                Text('Address              '),
+                                Text('Address                  '),
                                 Spacer(
                                   flex: 1,
                                 ),
@@ -888,7 +888,7 @@ class _MyMainPageState extends State<MyMainPage> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-                title: Text('   Home'),
+                title: Text('    Home'),
                 activeColor: Colors.blue,
                 inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.home)),

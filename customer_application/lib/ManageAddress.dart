@@ -1,4 +1,5 @@
 import 'package:customer_application/CommonMethods.dart';
+import 'package:customer_application/MapsExperiments.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,7 @@ class ManageAddress extends StatelessWidget {
             onPressed: () {
               GlobalVariables().longitude = null;
               GlobalVariables().longitude = null;
-              Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsApp(2)));
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(1)));
             }
           ),
         ],
