@@ -50,13 +50,8 @@ class NetworkCommon {
   }
 
   readFile() async {
-
-
     certificateChainBytes =
         (await rootBundle.load('assets/certificate.pem')).buffer.asInt8List();
-
-
-
   }
   static bool _certificateCheck(X509Certificate cert, String host, int port){
     return host == 'local.domain.ext';
@@ -73,8 +68,8 @@ class NetworkCommon {
 
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
-//    dio.options.baseUrl = 'http://10.10.20.62:30000/doorstep';    //office local server
-    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
+    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
+//    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
 
     // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s

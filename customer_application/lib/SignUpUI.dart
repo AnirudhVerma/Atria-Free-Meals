@@ -8,6 +8,7 @@ import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'SizeConfig.dart';
 
 /*void main() => runApp(MyApp());
@@ -66,8 +67,8 @@ class _MySignUpPageState extends State<MySignUpPage> {
     return (await showDialog(
       context: context,
       builder: (context) => new CupertinoAlertDialog(
-        title: new Text('Confirm Exit'),
-        content: new Text('Do you want to quit Sign-up, the data entered will not be saved'),
+        title: new Text('Cancel Sign-up?'),
+        content: new Text('Do you want to cancel Sign-up, the data entered will not be saved'),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -189,185 +190,41 @@ class _MySignUpPageState extends State<MySignUpPage> {
                  */
   }
 
-  Container getOTPUI() {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/myBackground.png'),
-          fit: BoxFit.cover,
+  Stack getOTPUI() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+            ),
+            height: 300,
+          ),
         ),
-        gradient: RadialGradient(
-          // Add one stop for each color. Stops should increase from 0 to 1
-          radius: 0.1,
-          stops: [0.1, 0.5, 0.7, 0.9],
-          colors: [
-            // Colors are easy thanks to Flutter's Colors class.
-            Colors.blue[400],
-            Colors.blue[300],
-            Colors.blue[200],
-            Colors.blue[50],
-          ],
-        ),
-      ),
-      //  color: Colors.grey[200],
+        Container(
+          alignment: Alignment.center,
+          /*decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/myBackground.png'),
+              fit: BoxFit.cover,
+            ),
+            gradient: RadialGradient(
+              // Add one stop for each color. Stops should increase from 0 to 1
+              radius: 0.1,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                // Colors are easy thanks to Flutter's Colors class.
+                Colors.blue[400],
+                Colors.blue[300],
+                Colors.blue[200],
+                Colors.blue[50],
+              ],
+            ),
+          ),*/
+          //  color: Colors.grey[200],
 
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-        // previous-10   0.8     SizeConfig.blockSizeHorizontal
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-              //previous-36     SizeConfig.blockSizeHorizontal * 1.5
-              child: Form(
-                key: _formKey1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 10),
-                    Text(
-                      " Sign-Up!",
-                      style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.blue,
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 30),
-                    phoneNumberInput(),
-                    SizedBox(height: 10),
-                    OTPButton(),
-                    SizedBox(height: 10),
-                    /*nameInput(),
-                    SizedBox(height: 10),
-                    addressInput(),
-                    SizedBox(height: 10),
-                    alternatePhoneNumberInput(),
-                    SizedBox(height: 10),
-                    passwordInput(),
-                    SizedBox(height: 10),
-                    Text('Security Question',),
-                    dropDown(),*/
-                  ],
-                ),
-              )),
-        ),
-      ),
-    );
-  }
-
-  Container enterOTPUI() {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/myBackground.png'),
-          fit: BoxFit.cover,
-        ),
-        gradient: RadialGradient(
-          radius: 0.1,
-          stops: [0.1, 0.5, 0.7, 0.9],
-          colors: [
-            Colors.blue[400],
-            Colors.blue[300],
-            Colors.blue[200],
-            Colors.blue[50],
-          ],
-        ),
-      ),
-      //  color: Colors.grey[200],
-
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-        // previous-10   0.8     SizeConfig.blockSizeHorizontal
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-              //previous-36     SizeConfig.blockSizeHorizontal * 1.5
-              child: Form(
-                key: _formKey1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 10),
-                    Text(
-                      " Enter OTP",
-                      style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.blue,
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          " We've sent an OTP to ${myController.text}",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'HelveticaNeue',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    OTPInput(),
-                    SizedBox(height: 10),
-                    validateOTPButton(),
-                    SizedBox(height: 10),
-                    /*nameInput(),
-                    SizedBox(height: 10),
-                    addressInput(),
-                    SizedBox(height: 10),
-                    alternatePhoneNumberInput(),
-                    SizedBox(height: 10),
-                    passwordInput(),
-                    SizedBox(height: 10),
-                    Text('Security Question',),
-                    dropDown(),*/
-                  ],
-                ),
-              )),
-        ),
-      ),
-    );
-  }
-
-  Container registrationFormUI() {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/myBackground.png'),
-          fit: BoxFit.cover,
-        ),
-        gradient: RadialGradient(
-          radius: 0.1,
-          stops: [0.1, 0.5, 0.7, 0.9],
-          colors: [
-            Colors.blue[400],
-            Colors.blue[300],
-            Colors.blue[200],
-            Colors.blue[50],
-          ],
-        ),
-      ),
-      //  color: Colors.grey[200],
-          child : Card(
+          child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
@@ -379,46 +236,229 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
                   //previous-36     SizeConfig.blockSizeHorizontal * 1.5
                   child: Form(
-                    key: _registrationFormKey,
+                    key: _formKey1,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 20),
-                        Text('Sign-up :  ${myController.text}',
-                            style: TextStyle(
-                                fontSize: 22,
-//                            fontFamily: 'HelveticaNeue',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue)),
-                        SizedBox(height: 20),
-                        nameInput(),
+                        SizedBox(height: 10),
+                        Text(
+                          " Sign-Up!",
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.blue,
+                              fontFamily: 'HelveticaNeue',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 30),
+                        phoneNumberInput(),
+                        SizedBox(height: 10),
+                        OTPButton(),
+                        SizedBox(height: 10),
+                        /*nameInput(),
                         SizedBox(height: 10),
                         addressInput(),
                         SizedBox(height: 10),
                         alternatePhoneNumberInput(),
                         SizedBox(height: 10),
-                        pinInput(),
+                        passwordInput(),
                         SizedBox(height: 10),
-                        confirmPinInput(),
-                        SizedBox(height: 10,),
-                        emailInput(),
-                        SizedBox(height: 10,),
-                        Text('Select a Security Question',),
-                        dropDown(),
-                        SizedBox(height: 10,),
-                        securityAnswerInput(),
-                        SizedBox(height: 10,),
-                        CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(0)));
-                        },),
-                        SizedBox(height: 10,),
-                        signUpButton(),
+                        Text('Security Question',),
+                        dropDown(),*/
                       ],
                     ),
                   )),
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Stack enterOTPUI() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+            ),
+            height: 300,
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          /*decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/myBackground.png'),
+              fit: BoxFit.cover,
+            ),
+            gradient: RadialGradient(
+              radius: 0.1,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                Colors.blue[400],
+                Colors.blue[300],
+                Colors.blue[200],
+                Colors.blue[50],
+              ],
+            ),
+          ),*/
+          //  color: Colors.grey[200],
+
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            elevation: 20,
+            margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+            // previous-10   0.8     SizeConfig.blockSizeHorizontal
+            child: SingleChildScrollView(
+              child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                  //previous-36     SizeConfig.blockSizeHorizontal * 1.5
+                  child: Form(
+                    key: _formKey1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Text(
+                          " Enter OTP",
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.blue,
+                              fontFamily: 'HelveticaNeue',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              " We've sent an OTP to ${myController.text}",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'HelveticaNeue',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        OTPInput(),
+                        SizedBox(height: 10),
+                        validateOTPButton(),
+                        SizedBox(height: 10),
+                        /*nameInput(),
+                        SizedBox(height: 10),
+                        addressInput(),
+                        SizedBox(height: 10),
+                        alternatePhoneNumberInput(),
+                        SizedBox(height: 10),
+                        passwordInput(),
+                        SizedBox(height: 10),
+                        Text('Security Question',),
+                        dropDown(),*/
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Stack registrationFormUI() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+            ),
+            height: 300,
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          /*decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/myBackground.png'),
+              fit: BoxFit.cover,
+            ),
+            gradient: RadialGradient(
+              radius: 0.1,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                Colors.blue[400],
+                Colors.blue[300],
+                Colors.blue[200],
+                Colors.blue[50],
+              ],
+            ),
+          ),*/
+          //  color: Colors.grey[200],
+              child : Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                elevation: 20,
+                margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                // previous-10   0.8     SizeConfig.blockSizeHorizontal
+                child: SingleChildScrollView(
+                  child: Padding(
+                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                      //previous-36     SizeConfig.blockSizeHorizontal * 1.5
+                      child: Form(
+                        key: _registrationFormKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 20),
+                            Text('Sign-up :  ${myController.text}',
+                                style: TextStyle(
+                                    fontSize: 22,
+//                            fontFamily: 'HelveticaNeue',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)),
+                            SizedBox(height: 20),
+                            nameInput(),
+                            SizedBox(height: 10),
+                            addressInput(),
+                            SizedBox(height: 10),
+                            alternatePhoneNumberInput(),
+                            SizedBox(height: 10),
+                            pinInput(),
+                            SizedBox(height: 10),
+                            confirmPinInput(),
+                            SizedBox(height: 10,),
+                            emailInput(),
+                            SizedBox(height: 10,),
+                            Text('Select a Security Question',),
+                            dropDown(),
+                            SizedBox(height: 10,),
+                            securityAnswerInput(),
+                            SizedBox(height: 10,),
+                            CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(0)));
+                            },),
+                            SizedBox(height: 10,),
+                            signUpButton(),
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+        ),
+      ],
     );
   }
 

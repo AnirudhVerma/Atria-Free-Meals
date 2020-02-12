@@ -80,7 +80,7 @@ class _BookServiceState extends State<BookService> {
             bloc: myBookServiceBloc,
             builder: (context, state) {
               if (state is InitialBookServiceState) {
-                return addressUI(context);
+                return  addressUI(context);
               }
               if (state is BankListState) {
                 return bankListUI(context);
@@ -113,6 +113,7 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack addressUI(BuildContext context) {
+
     Future<void> getAddress() async {
       String getBankString = """{
           "additionalData":
@@ -159,6 +160,7 @@ class _BookServiceState extends State<BookService> {
             return ListView.separated(
 //            itemCount: int.parse(addressSnapShot.data.length),
               shrinkWrap: true,
+
               itemCount: addressSnapShot.data.length,
               itemBuilder: (context, index) {
                 {
@@ -205,50 +207,63 @@ class _BookServiceState extends State<BookService> {
             height: 200,
           ),
         ),
-        Column(
-          children: <Widget>[
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                CircleAvatar(
-                  child: Text(
-                    '1',
-                    style: TextStyle(color: Colors.blue[900]),
+       Column(
+            children: <Widget>[
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 16,
                   ),
-                  backgroundColor: Colors.blue[100],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Text(
-                  'Choose an Address',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                  CircleAvatar(
+                    child: Text(
+                      '1',
+                      style: TextStyle(color: Colors.blue[900]),
+                    ),
+                    backgroundColor: Colors.blue[100],
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                    'Choose an Address',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ],
               ),
-              elevation: 20,
-              margin: EdgeInsets.all(18),
-              child: Center(
-                child: Container(child: addressList()),
+              SizedBox(
+                height: 16,
               ),
-            ),
-          ],
-        ),
+//              SingleChildScrollView(
+//                child: Card(
+               Center(
+                 child: Container(
+//                 margin: EdgeInsets.all(10),
+//                   height: 500,
+                   constraints: BoxConstraints(
+                       maxHeight: 500.0
+                   ),
+                   child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      elevation: 20,
+                      margin: EdgeInsets.all(18),
+                     // child: SingleChildScrollView(
+                        child: addressList(),
+                      //),
+//                ),
+              ),
+                 ),
+               ),
+            ],
+          ),
+
       ],
     );
   }
@@ -349,6 +364,22 @@ class _BookServiceState extends State<BookService> {
                 SizedBox(
                   width: 16,
                 ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(AddressEvent());
+                  },
+                  child: CircleAvatar(
+//                  child: Text(
+//                    '2',
+//                    style: TextStyle(color: Colors.blue[900]),
+//                  ),
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
                 CircleAvatar(
                   child: Text(
                     '2',
@@ -407,6 +438,38 @@ class _BookServiceState extends State<BookService> {
                 children: <Widget>[
                   SizedBox(
                     width: 16,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(AddressEvent());
+                    },
+                    child: CircleAvatar(
+//                  child: Text(
+//                    '2',
+//                    style: TextStyle(color: Colors.blue[900]),
+//                  ),
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(FetchBankList());
+                    },
+                    child: CircleAvatar(
+//                  child: Text(
+//                    '2',
+//                    style: TextStyle(color: Colors.blue[900]),
+//                  ),
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
                   ),
                   CircleAvatar(
                     child: Text(
@@ -481,7 +544,7 @@ class _BookServiceState extends State<BookService> {
                           contentPadding: EdgeInsets.all(16.0),
                           prefixText: '+91 ',
                           prefixStyle: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
+                              fontWeight: FontWeight.bold),
                           hintText: "Phone Number",
                           suffixIcon: Icon(
                             Icons.phone,
@@ -517,10 +580,8 @@ class _BookServiceState extends State<BookService> {
                           ),
                         ),
                         onTap: (startLoading, stopLoading, btnState) async {
-
 //                          startLoading();
 //                          _validatePhoneNumberInput();
-
                           /*CommonMethods().toast(context,
                               'The Phone number is ${GlobalVariables().phoneNumber}');
                           BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
@@ -614,6 +675,42 @@ class _BookServiceState extends State<BookService> {
                   SizedBox(
                     width: 16,
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(AddressEvent());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(FetchBankList());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(RegisteredNumber());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
                   CircleAvatar(
                     child: Text(
                       '4',
@@ -666,7 +763,7 @@ class _BookServiceState extends State<BookService> {
                       padding: EdgeInsets.all(8),
                       child: TextFormField(
                         maxLength: 6,
-                        obscureText: false,
+                        obscureText: true,
                         keyboardType: TextInputType.numberWithOptions(),
                         onChanged: (OTP) {
                           if (OTP.length == 6) {
@@ -1032,6 +1129,54 @@ class _BookServiceState extends State<BookService> {
                 SizedBox(
                   width: 16,
                 ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(AddressEvent());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBankList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(RegisteredNumber());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(EnterBankOTP());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
                 CircleAvatar(
                   child: Text(
                     '5',
@@ -1137,6 +1282,66 @@ class _BookServiceState extends State<BookService> {
               children: <Widget>[
                 SizedBox(
                   width: 16,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(AddressEvent());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBankList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(RegisteredNumber());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(EnterBankOTP());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchAccountList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
                 ),
                 CircleAvatar(
                   child: Text(
@@ -1244,6 +1449,78 @@ class _BookServiceState extends State<BookService> {
               children: <Widget>[
                 SizedBox(
                   width: 16,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(AddressEvent());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBankList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(RegisteredNumber());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(EnterBankOTP());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchAccountList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBranchList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
                 ),
                 CircleAvatar(
                   child: Text(
@@ -1427,6 +1704,90 @@ class _BookServiceState extends State<BookService> {
                 SizedBox(
                   width: 16,
                 ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(AddressEvent());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBankList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(RegisteredNumber());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(EnterBankOTP());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchAccountList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchBranchList());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    myBookServiceBloc.add(FetchTimeSlot());
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue[100],
+                    maxRadius: 10,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
                 CircleAvatar(
                   child: Text(
                     '8',
@@ -1437,6 +1798,15 @@ class _BookServiceState extends State<BookService> {
                 SizedBox(
                   width: 16,
                 ),
+
+                SizedBox(
+                  width: 16,
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(width: 16,),
                 Flexible(
                   child: Text(
                     'Almost Done, Select an account to be charged',
@@ -1445,9 +1815,6 @@ class _BookServiceState extends State<BookService> {
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0),
                   ),
-                ),
-                SizedBox(
-                  width: 16,
                 ),
               ],
             ),

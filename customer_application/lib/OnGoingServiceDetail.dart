@@ -98,7 +98,7 @@ class OnGoingServiceDetail extends StatelessWidget {
                                 SizedBox(height: 5,),
                                 Text('${bookingDetailSnapShot.data.agentInfo[0].agentname}', style: TextStyle(fontWeight: FontWeight.bold),),
                                 SizedBox(height: 10,),
-                                Text('${bookingDetailSnapShot.data.serviceinfo[0].deliveryaddress}'),
+//                                Text('${bookingDetailSnapShot.data.serviceinfo[0].deliveryaddress}',textWidthBasis: Tex,),
                                 SizedBox(height: 5,),
                                 Text('', style: TextStyle(fontWeight: FontWeight.bold),),
                               ],

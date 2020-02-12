@@ -47,7 +47,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Text('Looks like you don\'t have any On-Going Services'),
+            child: Text('Mm, Looks like you don\'t have any On-Going Services'),
           );
         }
         else {

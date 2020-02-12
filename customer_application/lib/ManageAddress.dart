@@ -7,9 +7,21 @@ import 'package:flutter/material.dart';
 
 import 'GlobalVariables.dart';
 
-class ManageAddress extends StatelessWidget {
+class ManageAddress extends StatefulWidget {
 
+  @override
+  _ManageAddressState createState() => _ManageAddressState();
+}
+
+class _ManageAddressState extends State<ManageAddress> {
   var addressOutput;
+
+  @override
+  void initState() {
+    setState(() {
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +91,9 @@ class ManageAddress extends StatelessWidget {
                     onPressed: () {
                       String result = Repository().removeAddress(addressOutput.addressid.toString());
                       CommonMethods().toast(context, result);
+                      setState(() {
+
+                      });
                     },),
                   );
                 }
@@ -92,5 +107,4 @@ class ManageAddress extends StatelessWidget {
       ),
     );
   }
-
 }

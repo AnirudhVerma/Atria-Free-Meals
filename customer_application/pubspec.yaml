@@ -127,6 +127,7 @@ flutter:
     - assets/images/service-details.png
     - assets/cert/certificate.pem
     - assets/
+    - assets/images/dices.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

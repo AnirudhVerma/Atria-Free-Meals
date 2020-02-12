@@ -4,6 +4,11 @@ abstract class BookServiceEvent extends Equatable {
    BookServiceEvent();
 }
 
+class AddressEvent extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}
+
 class FetchBankList extends BookServiceEvent{
    @override
    List<Object> get props => null;

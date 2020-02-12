@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
@@ -80,11 +81,16 @@ class MyApp extends StatelessWidget {
 //      title: 'DSB Customer',
       navigatorKey: MyApp.navKey,
       debugShowCheckedModeBanner: false,
-      theme: /*ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'HelveticaNeueLight',
-      ),*/
-      ThemeData.dark(),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        fontFamily: 'HelveticaNeueLight',
+//        primaryColor: Colors.blue,
+      ),
+      //ThemeData.dark(),
       home: BlocProvider(
 //          builder: (context) => SignInBloc(),
 //          child: MyHomePage(title: 'DSB Customer')),
@@ -374,390 +380,414 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }*/
 
-  Container buildCenterOTP() {
-    return Container(
-      alignment: Alignment.center,
-      //  color: Colors.grey[200],
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/myBackground.png'),
-          fit: BoxFit.cover,
+  Stack buildCenterOTP() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+            ),
+            height: 300,
+          ),
         ),
-        gradient: RadialGradient(
-          // Where the linear gradient begins and ends
+        Container(
+          alignment: Alignment.center,
+          //  color: Colors.grey[200],
+          /*decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/myBackground.png'),
+              fit: BoxFit.cover,
+            ),
+            gradient: RadialGradient(
+              // Where the linear gradient begins and ends
 //            begin: Alignment.topRight,
 //            end: Alignment.bottomLeft,
-          // Add one stop for each color. Stops should increase from 0 to 1
-          radius: 0.1,
-          stops: [0.1, 0.5, 0.7, 0.9],
-          colors: [
-            // Colors are easy thanks to Flutter's Colors class.
-            Colors.blue[400],
-            Colors.blue[300],
-            Colors.blue[200],
-            Colors.blue[50],
-          ],
-        ),
-      ),
-      // Center is a layout widget. It takes a single child and positions it
-      // in the middle of the parent.
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-        // previous 2
-        // previous-10   0.8     SizeConfig.blockSizeHorizontal
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-            // previous 2.5
-            //previous-36     SizeConfig.blockSizeHorizontal * 1.5
-            child: Form(
-              key: _formKey,
-              autovalidate: _autoValidate,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
+              // Add one stop for each color. Stops should increase from 0 to 1
+              radius: 0.1,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                // Colors are easy thanks to Flutter's Colors class.
+                Colors.blue[400],
+                Colors.blue[300],
+                Colors.blue[200],
+                Colors.blue[50],
+              ],
+            ),
+          ),*/
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            elevation: 20,
+            margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+            // previous 2
+            // previous-10   0.8     SizeConfig.blockSizeHorizontal
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                // previous 2.5
+                //previous-36     SizeConfig.blockSizeHorizontal * 1.5
+                child: Form(
+                  key: _formKey,
+                  autovalidate: _autoValidate,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
 //                  SizedBox(height: 35.0),
-                  Text(
-                    ' Door Step Banking',
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.blue,
-                      fontFamily: 'HelveticaNeue',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
-                    child: Image(
-                      image: AssetImage('assets/images/blue_door.png'),
-                      height: 100,
-                      width: 100,
-                    ),
-                  ),
-                  /*Text(
-                        "DOOR-STEP BANKING",
-                        style: TextStyle(fontSize: SizeConfig.permanentBlockSize * 2.5 ,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.normal),
-                      ),*/
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  signinTextRow(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  phoneNumberInput(),
+                      Text(
+                        ' Door Step Banking',
+                        style: TextStyle(
+                          fontSize: 26,
+                          color: Colors.blue,
+                          fontFamily: 'HelveticaNeue',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
+                        child: Image(
+                          image: AssetImage('assets/images/blue_door.png'),
+                          height: 100,
+                          width: 100,
+                        ),
+                      ),
+                      /*Text(
+                            "DOOR-STEP BANKING",
+                            style: TextStyle(fontSize: SizeConfig.permanentBlockSize * 2.5 ,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal),
+                          ),*/
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      signinTextRow(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      phoneNumberInput(),
 //                    SizedBox(
 //                      height: 15.0,
 //                    ),
 //                    OTPInput(),
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  loginWithOTPRow(),
-                  SizedBox(
-                    height: 15.0,
-                  ),
-//                  signUpRow(),
-                  workingRow(),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  /*   Center(
-                    child: Text(
-                      " -OR- ",
-                      style: TextStyle(
-                          fontSize: 18,
-                          //previous SizeConfig.permanentBlockSize * 1.5
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        mySignInBloc.add(DoSignInWithPIN());
-                      },
-                      child: Text(
-                        " Sign-in with PIN ",
-                        style: TextStyle(
-                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
-                            color: Colors.black,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.normal),
+                      SizedBox(
+                        height: 15.0,
                       ),
-                    ),
-                  ),*/
-                ],
+                      loginWithOTPRow(),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+//                  signUpRow(),
+                      workingRow(),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      /*   Center(
+                        child: Text(
+                          " -OR- ",
+                          style: TextStyle(
+                              fontSize: 18,
+                              //previous SizeConfig.permanentBlockSize * 1.5
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            mySignInBloc.add(DoSignInWithPIN());
+                          },
+                          child: Text(
+                            " Sign-in with PIN ",
+                            style: TextStyle(
+                                //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                                color: Colors.black,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ),
+                      ),*/
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Container buildCenterEnterOTP() {
-    return Container(
-      alignment: Alignment.center,
-      //  color: Colors.grey[200],
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/myBackground.png'),
-          fit: BoxFit.cover,
+  Stack buildCenterEnterOTP() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: WaveClipperTwo(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+            ),
+            height: 300,
+          ),
         ),
-        gradient: RadialGradient(
-          // Where the linear gradient begins and ends
+        Container(
+          alignment: Alignment.center,
+          //  color: Colors.grey[200],
+          /*decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/myBackground.png'),
+              fit: BoxFit.cover,
+            ),
+            gradient: RadialGradient(
+              // Where the linear gradient begins and ends
 //            begin: Alignment.topRight,
 //            end: Alignment.bottomLeft,
-          // Add one stop for each color. Stops should increase from 0 to 1
-          radius: 0.1,
-          stops: [0.1, 0.5, 0.7, 0.9],
-          colors: [
-            // Colors are easy thanks to Flutter's Colors class.
-            Colors.blue[400],
-            Colors.blue[300],
-            Colors.blue[200],
-            Colors.blue[50],
-          ],
-        ),
-      ),
-      // Center is a layout widget. It takes a single child and positions it
-      // in the middle of the parent.
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 20,
-        margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-        // previous-10   0.8     SizeConfig.blockSizeHorizontal
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-              //previous-36     SizeConfig.blockSizeHorizontal * 1.5
-              child: Form(
-                key: _formOTPKey,
-                autovalidate: _autoValidate,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
+              // Add one stop for each color. Stops should increase from 0 to 1
+              radius: 0.1,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                // Colors are easy thanks to Flutter's Colors class.
+                Colors.blue[400],
+                Colors.blue[300],
+                Colors.blue[200],
+                Colors.blue[50],
+              ],
+            ),
+          ),*/
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            elevation: 20,
+            margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+            // previous-10   0.8     SizeConfig.blockSizeHorizontal
+            child: SingleChildScrollView(
+              child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                  //previous-36     SizeConfig.blockSizeHorizontal * 1.5
+                  child: Form(
+                    key: _formOTPKey,
+                    autovalidate: _autoValidate,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
 //                  SizedBox(height: 35.0),
-                    Text(
-                      " Door-Step Banking",
-                      style: TextStyle(
-                        fontSize: 26,
-                        color: Colors.blue,
-                        fontFamily: 'HelveticaNeue',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
-                      child: Image(
-                        image: AssetImage('assets/images/blue_door.png'),
-                        height: 100,
-                        width: 100,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    OTPPhoneNumberTextRow(),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    OTPInput(),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    //loginWithOTPRow(),
-                    /*Center(
-                      child: GestureDetector(
-                        child: Text(
-                          'Resend OTP',
+                        Text(
+                          " Door-Step Banking",
                           style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline),
+                            fontSize: 26,
+                            color: Colors.blue,
+                            fontFamily: 'HelveticaNeue',
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        onTap: () async {
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
+                          child: Image(
+                            image: AssetImage('assets/images/blue_door.png'),
+                            height: 100,
+                            width: 100,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        OTPPhoneNumberTextRow(),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        OTPInput(),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        //loginWithOTPRow(),
+                        /*Center(
+                          child: GestureDetector(
+                            child: Text(
+                              'Resend OTP',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                            ),
+                            onTap: () async {
 //                          mySignInBloc.add(EventResendOTP(phoneNumber: myController.text));
 
-                          String response =
-                              await Repository().resendOTP(myController.text);
-                          if (response == 'Success') {
-                            CommonMethods()
-                                .toast(context, 'Resend OTP request sent');
-                          } else {
-                            CommonMethods()
-                                .toast(context, 'Unable to send request');
-                          }
-                        },
-                      ),
-                    ),*/
-                    ArgonTimerButton(
-                      elevation: 5.0,
-                      color: Colors.redAccent,
-                      initialTimer: 30,
-                      // Optional
-                      height: 50,
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      minWidth: MediaQuery.of(context).size.width * 0.30,
-                      borderRadius: 30.0,
-                      padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      child: Text(
-                        'Resend OTP',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      loader: (_timeLeft) {
-                        return Text(
-                          "Wait | $_timeLeft  ",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        );
-                      },
-                      onTap: (startTimer, btnState) {
-                        if (btnState == ButtonState.Idle) {
-                          String generateOTPJSON = """{
-                                 "additionalData":
-                             {
-                             "client_app_ver":"1.0.0",
-                             "client_apptype":"DSB",
-                             "platform":"ANDROID",
-                             "vendorid":"17",
-                             "ClientAppName":"ANIOSCUST"
-                             },
-                             "mobilenumber":"$myController.text"
-                             }""";
-                          NetworkCommon()
-                              .myDio
-                              .post("/generateOTP", data: generateOTPJSON);
-                          CommonMethods()
-                              .toast(context, 'Resend OTP request sent Successfully');
-                          startTimer(30);
-                        }
-                        if (btnState == ButtonState.Busy) {
-                          CommonMethods()
-                              .toast(context, 'Please wait to resend OTP');
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        child: Text(
-                          'CANCEL LOGIN',
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold),
-                        ),
-                        onTap: () async {
-                          mySignInBloc.add(DoSignInwithOTP());
-                        },
-                      ),
-                      /*ArgonTimerButton(
-                        elevation: 5.0,
-                        color: Colors.redAccent,
-                        initialTimer: 30,
-                        // Optional
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        minWidth: MediaQuery.of(context).size.width * 0.30,
-                        borderRadius: 30.0,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        child: Text(
-                          'Resend OTP',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        loader: (_timeLeft) {
-                          return Text(
-                            "Wait | $_timeLeft  ",
+                              String response =
+                                  await Repository().resendOTP(myController.text);
+                              if (response == 'Success') {
+                                CommonMethods()
+                                    .toast(context, 'Resend OTP request sent');
+                              } else {
+                                CommonMethods()
+                                    .toast(context, 'Unable to send request');
+                              }
+                            },
+                          ),
+                        ),*/
+                        ArgonTimerButton(
+                          elevation: 5.0,
+                          color: Colors.redAccent,
+                          initialTimer: 30,
+                          // Optional
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          minWidth: MediaQuery.of(context).size.width * 0.30,
+                          borderRadius: 30.0,
+                          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          child: Text(
+                            'Resend OTP',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
-                          );
-                        },
-                        onTap: (startTimer, btnState) {
-                          if (btnState == ButtonState.Idle) {
-                            String generateOTPJSON = """{
-                                 "additionalData":
-                             {
-                             "client_app_ver":"1.0.0",
-                             "client_apptype":"DSB",
-                             "platform":"ANDROID",
-                             "vendorid":"17",
-                             "ClientAppName":"ANIOSCUST"
-                             },
-                             "mobilenumber":"$myController.text"
-                             }""";
-                            NetworkCommon()
-                                .myDio
-                                .post("/generateOTP", data: generateOTPJSON);
-                            startTimer();
-                          }
-                          if(btnState == ButtonState.Busy){
-                            CommonMethods().toast(context, 'Please wait to resend OTP');
-                          }
-                        },
-                      ),*/
-                    ),
-//                  signUpRow(),
-                    /*workingRow(),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Center(
-                      child: Text(
-                        " -OR- ",
-                        style: TextStyle(
-                            fontSize: 18,
-                            //previous SizeConfig.permanentBlockSize * 1.5
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          mySignInBloc.add(DoSignInWithPIN());
-                        },
-                        child: Text(
-                          " Sign-in with PIN ",
-                          style: TextStyle(
-                            //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
-                              color: Colors.black,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.normal),
+                          ),
+                          loader: (_timeLeft) {
+                            return Text(
+                              "Wait | $_timeLeft  ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            );
+                          },
+                          onTap: (startTimer, btnState) {
+                            if (btnState == ButtonState.Idle) {
+                              String generateOTPJSON = """{
+                                     "additionalData":
+                                 {
+                                 "client_app_ver":"1.0.0",
+                                 "client_apptype":"DSB",
+                                 "platform":"ANDROID",
+                                 "vendorid":"17",
+                                 "ClientAppName":"ANIOSCUST"
+                                 },
+                                 "mobilenumber":"$myController.text"
+                                 }""";
+                              NetworkCommon()
+                                  .myDio
+                                  .post("/generateOTP", data: generateOTPJSON);
+                              CommonMethods()
+                                  .toast(context, 'Resend OTP request sent Successfully');
+                              startTimer(30);
+                            }
+                            if (btnState == ButtonState.Busy) {
+                              CommonMethods()
+                                  .toast(context, 'Please wait to resend OTP');
+                            }
+                          },
                         ),
-                      ),
-                    ),*/
-                  ],
-                ),
-              )),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Center(
+                          child: GestureDetector(
+                            child: Text(
+                              'CANCEL LOGIN',
+                              style: TextStyle(
+                                  color: Colors.red, fontWeight: FontWeight.bold),
+                            ),
+                            onTap: () async {
+                              mySignInBloc.add(DoSignInwithOTP());
+                            },
+                          ),
+                          /*ArgonTimerButton(
+                            elevation: 5.0,
+                            color: Colors.redAccent,
+                            initialTimer: 30,
+                            // Optional
+                            height: 50,
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            minWidth: MediaQuery.of(context).size.width * 0.30,
+                            borderRadius: 30.0,
+                            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            child: Text(
+                              'Resend OTP',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            loader: (_timeLeft) {
+                              return Text(
+                                "Wait | $_timeLeft  ",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              );
+                            },
+                            onTap: (startTimer, btnState) {
+                              if (btnState == ButtonState.Idle) {
+                                String generateOTPJSON = """{
+                                     "additionalData":
+                                 {
+                                 "client_app_ver":"1.0.0",
+                                 "client_apptype":"DSB",
+                                 "platform":"ANDROID",
+                                 "vendorid":"17",
+                                 "ClientAppName":"ANIOSCUST"
+                                 },
+                                 "mobilenumber":"$myController.text"
+                                 }""";
+                                NetworkCommon()
+                                    .myDio
+                                    .post("/generateOTP", data: generateOTPJSON);
+                                startTimer();
+                              }
+                              if(btnState == ButtonState.Busy){
+                                CommonMethods().toast(context, 'Please wait to resend OTP');
+                              }
+                            },
+                          ),*/
+                        ),
+//                  signUpRow(),
+                        /*workingRow(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Center(
+                          child: Text(
+                            " -OR- ",
+                            style: TextStyle(
+                                fontSize: 18,
+                                //previous SizeConfig.permanentBlockSize * 1.5
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              mySignInBloc.add(DoSignInWithPIN());
+                            },
+                            child: Text(
+                              " Sign-in with PIN ",
+                              style: TextStyle(
+                                //fontSize: SizeConfig.permanentBlockSize * 1.5 ,
+                                  color: Colors.black,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  )),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -1089,7 +1119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           contentPadding: EdgeInsets.all(16.0),
           prefixText: '+91 ',
           prefixStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              TextStyle(fontWeight: FontWeight.bold),
           hintText: "Phone Number",
           suffixIcon: Icon(
             Icons.phone,

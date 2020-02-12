@@ -153,9 +153,15 @@ class MyMapsExperimentsMapSampleState extends State<MyMapsExperimentsMap> {
                                 }
                                 else{
                                   Future<dynamic> addAddressResponse = Repository().addAddress(GlobalVariables().addressFromLocation, GlobalVariables().registrationLatitude, GlobalVariables().registrationLongitude, GlobalVariables().pinCodeFromLocation);
-
+                                  GlobalVariables().registrationLatitude = null;
+                                  GlobalVariables().registrationLongitude = null;
+                                  GlobalVariables().addressFromLocation = null ;
+                                  GlobalVariables().pinCodeFromLocation = null;
+                                  print('*******************The address response is $addAddressResponse');
                                   CommonMethods().toast(context, addAddressResponse.toString());
-                                  Navigator.pop(context);
+                                  Navigator.pop(context, () {
+                                    setState(() {});
+                                  });
                                 }
 
                               }

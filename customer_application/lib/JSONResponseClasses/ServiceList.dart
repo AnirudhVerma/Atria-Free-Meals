@@ -158,20 +158,6 @@ class LIST {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ServiceList {
   String eRRORCODE;
   String eRRORMSG;

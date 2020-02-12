@@ -406,6 +406,10 @@ class Repository {
         .myDio
         .post("/customerRegistration", data: registerUserJSON);
     if(registerUserResponse.toString().contains('"ERRORCODE": "00"')){
+      GlobalVariables().registrationLatitude = null;
+      GlobalVariables().registrationLongitude = null;
+      GlobalVariables().addressFromLocation = null ;
+      GlobalVariables().pinCodeFromLocation = null;
       return('Registration Successful');
     }
     else{
@@ -522,6 +526,8 @@ class Repository {
     } else {
       return 'Couldn\'t Add address,Please try again';
     }
+
+
     /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;

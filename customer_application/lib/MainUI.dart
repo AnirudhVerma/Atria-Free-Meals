@@ -319,6 +319,9 @@ class _MyMainPageState extends State<MyMainPage> {
     if (serviceCode == 'ACCSTMT') {
       return 'assets/images/bank-statement.png';
     }
+    else{
+      return 'assets/images/dices.png';
+    }
   }
 
   /*Future<void> getServices() async {
@@ -568,7 +571,7 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),*/
                   ),
               Container(
-               // color: Colors.blue,
+                // color: Colors.blue,
                 child: ListView(
                   children: <Widget>[
                     ListTile(
@@ -864,7 +867,9 @@ class _MyMainPageState extends State<MyMainPage> {
                         onPressed: logout,
                         color: Colors.red,
                       )),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       /*Center(
                           child: CupertinoButton(
                             child: Text(
@@ -893,7 +898,7 @@ class _MyMainPageState extends State<MyMainPage> {
                 inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.home)),
             BottomNavyBarItem(
-                title: Text(' My Services'),
+                title: Text('My Services'),
                 activeColor: Colors.blue,
                 inactiveColor: Colors.blueGrey,
                 icon: Icon(Icons.apps)),
@@ -1120,7 +1125,7 @@ class _MyDialogState extends State<MyDialog> {
       elevation: 5.0,
       shape: RoundedRectangleBorder(
           side: BorderSide.none,
-          borderRadius: BorderRadius.all(Radius.circular(6))),
+          borderRadius: BorderRadius.all(Radius.circular(18))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -1133,13 +1138,13 @@ class _MyDialogState extends State<MyDialog> {
                 color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 15,
+            height: 25,
           ),
           Center(
             //padding: EdgeInsets.all(15.0),
             child: Container(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(18.0),
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -1147,13 +1152,17 @@ class _MyDialogState extends State<MyDialog> {
                     children: <Widget>[
                       RaisedButton(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                            borderRadius: BorderRadius.circular(18.0)),
                         elevation: 4.0,
                         onPressed: () {
                           DatePicker.showDatePicker(
                             context,
                             theme: DatePickerTheme(
-                              containerHeight: 210.0,
+                              containerHeight: MediaQuery.of(context).copyWith().size.height / 3,
+                              backgroundColor: Theme.of(context).backgroundColor,
+                              titleHeight: 24.0,
+                              itemHeight: 30.0,
+                              itemStyle: TextStyle(color: Colors.white),
                             ),
                             onChanged: (date) {
                               print('confirm $date');
@@ -1179,6 +1188,7 @@ class _MyDialogState extends State<MyDialog> {
                           );
                         },
                         child: Container(
+                          //color: Theme.of(context).backgroundColor,
                           alignment: Alignment.center,
                           height: 50.0,
                           child: Row(
@@ -1216,7 +1226,7 @@ class _MyDialogState extends State<MyDialog> {
                             ],
                           ),
                         ),
-                        color: Colors.white,
+                        color: Theme.of(context).backgroundColor,
                       ),
                       SizedBox(
                         height: 20.0,
@@ -1224,12 +1234,16 @@ class _MyDialogState extends State<MyDialog> {
                       ),
                       RaisedButton(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                            borderRadius: BorderRadius.circular(18.0)),
                         elevation: 4.0,
                         onPressed: () {
                           DatePicker.showDatePicker(context,
                               theme: DatePickerTheme(
-                                containerHeight: 210.0,
+                                containerHeight: MediaQuery.of(context).copyWith().size.height / 3,
+                                backgroundColor: Theme.of(context).backgroundColor,
+                                titleHeight: 24.0,
+                                itemHeight: 30.0,
+                                itemStyle: TextStyle(color: Colors.white),
                               ),
                               showTitleActions: true,
                               minTime: DateTime(2000, 1, 1),
@@ -1283,7 +1297,7 @@ class _MyDialogState extends State<MyDialog> {
                             ],
                           ),
                         ),
-                        color: Colors.white,
+                        color: Theme.of(context).backgroundColor,
                       )
                     ],
                   ),
@@ -1361,7 +1375,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
       elevation: 5.0,
       shape: RoundedRectangleBorder(
           side: BorderSide.none,
-          borderRadius: BorderRadius.all(Radius.circular(6))),
+          borderRadius: BorderRadius.all(Radius.circular(18))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -1374,7 +1388,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                 color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 15,
+            height: 25,
           ),
           Center(
             //padding: EdgeInsets.all(15.0),
