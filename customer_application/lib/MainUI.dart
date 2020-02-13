@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:customer_application/BookService.dart';
+import 'package:customer_application/CustomParamsDialog.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
@@ -281,7 +282,12 @@ class _MyMainPageState extends State<MyMainPage> {
                       print(
                           '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       String servicename;
-                      if (output.servicecode == 'ACCSTMT') {
+                      return showDialog(
+                          context: context,
+                          builder: (_) {
+                            return CustomParamsDialog(selectedService: output,);
+                          });
+                      /*if (output.servicecode == 'ACCSTMT') {
                         showDialog(
                             context: context,
                             builder: (_) {
@@ -293,7 +299,7 @@ class _MyMainPageState extends State<MyMainPage> {
                             builder: (_) {
                               return MyChequeDialog();
                             });
-                      }
+                      }*/
                       /*Navigator.push(
                           context,
                           new CupertinoPageRoute(

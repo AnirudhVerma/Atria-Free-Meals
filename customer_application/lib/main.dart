@@ -123,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String userName;
   var _myFocusNode = new FocusNode();
   var _timeLeft;
+  ArgonTimerButton _argonTimerButton;
 
   @override
   void initState() {
@@ -632,7 +633,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           ),
                         ),*/
-                        ArgonTimerButton(
+                        CupertinoButton(
+                          child: Text('Resend OTP'),
+                          onPressed:() async {
+                            String resendOTPResponse =  await Repository().resendOTP(myController.text);
+                            CommonMethods().toast(context, resendOTPResponse);
+                          }
+                        ),
+                       /* ArgonTimerButton(
                           elevation: 5.0,
                           color: Colors.redAccent,
                           initialTimer: 30,
@@ -658,7 +666,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   fontWeight: FontWeight.bold),
                             );
                           },
-                          onTap: (startTimer, btnState) {
+                          onTap: (startTimer, btnState) async {
                             if (btnState == ButtonState.Idle) {
                               String generateOTPJSON = """{
                                      "additionalData":
@@ -669,21 +677,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                  "vendorid":"17",
                                  "ClientAppName":"ANIOSCUST"
                                  },
-                                 "mobilenumber":"$myController.text"
+                                 "mobilenumber":"${myController.text}"
                                  }""";
-                              NetworkCommon()
+                              Response resendOTPResponse =  await NetworkCommon()
                                   .myDio
                                   .post("/generateOTP", data: generateOTPJSON);
-                              CommonMethods()
-                                  .toast(context, 'Resend OTP request sent Successfully');
-                              startTimer(30);
+                              if(resendOTPResponse.toString().contains('"ERRORCODE":"00')){
+                                CommonMethods()
+                                    .toast(context, 'Resend OTP request sent Successfully');
+                              }
+                              else{
+                                CommonMethods()
+                                    .toast(context, 'Couldn\'t send request, please try again');
+                              }
+//                              startTimer(30);
                             }
                             if (btnState == ButtonState.Busy) {
                               CommonMethods()
                                   .toast(context, 'Please wait to resend OTP');
                             }
                           },
-                        ),
+                        ),*/
                         SizedBox(
                           height: 15.0,
                         ),
