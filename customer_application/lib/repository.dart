@@ -247,9 +247,6 @@ class Repository {
 
   Future<String> resendOTP(String phoneNumber) async {
     try {
-
-
-
       String generateOTPJSON = """{
                                  "additionalData":
                              {
@@ -261,13 +258,7 @@ class Repository {
                              },
                              "mobilenumber":"$phoneNumber"
                              }""";
-
-
-
-
       Response resendOTPResponse = await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
-
-
       var myOTPResponse = jsonDecode(resendOTPResponse.toString());
       var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
 

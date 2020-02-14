@@ -18,70 +18,75 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
   @override
   Widget build(BuildContext context) {
     var output;
-    return FutureBuilder(
-      future: getBookingHistory(),
-      builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/fogg-booking-history-1.png'),
-                fit: BoxFit.cover,
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: 360
+      ),
+      child: FutureBuilder(
+        future: getBookingHistory(),
+        builder: (context, servicesSnapShot) {
+          if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
+            print('The data is in loading state');
+            print('project snapshot data is: ${servicesSnapShot.data}');
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/fogg-booking-history-1.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Center(child: CircularProgressIndicator(),),
-          );
-        }
-        else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/fogg-booking-history-1.png'),
-                fit: BoxFit.cover,
+              child: Center(child: CircularProgressIndicator(),),
+            );
+          }
+          else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
+            print('The data is in loading state');
+            print('project snapshot data is: ${servicesSnapShot.data}');
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/fogg-booking-history-1.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Text('Mm, Looks like you don\'t have any Completed Services',style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
-          );
-        }
-        else {
+              child: Text('Mm, Looks like you don\'t have any Completed Services',style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+            );
+          }
+          else {
 //          print('The data is loaded!!!!');
-          return ListView.builder(
-            itemCount: servicesSnapShot.data.length,
-            itemBuilder: (context, index) {
-              {
-                output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
-                return ListTile(
-                  title: Text(output.serviceName),
+            return ListView.builder(
+              itemCount: servicesSnapShot.data.length,
+              itemBuilder: (context, index) {
+                {
+                  output = servicesSnapShot.data[index];
+                  print('project snapshot data is: ${servicesSnapShot.data}');
+                  return ListTile(
+                    title: Text(output.serviceName),
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                  onTap: () {
-                    output = servicesSnapShot.data[index];
-                    /*print('******************** THE OUTPUT IS ${output.toString()}');
-                    GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
-                    /*GlobalVariables().serviceid = output.serviceid;
-                    GlobalVariables().servicename = output.servicename;
-                    GlobalVariables().servicetype = output.servicetype;
-                    GlobalVariables().servicecategory = output.servicecategory;
-                    GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;*/
-                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                    String servicename;
-                    /* Navigator.push(
-                        context,
-                        new CupertinoPageRoute(
-                            builder: (context) =>
-                                BookService()));*/
-                  },
-                );
-              }
-            },
-          );
-        }
-      },
+                    onTap: () {
+                      output = servicesSnapShot.data[index];
+                      /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
+                      /*GlobalVariables().serviceid = output.serviceid;
+                      GlobalVariables().servicename = output.servicename;
+                      GlobalVariables().servicetype = output.servicetype;
+                      GlobalVariables().servicecategory = output.servicecategory;
+                      GlobalVariables().serviceCharge = output.serviceCharge;
+                      GlobalVariables().servicecode = output.servicecode;*/
+                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      String servicename;
+                      /* Navigator.push(
+                          context,
+                          new CupertinoPageRoute(
+                              builder: (context) =>
+                                  BookService()));*/
+                    },
+                  );
+                }
+              },
+            );
+          }
+        },
+      ),
     );
   }
 
