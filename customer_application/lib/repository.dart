@@ -172,8 +172,8 @@ class Repository {
       print(fetchUserResonse.toString());
       print(GlobalVariables().firstResponse.eRRORCODE);
       print(GlobalVariables().firstResponse.eRRORMSG);
-      if (GlobalVariables().firstResponse.oUTPUTOBJECT != null)
-        print(GlobalVariables().firstResponse.oUTPUTOBJECT.firstname);
+      if (GlobalVariables().firstResponse.oUTPUT[0] != null)
+        print(GlobalVariables().firstResponse.oUTPUT[0].firstname);
 
       print(GlobalVariables().firstResponse.toJson());
 

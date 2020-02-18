@@ -1,8 +1,14 @@
+import 'package:customer_application/GlobalVariables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class DatePickerButton extends StatefulWidget{
+
+  int position;
+  String nameInMap;
+
+  DatePickerButton({this.position});
 
   @override
   _DatePickerButtonState createState() => _DatePickerButtonState();
@@ -14,7 +20,6 @@ class _DatePickerButtonState extends State<DatePickerButton> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return RaisedButton(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0)),
@@ -32,6 +37,10 @@ class _DatePickerButtonState extends State<DatePickerButton> {
           onChanged: (date) {
             print('confirm $date');
             _date = '${date.year}-${date.month}-${date.day}';
+            Map myMap = new Map();
+            myMap['name'] = widget.nameInMap;
+            myMap['value'] = _date.toString();
+            GlobalVariables().listOfParams.insert(widget.position - 1, myMap);
             setState(() {
               _date =
               '${date.year}-${date.month}-${date.day}';
@@ -43,6 +52,10 @@ class _DatePickerButtonState extends State<DatePickerButton> {
           onConfirm: (date) {
             print('confirm $date');
             _date = '${date.year}-${date.month}-${date.day}';
+            Map myMap = new Map();
+            myMap['name'] = widget.nameInMap;
+            myMap['value'] = _date.toString();
+            GlobalVariables().listOfParams[widget.position - 1] = myMap;
             setState(() {
               _date =
               '${date.year}-${date.month}-${date.day}';

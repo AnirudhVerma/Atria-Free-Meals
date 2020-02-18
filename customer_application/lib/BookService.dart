@@ -70,44 +70,80 @@ class _BookServiceState extends State<BookService> {
       };
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+    return WillPopScope(
+      onWillPop: () {
+        GlobalVariables().listOfParams = null;
+        return showDialog(
+          context: context,
+          child: CupertinoAlertDialog(
+//            shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            title: Text('Cancel Booking?'),
+            content: Text('Are you sure you want to cancel your Booking?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(
+                  'Back',
+                  style: TextStyle(
+                      color: Colors.blue, fontWeight: FontWeight.bold),
+                ),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(
+                  'Cancel',
+                  style:
+                  TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
 //      body: addressUI(context),
-      body: Center(
-        child: BlocBuilder<BookServiceBloc, BookServiceState>(
-            bloc: myBookServiceBloc,
-            builder: (context, state) {
-              if (state is InitialBookServiceState) {
-                return  addressUI(context);
-              }
-              if (state is BankListState) {
-                return bankListUI(context);
-              }
-              if (state is EnterRegisteredNumberState) {
-                return getPhoneNumberUI(context);
-              }
-              if (state is EnterBankOTPState) {
-                return enterOTPUI(context);
-              }
-              if (state is AccountListState) {
-                return userAccountDetailsUI(context);
-              }
-              if (state is BranchListState) {
-                return branchListUI(context);
-              }
-              if (state is TimeSlotState) {
-                return selectTimeSlotUI(context);
-              }
-              if (state is LiamAccountListState) {
-                return selectLiamAccountUI(context);
-              }
-              return Container(
-                height: 0.0,
-                width: 0.0,
-              );
-            }),
+        body: Center(
+          child: BlocBuilder<BookServiceBloc, BookServiceState>(
+              bloc: myBookServiceBloc,
+              builder: (context, state) {
+                if (state is InitialBookServiceState) {
+                  return  addressUI(context);
+                }
+                if (state is BankListState) {
+                  return bankListUI(context);
+                }
+                if (state is EnterRegisteredNumberState) {
+                  return getPhoneNumberUI(context);
+                }
+                if (state is EnterBankOTPState) {
+                  return enterOTPUI(context);
+                }
+                if (state is AccountListState) {
+                  return userAccountDetailsUI(context);
+                }
+                if (state is BranchListState) {
+                  return branchListUI(context);
+                }
+                if (state is TimeSlotState) {
+                  return selectTimeSlotUI(context);
+                }
+                if (state is LiamAccountListState) {
+                  return selectLiamAccountUI(context);
+                }
+                return Container(
+                  height: 0.0,
+                  width: 0.0,
+                );
+              }),
+        ),
       ),
     );
   }
@@ -369,10 +405,6 @@ class _BookServiceState extends State<BookService> {
                     myBookServiceBloc.add(AddressEvent());
                   },
                   child: CircleAvatar(
-//                  child: Text(
-//                    '2',
-//                    style: TextStyle(color: Colors.blue[900]),
-//                  ),
                     backgroundColor: Colors.blue[100],
                     maxRadius: 10,
                   ),
@@ -444,10 +476,6 @@ class _BookServiceState extends State<BookService> {
                       myBookServiceBloc.add(AddressEvent());
                     },
                     child: CircleAvatar(
-//                  child: Text(
-//                    '2',
-//                    style: TextStyle(color: Colors.blue[900]),
-//                  ),
                       backgroundColor: Colors.blue[100],
                       maxRadius: 10,
                     ),
@@ -460,10 +488,6 @@ class _BookServiceState extends State<BookService> {
                       myBookServiceBloc.add(FetchBankList());
                     },
                     child: CircleAvatar(
-//                  child: Text(
-//                    '2',
-//                    style: TextStyle(color: Colors.blue[900]),
-//                  ),
                       backgroundColor: Colors.blue[100],
                       maxRadius: 10,
                     ),
@@ -643,13 +667,36 @@ class _BookServiceState extends State<BookService> {
     Response getBankListResponse = await NetworkCommon()
         .myDio
         .post("/generateOTPBank", data: getBankListString);
-    print('************The bank string is $getBankListString');
+    print('************The generateOTPBank string is $getBankListString');
     var getBankOTPResponseString = jsonDecode(getBankListResponse.toString());
-    var getBankOTPResponseObject =
-        BankOTPResponse.fromJson(getBankOTPResponseString);
+    if(getBankOTPResponseString.toString().contains('"code":"ECONNREFUSED"')){
+      return showDialog(context: context,builder: (_) {
+        return CupertinoAlertDialog(
+//            shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text('Error'),
+          content: Text('ECONNREFUSED'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      } );
+    }else{
+      var getBankOTPResponseObject =
+      BankOTPResponse.fromJson(getBankOTPResponseString);
 
-    var output = getBankOTPResponseObject.oUTPUT;
-    return getBankOTPResponseObject;
+      var output = getBankOTPResponseObject.oUTPUT;
+      return getBankOTPResponseObject;
+    }
   }
 
   Stack enterOTPUI(BuildContext context) {
@@ -880,9 +927,10 @@ class _BookServiceState extends State<BookService> {
     "username":"$userName",
     "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
     "OTP":"${myBankOTPController.text}",
-    "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.uniqrefnum}",
-    "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT.bankuniqrefnum}"
+    "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].uniqrefnum}",
+    "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].bankuniqrefnum}"
     }""";
+    print('**************** The get account details call is $verifyOTPAndGetAccountDetailsString');
     Response verifyOTPAndGetAccountDetailsResponse = await NetworkCommon()
         .myDio
         .post("/getAccountDetails", data: verifyOTPAndGetAccountDetailsString);
@@ -964,7 +1012,7 @@ class _BookServiceState extends State<BookService> {
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",  
     "customerid":"${GlobalVariables().myPortalLogin.oUTPUT.user.userid}",
-    "customername":"${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}",
+    "customername":"${GlobalVariables().firstResponse.oUTPUT[0].firstname}",
     "requesttime":"$requestTime",
     "DEVICEID": "",
     "serviceid":"$serviceid",
@@ -1004,9 +1052,54 @@ class _BookServiceState extends State<BookService> {
         	]
     }""";
 
+    String bookServiceDynamicString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${myBankPhoneNumberController.text}",  
+    "customerid":"${GlobalVariables().myPortalLogin.oUTPUT.user.userid}",
+    "customername":"${GlobalVariables().firstResponse.oUTPUT[0].firstname}",
+    "requesttime":"$requestTime",
+    "DEVICEID": "",
+    "serviceid":"$serviceid",
+    "servicetype":"${GlobalVariables().servicetype}",
+    "servicecategory":"${GlobalVariables().servicecategory}",
+    "servicename":"${GlobalVariables().servicename}",
+    "servicecharge":"${GlobalVariables().serviceCharge}",
+    "bankcode":"${GlobalVariables().bankCode}",
+    "bankname":"${GlobalVariables().bankname}",
+    "branchcode":"${GlobalVariables().branchcode}",
+    "branchname":"${GlobalVariables().branchname}",
+    "addressid":"${GlobalVariables().addressid}",
+    "address":"${GlobalVariables().address}",
+    "lienmarkaccounttype":"NA",
+    "lienmarkaccount":"${GlobalVariables().lianAccount}",
+    "serviceaccounttype":"NA",
+    "serviceaccount":"${GlobalVariables().serviceAccount}",
+    "prefereddate":"$date",
+    "slot":"${GlobalVariables().timeSlot}",
+    "channel":"iOS",
+    "ccagentid":"",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "latitude":"${GlobalVariables().latitude}",
+    "longitude":"${GlobalVariables().longitude}",
+    "pincode":"${GlobalVariables().pincode}",
+    "servicecode":"${GlobalVariables().servicecode}",
+    "custom_params": ${GlobalVariables().listOfParams}
+    }""";
+
+    print('The book Service String is $bookServiceDynamicString');
+
     Response bokServiceResponse = await NetworkCommon()
         .myDio
-        .post("/bookService", data: bookServiceString);
+        .post("/bookService", data: bookServiceDynamicString);
     var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
     GlobalVariables().myBookServiceResponseObject =
         BookServiceResponse.fromJson(getBranchesResponseString);
@@ -1021,6 +1114,7 @@ class _BookServiceState extends State<BookService> {
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MyMainPage()));
               },
@@ -1044,6 +1138,7 @@ class _BookServiceState extends State<BookService> {
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MyMainPage()));
               },
@@ -1075,10 +1170,10 @@ class _BookServiceState extends State<BookService> {
             return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
+              itemCount: AccountSnapShot.data.oUTPUT[0].accountnumber.length,
               itemBuilder: (context, index) {
                 {
-                  accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                  accounts = AccountSnapShot.data.oUTPUT[0].accountnumber[index];
                   print('project snapshot data is: ${AccountSnapShot.data}');
                   return ListTile(
                     leading: new CircleAvatar(
@@ -1089,7 +1184,7 @@ class _BookServiceState extends State<BookService> {
                     title: Text(accounts),
                     onTap: () {
                       accounts =
-                          AccountSnapShot.data.oUTPUT.accountnumber[index];
+                          AccountSnapShot.data.oUTPUT[0].accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().serviceAccount = accounts;
@@ -1577,10 +1672,10 @@ class _BookServiceState extends State<BookService> {
             return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: AccountSnapShot.data.oUTPUT.accountnumber.length,
+              itemCount: AccountSnapShot.data.oUTPUT[0].accountnumber.length,
               itemBuilder: (context, index) {
                 {
-                  accounts = AccountSnapShot.data.oUTPUT.accountnumber[index];
+                  accounts = AccountSnapShot.data.oUTPUT[0].accountnumber[index];
                   print('project snapshot data is: ${AccountSnapShot.data}');
                   return ListTile(
                     leading: new CircleAvatar(
@@ -1591,7 +1686,7 @@ class _BookServiceState extends State<BookService> {
                     title: Text(accounts),
                     onTap: () {
                       accounts =
-                          AccountSnapShot.data.oUTPUT.accountnumber[index];
+                          AccountSnapShot.data.oUTPUT[0].accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().lianAccount = accounts;
@@ -1602,7 +1697,7 @@ class _BookServiceState extends State<BookService> {
                           content: Column(
                             children: <Widget>[
                               Text(
-                                  'Name : ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}'),
+                                  'Name : ${GlobalVariables().firstResponse.oUTPUT[0].firstname}'),
                               Text(
                                   'Service Type : ${GlobalVariables().servicetype}'),
                               Text(

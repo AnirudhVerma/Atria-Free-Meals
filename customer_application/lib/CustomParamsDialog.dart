@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:customer_application/CreateTextField.dart';
 import 'package:customer_application/DatePickerButton.dart';
 import 'package:customer_application/MyAlertDialog.dart';
 import 'package:dio/dio.dart';
@@ -25,8 +26,8 @@ class CustomParamsDialog extends StatefulWidget {
 
 class _CustomParamsDialogState extends State<CustomParamsDialog> {
 
-  String _date = "Not set";
-  String _toDate = 'Not Set';
+//  String _date = "Not set";
+//  String _toDate = 'Not Set';
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +70,8 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                           itemBuilder: (BuildContext context, int index) {
                             CustomParams mCust =
                             widget.selectedService.customParams[index];
+                            RegExp regex = new RegExp(widget.selectedService.customParams[index].rEGEX);
+                            GlobalVariables().listOfParams = new List(widget.selectedService.customParams.length);
                             if (mCust.dATATYPE == 'LIST') {
                               print(mCust.lIST);
                               return Row(
@@ -76,7 +79,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                                 children: <Widget>[
                                   Text('${mCust.nAME}  '),
 //                            dropDown(convertListToMap(mCust.lIST)),
-                                  CreateDropDown(myJson: convertListToMap(mCust.lIST),),
+                                  new CreateDropDown(myJson: convertListToMap(mCust.lIST), position: int.parse(widget.selectedService.customParams[index].sEQUENCE, ),nameInMap: mCust.nAME,),
                                 ],
                               );
                             }
@@ -87,7 +90,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
 //                                  Text('${mCust.nAME}  '),
-                                      Expanded(child: textField(mCust.nAME)),
+                                      Expanded(child: CreateTextField(hint: mCust.nAME, position: int.parse(widget.selectedService.customParams[index].sEQUENCE), regex: regex,)),
                                     ],
                                   ),
                                   SizedBox(height: 10,)
@@ -98,18 +101,18 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                               return Column(
                                 children: <Widget>[
                                   SizedBox(
-                                    height: 20.0,
+                                    height: 10.0,
                                     width: 500,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
                                       Text('${mCust.nAME}  '),
-                                      new DatePickerButton(),
+                                      new DatePickerButton(position: int.parse(widget.selectedService.customParams[index].sEQUENCE)),
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 20.0,
+                                    height: 10.0,
                                     width: 500,
                                   )
                                 ],
@@ -158,7 +161,8 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                         ),
                       ),
                       onPressed: () {
-                        if (_date == 'Not set' || _toDate == 'Not set') {
+
+                        if (allParamsFilled()) {
                           Navigator.pop(context);
                           Navigator.push(
                               context,
@@ -166,11 +170,12 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                                   builder: (context) => BookService()));
                       }
                         else{
-                          Navigator.pop(context);
+                          CommonMethods().toast(context, 'Please fill all the Mandatory fields!');
+                          /*Navigator.pop(context);
                           Navigator.push(
                               context,
                               new CupertinoPageRoute(
-                                  builder: (context) => BookService()));
+                                  builder: (context) => BookService()));*/
                         }
                         /* ... */
                       },
@@ -211,6 +216,18 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
     }
 //    listOfMap.add(myMap);
     return listOfMap;
+  }
+
+  bool allParamsFilled(){
+    int count = 0;
+    for(Map m in GlobalVariables().listOfParams){
+      if (m == null){
+        count++;
+        print('The number of maps in list is $count');
+        return false;
+      }
+      else return true;
+    }
   }
 
 }

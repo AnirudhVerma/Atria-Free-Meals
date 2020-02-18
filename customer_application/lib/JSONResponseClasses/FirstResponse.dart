@@ -1,34 +1,33 @@
 class FirstResponse {
-
   String eRRORCODE;
   String eRRORMSG;
-  OUTPUTOBJECT oUTPUTOBJECT;
+  List<OUTPUT> oUTPUT;
 
-
-
-  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUTOBJECT});
-
+  FirstResponse({this.eRRORCODE, this.eRRORMSG, this.oUTPUT});
 
   FirstResponse.fromJson(Map<String, dynamic> json) {
     eRRORCODE = json['ERRORCODE'];
     eRRORMSG = json['ERRORMSG'];
-    oUTPUTOBJECT = json['OUTPUTOBJECT'] != null
-        ? new OUTPUTOBJECT.fromJson(json['OUTPUTOBJECT'])
-        : null;
+    if (json['OUTPUT'] != null) {
+      oUTPUT = new List<OUTPUT>();
+      json['OUTPUT'].forEach((v) {
+        oUTPUT.add(new OUTPUT.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ERRORCODE'] = this.eRRORCODE;
     data['ERRORMSG'] = this.eRRORMSG;
-    if (this.oUTPUTOBJECT != null) {
-      data['OUTPUTOBJECT'] = this.oUTPUTOBJECT.toJson();
+    if (this.oUTPUT != null) {
+      data['OUTPUT'] = this.oUTPUT.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class OUTPUTOBJECT {
+class OUTPUT {
   int userid;
   String username;
   String firstname;
@@ -37,7 +36,7 @@ class OUTPUTOBJECT {
   String mobilenumber;
   String alternatemobile;
 
-  OUTPUTOBJECT(
+  OUTPUT(
       {this.userid,
         this.username,
         this.firstname,
@@ -46,7 +45,7 @@ class OUTPUTOBJECT {
         this.mobilenumber,
         this.alternatemobile});
 
-  OUTPUTOBJECT.fromJson(Map<String, dynamic> json) {
+  OUTPUT.fromJson(Map<String, dynamic> json) {
     userid = json['userid'];
     username = json['username'];
     firstname = json['firstname'];

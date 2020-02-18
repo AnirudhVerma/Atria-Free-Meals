@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
   List<int> certificateChainBytes = null;
@@ -63,12 +60,12 @@ class NetworkCommon {
 
 //    dio.interceptors.add(alice.getDioInterceptor());
 //    dio.options.baseUrl = 'https://111.125.203.226:30001/doorstep'; // public server
-//    dio.options.baseUrl = 'http://111.125.203.226:30001/doorstep'; // public server
+    dio.options.baseUrl = 'http://localhost:30000/doorstep'; // mac server
 
 
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
-    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
+//    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
 //    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
 
     // handle timeouts //Bhuvaneswari

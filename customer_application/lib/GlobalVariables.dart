@@ -17,6 +17,7 @@ class GlobalVariables{
   ServiceList myServiceList = new ServiceList();
   PortalLogin myPortalLogin = new PortalLogin();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
+  List<Map> listOfParams;
   String phoneNumber;
   String serviceid;
   String servicename;

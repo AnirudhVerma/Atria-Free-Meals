@@ -1009,7 +1009,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Map<String, dynamic> map = jsonDecode(response1.toString());
       var myVar = jsonDecode(response1.toString());
       var firstResponse = FirstResponse.fromJson(myVar);
-      userName = firstResponse.oUTPUTOBJECT.firstname;
+      userName = firstResponse.oUTPUT[0].firstname;
 
       String generateOTPJSON = """{
         "additionalData":

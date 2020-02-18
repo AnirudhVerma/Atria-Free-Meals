@@ -479,7 +479,7 @@ class _MyMainPageState extends State<MyMainPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-              'Welcome ${GlobalVariables().firstResponse.oUTPUTOBJECT.firstname}!'),
+              'Welcome ${GlobalVariables().firstResponse.oUTPUT[0].firstname}!'),
           automaticallyImplyLeading: false,
         ),
         body: SizedBox.expand(
