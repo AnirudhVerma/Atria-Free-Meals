@@ -619,19 +619,28 @@ class _BookServiceState extends State<BookService> {
                           //startLoading();
                           // stopLoading();
                           _validatePhoneInput1();
+
                           if(_validatePhoneInput1() == 0){
                             startLoading();
                             CommonMethods().toast(context,
                               'The Phone number is ${GlobalVariables().phoneNumber}');
                           BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
                           GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
-                          if (myBankOTPResponse.eRRORMSG == 'SUCCESS') {
-                            myBookServiceBloc.add(EnterBankOTP());
-                          } else {
-                            CommonMethods()
-                                .toast(context, myBankOTPResponse.eRRORMSG);
+                          print('************The problem ${myBankOTPResponse.eRRORMSG}');
+                          if(myBankOTPResponse.eRRORMSG != null){
+                            if (myBankOTPResponse.eRRORMSG != null && myBankOTPResponse.eRRORMSG == 'SUCCESS') {
+                              myBookServiceBloc.add(EnterBankOTP());
+                            } else {
+                              CommonMethods()
+                                  .toast(context, myBankOTPResponse.eRRORMSG);
+                            }
+                          }
+                          else{
+                            CommonMethods().toast(context,'Couldn\'t get Response from bank');
+                            stopLoading();
                           }
                           }
+
                         },
                       ),
                     ),
@@ -1001,56 +1010,8 @@ class _BookServiceState extends State<BookService> {
     var requestTime = CommonMethods().getEpochTime();
     String date = DateTime.now().toString().substring(0, 10);
 
-    String bookServiceString = """{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    },
-    "mobilenumber":"${myBankPhoneNumberController.text}",  
-    "customerid":"${GlobalVariables().myPortalLogin.oUTPUT.user.userid}",
-    "customername":"${GlobalVariables().firstResponse.oUTPUT[0].firstname}",
-    "requesttime":"$requestTime",
-    "DEVICEID": "",
-    "serviceid":"$serviceid",
-    "servicetype":"${GlobalVariables().servicetype}",
-    "servicecategory":"${GlobalVariables().servicecategory}",
-    "servicename":"${GlobalVariables().servicename}",
-    "servicecharge":"${GlobalVariables().serviceCharge}",
-    "bankcode":"${GlobalVariables().bankCode}",
-    "bankname":"${GlobalVariables().bankname}",
-    "branchcode":"${GlobalVariables().branchcode}",
-    "branchname":"${GlobalVariables().branchname}",
-    "addressid":"${GlobalVariables().addressid}",
-    "address":"${GlobalVariables().address}",
-    "lienmarkaccounttype":"NA",
-    "lienmarkaccount":"${GlobalVariables().lianAccount}",
-    "serviceaccounttype":"NA",
-    "serviceaccount":"${GlobalVariables().serviceAccount}",
-    "prefereddate":"$date",
-    "slot":"${GlobalVariables().timeSlot}",
-    "channel":"iOS",
-    "ccagentid":"",
-    "authorization":"$accessToken",
-    "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
-    "latitude":"${GlobalVariables().latitude}",
-    "longitude":"${GlobalVariables().longitude}",
-    "pincode":"${GlobalVariables().pincode}",
-    "servicecode":"${GlobalVariables().servicecode}",
-    "custom_params": [
-		{
-        		"NAME"  : "Amount" ,
-        		"VALUE" : "10000"
-    			 },{
-        		"NAME"  : "Remarks" ,
-        		"VALUE" : "Test"
-    			 }
-        	]
-    }""";
+    String jason = json.encode(GlobalVariables().listOfParams);
+    //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
 
     String bookServiceDynamicString = """{
           "additionalData":
@@ -1092,10 +1053,10 @@ class _BookServiceState extends State<BookService> {
     "longitude":"${GlobalVariables().longitude}",
     "pincode":"${GlobalVariables().pincode}",
     "servicecode":"${GlobalVariables().servicecode}",
-    "custom_params": ${GlobalVariables().listOfParams}
+    "custom_params": $jason
     }""";
 
-    print('The book Service String is $bookServiceDynamicString');
+    print('******************The book Service String is $bookServiceDynamicString');
 
     Response bokServiceResponse = await NetworkCommon()
         .myDio

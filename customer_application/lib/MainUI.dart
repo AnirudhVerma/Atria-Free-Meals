@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:customer_application/BookService.dart';
+import 'package:customer_application/CreateDropDown.dart';
+import 'package:customer_application/CreateHorizontalDropDown.dart';
 import 'package:customer_application/CustomParamsDialog.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'CompletedServicesDialog.dart';
+import 'JSONResponseClasses/ComplaintType.dart';
 import 'OnGoingServiceDialog.dart';
 import 'SizeConfig.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
@@ -285,7 +288,9 @@ class _MyMainPageState extends State<MyMainPage> {
                       return showDialog(
                           context: context,
                           builder: (_) {
-                            return CustomParamsDialog(selectedService: output,);
+                            return CustomParamsDialog(
+                              selectedService: output,
+                            );
                           });
                       /*if (output.servicecode == 'ACCSTMT') {
                         showDialog(
@@ -324,10 +329,32 @@ class _MyMainPageState extends State<MyMainPage> {
     }
     if (serviceCode == 'ACCSTMT') {
       return 'assets/images/bank-statement.png';
-    }
-    else{
+    } else {
       return 'assets/images/dices.png';
     }
+  }
+
+  List<Map> convertOutputToMap(List<OUTPUT1> ml) {
+    List<Map> _myJson = [
+      {"name": "1", "value": "1"},
+      {"name": "2", "value": "2"},
+      {"name": "3", "value": "3"},
+      {"name": "4", "value": "4"},
+      {"name": "5", "value": "Five"}
+    ];
+
+    var myMap = new Map();
+    List<Map> listOfMap = [];
+    for (var listObject in ml) {
+      Map myMap1 = new Map();
+      myMap1['complaintType'] = listObject.complaintType;
+      myMap1['complaintType'] = listObject.complaintType;
+      listOfMap.add(myMap1);
+//      myMap.clear();
+      myMap1 = null;
+    }
+//    listOfMap.add(myMap);
+    return listOfMap;
   }
 
   /*Future<void> getServices() async {
@@ -513,17 +540,17 @@ class _MyMainPageState extends State<MyMainPage> {
                   const Padding(
                     padding: EdgeInsets.all(16.0),
                   ),
-                  SizedBox(
-                    width: 500.0,
-                    child: CupertinoSegmentedControl<int>(
-                      children: services,
-                      onValueChanged: (int val) {
-                        setState(() {
-                          currentValue = val;
-                        });
-                      },
-                      groupValue: currentValue,
-                    ),
+                    SizedBox(
+                     width: 500.0,
+                     child: CupertinoSegmentedControl<int>(
+                       children: services,
+                       onValueChanged: (int val) {
+                         setState(() {
+                           currentValue = val;
+                         });
+                       },
+                       groupValue: currentValue,
+                     ),
                   ),
                   Expanded(
                     child: Padding(
@@ -577,8 +604,8 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),*/
                   ),
               Container(
-                // color: Colors.blue,
-                child: ListView(
+//                color: Colors.blue,
+                /*child: ListView(
                   children: <Widget>[
                     ListTile(
                       title: Center(
@@ -644,8 +671,31 @@ class _MyMainPageState extends State<MyMainPage> {
                       title: Text('App Info'),
                     ),
                   ],
-                ),
+                ),*/
+
+
+                /*child: Column(
+                  children: <Widget>[
+                    FutureBuilder(
+                      future: Repository().getComplaintTypes(),
+                      builder: (context, complaintSnapShot) {
+                        if (complaintSnapShot.data == null) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          return CreateHorizontalDropDown(
+                            myJson: convertOutputToMap(
+                                complaintSnapShot.data.oUTPUT),
+                          );
+                        }
+                      },
+                    )
+                  ],
+                ),*/
               ),
+
+
               Container(
                 //color: Colors.purple,
                 child: SingleChildScrollView(
@@ -1164,8 +1214,13 @@ class _MyDialogState extends State<MyDialog> {
                           DatePicker.showDatePicker(
                             context,
                             theme: DatePickerTheme(
-                              containerHeight: MediaQuery.of(context).copyWith().size.height / 3,
-                              backgroundColor: Theme.of(context).backgroundColor,
+                              containerHeight: MediaQuery.of(context)
+                                      .copyWith()
+                                      .size
+                                      .height /
+                                  3,
+                              backgroundColor:
+                                  Theme.of(context).backgroundColor,
                               titleHeight: 24.0,
                               itemHeight: 30.0,
                               itemStyle: TextStyle(color: Colors.white),
@@ -1245,8 +1300,13 @@ class _MyDialogState extends State<MyDialog> {
                         onPressed: () {
                           DatePicker.showDatePicker(context,
                               theme: DatePickerTheme(
-                                containerHeight: MediaQuery.of(context).copyWith().size.height / 3,
-                                backgroundColor: Theme.of(context).backgroundColor,
+                                containerHeight: MediaQuery.of(context)
+                                        .copyWith()
+                                        .size
+                                        .height /
+                                    3,
+                                backgroundColor:
+                                    Theme.of(context).backgroundColor,
                                 titleHeight: 24.0,
                                 itemHeight: 30.0,
                                 itemStyle: TextStyle(color: Colors.white),

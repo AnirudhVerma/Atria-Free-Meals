@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:customer_application/GlobalVariables.dart';
+import 'package:customer_application/JSONResponseClasses/ComplaintType.dart';
 import 'package:dio/dio.dart';
 import 'JSONResponseClasses/Address.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
@@ -439,6 +440,31 @@ class Repository {
     print('             THE ADDRESSES ARE $address                 ');
 
     return output;
+  }
+
+  Future<void> getComplaintTypes() async {
+    String getComplaintType = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    }""";
+    Response getComplaintTypeResponse = await NetworkCommon()
+        .myDio
+        .post("/getComplaintType", data: getComplaintType);
+    var getComplaintTypeResponseString = jsonDecode(getComplaintTypeResponse.toString());
+    var getComplaintTypeResponseObject =
+    ComplaintType.fromJson(getComplaintTypeResponseString);
+
+    return getComplaintTypeResponseObject;
   }
 
   removeAddress(String addressId) async {
