@@ -45,6 +45,9 @@ dependencies:
 
   #examples
   google_fonts: ^0.2.0
+  #Encryption
+  encrypt: ^4.0.0
+
 
 
 dev_dependencies:
