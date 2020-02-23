@@ -27,7 +27,7 @@ class _CreateDropDownState extends State<CreateDropDown> {
       onChanged: (String newValue) {
         Map myMap = new Map();
         myMap['name'] = widget.nameInMap;
-        myMap['value'] = _mySelection;
+        myMap['value'] = newValue;
         GlobalVariables().listOfParams[widget.position - 1] = myMap;
         setState(() {
           _mySelection = newValue;

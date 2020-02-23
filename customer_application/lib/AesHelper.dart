@@ -118,7 +118,7 @@ Encryption(String planinText) {
 
   //print('\n\n2 base16==== : ${ecncrypted.base16}');
 
-  var data = hex.encode(APPEND.codeUnits) + salt +ecncrypted.base16;
+  var data = hex.encode(APPEND.codeUnits) + salt + ecncrypted.base16;
 
   //print('hexDataEnc : $data');
   var encoded = base64.encode(hex.decode(data));
