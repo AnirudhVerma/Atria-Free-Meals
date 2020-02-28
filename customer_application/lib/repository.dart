@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/ComplaintType.dart';
+import 'package:customer_application/JSONResponseClasses/EncryptedResponse.dart';
 import 'package:dio/dio.dart';
+import 'AesHelper.dart';
 import 'JSONResponseClasses/Address.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
@@ -48,10 +51,13 @@ class Repository {
     },
     "mobilenumber":"$phoneNumber",
     "type":"login",
-    "usertype":"C"
+    "usertype":"C",
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
 
-      print("Resquest :: " + fetchUserDetailsString);
+     /* String data = """{ "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+                    "username":"$phoneNumber", "data":"${encrypt(fetchUserDetailsString)}" }""";
+      print(data);*/
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
@@ -62,7 +68,15 @@ class Repository {
           .post("/fetchUserDetails", data: fetchUserDetailsString);
       print("THE Fetch User RESPONSE IS :: $response1");
 
+   /*   var encryptedResponse = jsonDecode(response1.toString());
+      EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
+
+      var myVar = jsonDecode(decrypt(myEncriptedResponse.data).toString());*/
+
+
+
       var myVar = jsonDecode(response1.toString());
+      print("THE Fetch User Decrypted RESPONSE IS :: $myVar");
 
       GlobalVariables().firstResponse = FirstResponse.fromJson(myVar);
 
@@ -75,14 +89,19 @@ class Repository {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "mobilenumber":"$phoneNumber"
+    "mobilenumber":"$phoneNumber",
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
 
       print("RESPONSE CODE :: ${GlobalVariables().firstResponse.eRRORCODE}");
       if (GlobalVariables().firstResponse.eRRORCODE == "00") {
+        print('The data is ${CommonMethods().getEncryptedRequestBeforeLogin(generateOTPJSON, phoneNumber)}');
         Response response2 = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
+
+
+
         print("THE OTP RESPONSE IS :: $response2");
         var myOTPVar = jsonDecode(response2.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
@@ -91,18 +110,6 @@ class Repository {
         //print('The User Name is ${oTPResponse.oUTPUT.firstname}');
         print('');
 
-        String validateOTPJSON = """{
-        "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    },
-    "mobilenumber":"$phoneNumber",
-    "otp":"123456"
-    }""";
 
         if (oTPResponse.eRRORCODE == "00") {
           /*
@@ -162,6 +169,7 @@ class Repository {
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
+
       Response fetchUserResonse = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: fetchUserJSON);
@@ -283,7 +291,26 @@ class Repository {
       String enteredOTP = otp;
 
       String portalLogin2 =
-          """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}"}""";
+      """{"password":"encoded", "username":"{\\"deviceid\\" : \\"\\",\\"ClientAppName\\":\\"ANIOSCUST\\",\\"operatorid\\" : \\"\\",\\"username\\" : \\"$phoneNumber\\",\\"password\\" : \\"$enteredOTP\\",\\"authtype\\" : \\"O\\",\\"rdxml\\" : \\"\\",\\"accNum\\" : \\"\\",\\"AadhaarAuthReq\\" : \\"\\",\\"vendorid\\" : \\"17\\",\\"platform\\" : \\"ANDROID\\",\\"client_apptype\\" : \\"DSB\\",\\"usertypeinfo\\" : \\"C\\",\\"fcm_id\\" : \\"\\",\\"client_app_ver\\" : \\"1.0.0\\",\\"ts\\" : \\"${CommonMethods().getTimeStamp()}\\"}"}""";
+
+
+      if(GlobalVariables().encryptionEnabled){
+        String userNameData = """{"deviceid" : "","ClientAppName":"ANIOSCUST","operatorid" : "","username" : "$phoneNumber","password" : "$enteredOTP","authtype" : "O","rdxml" : "","accNum" : "","AadhaarAuthReq" : "","vendorid" : "17","platform" : "ANDROID","client_apptype" : "DSB","usertypeinfo" : "C","fcm_id" : "","client_app_ver" : "1.0.0","ts" : "${CommonMethods().getTimeStamp()}"}""";
+
+        String userNameDataValue = encrypt(userNameData);
+
+        String webLoginRequest = """{
+        "username":"{\\"username\\":\\"$phoneNumber\\",\\"ts\\":\\"${CommonMethods().getTimeStamp()}\\",\\"data\\":\\"$userNameDataValue\\"}",
+        "password":"encoded"
+        }""";
+        portalLogin2 = webLoginRequest;
+
+      }
+
+
+
+
+
 
       Response response3 = await NetworkCommon().myDio.post(
             "/portallogin",
@@ -292,8 +319,12 @@ class Repository {
       print("The JSON request is :: $portalLogin2");
       print("THE PORTAL LOGIN RESPONSE IS :: $response3");
 
-      var myResponse = jsonDecode(response3.toString());
-      var loginResponse = PortalLogin.fromJson(myResponse);
+
+      var myVar = jsonDecode(response3.toString());
+
+      print("THE Fetch User Decrypted RESPONSE IS :: $myVar");
+
+      var loginResponse = PortalLogin.fromJson(myVar);
 
       if (loginResponse.eRRORCODE == "00") {
         GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
@@ -317,7 +348,7 @@ class Repository {
   Future<void> getServices() async {
 
     //TODO need to change
-    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
+    String ts= CommonMethods().getTimeStamp();
 
     String getServicesString = """{
           "additionalData":
@@ -422,7 +453,7 @@ class Repository {
     "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
     Response getAddressResponse = await NetworkCommon()
         .myDio
@@ -455,7 +486,7 @@ class Repository {
     "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
     Response getComplaintTypeResponse = await NetworkCommon()
         .myDio
@@ -468,9 +499,6 @@ class Repository {
   }
 
   removeAddress(String addressId) async {
-
-    //TODO need to change
-    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
 
     String removeAddressString = """{
           "additionalData":
@@ -516,7 +544,7 @@ class Repository {
   addAddress(String address, String latitude, String longitude, String pinCode) async {
 
     //TODO need to change
-    String ts= "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)";
+    String ts= CommonMethods().getTimeStamp();
 
     String addAddressString = """{
           "additionalData":

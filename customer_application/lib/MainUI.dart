@@ -12,6 +12,7 @@ import 'package:customer_application/bloc.dart';
 import 'package:customer_application/main.dart';
 import 'package:customer_application/repository.dart';
 import 'package:dio/dio.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -74,14 +75,14 @@ class _MyMainPageState extends State<MyMainPage> {
 
   _MyMainPageState();
 
-  GoogleMapController mapController;
+  /*GoogleMapController mapController;
 
   final LatLng _center = const LatLng(45.521563, -122.677433);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-
+*/
   @override
   void initState() {
     super.initState();
@@ -144,7 +145,7 @@ class _MyMainPageState extends State<MyMainPage> {
                     "vendorid":"17",
                     "ClientAppName":"ANIOSCUST"
                     },
-                    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+                    "ts": "${CommonMethods().getTimeStamp()}",
                     "authorization":"$accessToken",
                     "username":"$phoneNumber"
                 
@@ -235,7 +236,7 @@ class _MyMainPageState extends State<MyMainPage> {
         );*/
   }
 
-  Widget servicesWidget() {
+  Widget servicesWidget1() {
     var output;
     return FutureBuilder(
       future: Repository().getServices(),
@@ -322,6 +323,64 @@ class _MyMainPageState extends State<MyMainPage> {
       },
     );
   }
+
+  Widget servicesWidget() {
+    var output;
+    return EnhancedFutureBuilder(
+      future: Repository().getServices(),
+      rememberFutureResult: true,
+        whenNotDone: Center(child: CircularProgressIndicator()),
+        whenDone: (dynamic data) => ListView.builder(
+          itemCount: data.oUTPUT.length,
+          itemBuilder: (context, index) {
+            {
+              output = data.oUTPUT[index];
+              return Card(
+                child: ListTile(
+                  title: Text(output.servicename),
+                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                  leading: CircleAvatar(
+                    child: new Image(
+                        image:
+                        new AssetImage(getIconPath(output.servicecode))),
+                  ),
+                  onTap: () {
+                    output = data.oUTPUT[index];
+                    /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
+                    GlobalVariables().serviceid = output.serviceid;
+                    GlobalVariables().servicename = output.servicename;
+                    GlobalVariables().servicetype = output.servicetype;
+                    GlobalVariables().servicecategory =
+                        output.servicecategory;
+                    GlobalVariables().serviceCharge = output.serviceCharge;
+                    GlobalVariables().servicecode = output.servicecode;
+                    print(
+                        '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    String servicename;
+                    return showDialog(
+                        context: context,
+                        builder: (_) {
+                          return CustomParamsDialog(
+                            selectedService: output,
+                          );
+                        });
+                  },
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+              );
+            }
+          },
+        ),
+        whenNone: Center(
+          child: Text(
+              '/*ERROR OCCURED, Please retry */'),
+          //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+        ),
+    );
+  }
+
 
   String getIconPath(String serviceCode) {
     if (serviceCode == 'CHQCTL') {

@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'AesHelper.dart';
+import 'JSONResponseClasses/EncryptedResponse.dart';
+
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
   List<int> certificateChainBytes = null;
@@ -60,13 +63,14 @@ class NetworkCommon {
 
 //    dio.interceptors.add(alice.getDioInterceptor());
 //    dio.options.baseUrl = 'https://111.125.203.226:30001/doorstep'; // public server
-    dio.options.baseUrl = 'http://localhost:30000/doorstep'; // mac server
+//    dio.options.baseUrl = 'http://localhost:30000/doorstep'; // mac server
 
 
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
 //    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
-//    dio.options.baseUrl = 'http://10.10.20.46:30000/doorstep';  // bhubhaneshvari local server
+    dio.options.baseUrl = 'http://10.10.20.120:30000/doorstep';  // kavyananda local server
+//    dio.options.baseUrl = 'http://10.10.20.40:30001/doorstep';  // Bhuvaneswari local server
 
     // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s
@@ -144,6 +148,31 @@ class NetworkCommon {
           // print requests
           print("Pre request:${options.method},${options.baseUrl}${options.path}");
           print("Pre request:${options.headers.toString()}");
+          print("Pre request Data:${options.data.toString()}");
+
+
+
+
+
+
+          if(GlobalVariables().encryptionEnabled){
+            if(options.path == '/portallogin'){
+
+            }else{
+
+              print(options.data);
+              String ts = CommonMethods().getTimeStamp();
+              String encryptedData = encrypt(options.data);
+
+              String data = """{ "ts": "$ts",
+                    "username":"${GlobalVariables().phoneNumber}", "data":"$encryptedData" }""";
+              print(data);
+              options.data = data;
+
+            }
+          }
+
+
 
           return options; //continue
         }, onResponse: (Response response) async {
@@ -192,6 +221,17 @@ class NetworkCommon {
           print('response : ${response.toString()}');
           prefs.setString("user", _encoder.convert((resultContainer as Map)));
         }
+
+
+        if(GlobalVariables().encryptionEnabled){
+          print('B4 response : ${response.toString()}');
+          var encryptedResponse = jsonDecode(response.toString());
+          EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
+          response.data = jsonDecode(decrypt(myEncriptedResponse.data).toString());
+          print('A4 response : ${response.toString()}');
+        }
+
+
 
       }else{
 
@@ -251,7 +291,7 @@ class NetworkCommon {
                   '${dioError.request.toString()} \n'),*/
               content: Text(//'${dioError.type.toString()} \n'
                   //'$errMsg \n'
-                  'We\'re unable to connect at the moment, make sure the device is connected to internet and try again'),
+                  '$errMsg \n We\'re unable to connect at the moment, make sure the device is connected to internet and try again'),
               actions: <Widget>[
                 FlatButton(
                     child: Text('OK', style: TextStyle(color: Colors.blue),),

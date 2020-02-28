@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:customer_application/AesHelper.dart';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
@@ -67,8 +68,36 @@ class MyHttpOverrides extends HttpOverrides {
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+//  WidgetsFlutterBinding.ensureInitialized();
+//  testDatat();
   runApp(MyApp());
 }
+
+/*void testDatat() {
+
+  String phoneNumber = '999979797979';
+
+
+  String userNameData = """{"deviceid" : "","ClientAppName":"ANIOSCUST","operatorid" : "","username" : "$phoneNumber","password" : "123456","authtype" : "O","rdxml" : "","accNum" : "","AadhaarAuthReq" : "","vendorid" : "17","platform" : "ANDROID","client_apptype" : "DSB","usertypeinfo" : "C","fcm_id" : "","client_app_ver" : "1.0.0","ts" : "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"}""";
+  String encryptedData = encrypt(userNameData);
+
+  String finalUserNameData = """{
+        \\"username\\":\\"$phoneNumber\\",
+        \\"data\\" : \\"$encryptedData\\",
+        \\"ts\\" : \\"Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)\\"}""";
+
+  print('Data : $finalUserNameData');
+  String finalLoginRequest ="""{
+        "password":"encoded"
+        "username" : "$finalUserNameData"
+        }""";
+
+
+  print('finalLoginRequest : $finalLoginRequest');
+
+
+
+}*/
 
 class MyApp extends StatelessWidget {
   static final navKey = new GlobalKey<NavigatorState>();
@@ -1002,6 +1031,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
       // NetworkCommon().netWorkInitilize(context);
+
       Response response1 = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: fetchUserDetailsString);
@@ -1245,7 +1275,6 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
 //           Navigator.push(context, MaterialPageRoute(builder: (context) => MySignUpPage()));
-
 //            BlocProvider.of<SignInBloc>(context).add(DoSignIn(userId: " ", OTP: " ")); // this is the one!!
 
             Fluttertoast.showToast(
@@ -1288,7 +1317,6 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
 //           Navigator.push(context, MaterialPageRoute(builder: (context) => MySignUpPage()));
-
 //            BlocProvider.of<SignInBloc>(context).add(DoSignIn(userId: " ", OTP: " ")); // this is the one!!
 
             _validateInputs();
@@ -1487,6 +1515,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       String phoneNumber = myController.text;
+      GlobalVariables().phoneNumber = phoneNumber;
       mySignInBloc.add(DoOTPSignIN(phoneNumber: phoneNumber));
 //      _formKey.currentState.save();
     } else {

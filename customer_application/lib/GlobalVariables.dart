@@ -8,6 +8,7 @@ import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart
 import 'package:flutter/src/widgets/framework.dart';
 
 class GlobalVariables{
+  bool encryptionEnabled = true;
   String accessToken = '90';
   String otherString;
   FirstResponse firstResponse = new FirstResponse();

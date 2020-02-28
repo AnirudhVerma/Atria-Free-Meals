@@ -6,47 +6,43 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encryptLib;
 import 'package:convert/convert.dart';
 
-
 String Password = "jjkaDHJSJFF4385N";
 String APPEND = "Salted__";
 
 void main(){
   testEncAndDecryption();
  runApp(EncryptApp());
-
 }
 
 void testEncAndDecryption() {
 
   var data64 = 'U2FsdGVkX19zdiftLRnTCRmTb3EKtGSxk+HbTZTaN/4wiT32BPwfYm1fyeYjIAbn/q9cr30b84cPFAILe4OYJ0HEIxXeXdjaKaM8HVRZFfv2D0F30UmFj/8IOt84L0VQ0MlstJhI1eQWXIY1Llhq2r3E/K9DzEj6xll/Y8hMtPTyryL0IKzRYFirsEvA08XeM3u8THUeR2PQP6Mxro05EBLfEhULRr2m0AeEeu+KQvh8DyAacwsgSQjsM1anu/M871E4bHTx8WfPpWhrBZPUsiiuBo+/G+pFOsjFSYeEUjmjArAWWWy2C80tQA3dejkhMianYObkNpmm+emP83k9QOM1EHiyKQ+lt6S7Suvq0udRmcsJE+UqYg48gpV6WCRY0VJZbaBquvvb9KdUbBViUJBosfxQGVNCYXEhDAJmBXsIQ9Gr0M4cEiA5zsrrUPgIRopp8ZHrYy2YA2lPnWmOJQ==';
   print('encryted Data : $data64');
-  var decrypted = Decryption(data64);
+  var decrypted = decrypt(data64);
   print('\n\nDec==== : $decrypted');
 
-  var encryption = Encryption(decrypted);
+  var encryption = encrypt(decrypted);
   print('\n\nEnc==== : $encryption');
 
-  decrypted = Decryption(encryption);
+  decrypted = decrypt(encryption);
   print('\n\nDec2==== : $decrypted');
 
 
-  encryption = Encryption("Hari Krishna");
+  encryption = encrypt("Hari Krishna");
   print('\n\nEnc==== : $encryption');
 
-  decrypted = Decryption(encryption);
+  decrypted = decrypt(encryption);
   print('\n\nDec2==== : $decrypted');
-
-
 
 }
 
-Decryption(String data64) {
+decrypt(String data64) {
 
+  print('******************************The data to be decrypted is $data64');
 
   const base64 = const Base64Codec();
 
   var decode = base64.decode(data64);
-
 
   var salt = hex.encode(decode.sublist(8, 16));
   //print('random $salt');
@@ -55,8 +51,6 @@ Decryption(String data64) {
 
   var password = hex.encode(Password.codeUnits);
   //print('password $password');
-
-
 
   var derivedBytes = EvpKDF(password, 256, 128, salt, 1);
 
@@ -74,7 +68,6 @@ Decryption(String data64) {
   var hexData = hex.encode(decode.sublist(16));
   //print('hexData $hexData');
 
-
   var decrypted = encrypter.decrypt16(ciphertextBytes, iv: iv1);
 
   print('\n\n1==== : $decrypted');
@@ -83,11 +76,9 @@ Decryption(String data64) {
   print('\n\n2==== : $decrypted');
   return decrypted;
 
-
 }
 
-Encryption(String planinText) {
-
+encrypt(String planinText) {
 
   const base64 = const Base64Codec();
 
@@ -95,7 +86,6 @@ Encryption(String planinText) {
 
   var password = hex.encode(Password.codeUnits);
   //print('password $password');
-
 
   var derivedBytes = EvpKDF(password, 256, 128, salt, 1);
 
@@ -109,8 +99,6 @@ Encryption(String planinText) {
   final iv1 = encryptLib.IV.fromBase16(iv);
 
   final encrypter = encryptLib.Encrypter(encryptLib.AES(key1, mode: encryptLib.AESMode.cbc, padding: 'PKCS7'));
-
-
 
   var ecncrypted = encrypter.encrypt(planinText, iv: iv1);
 
@@ -126,14 +114,11 @@ Encryption(String planinText) {
 
   return encoded;
 
-
 }
 
 
 EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
 {
-
-
 
   try {
 
@@ -144,7 +129,6 @@ EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
 
     var derivedBytes ="";
 
-
     num numberOfDerivedWords = 0;
 
     var password = hex.decode(Password);
@@ -153,9 +137,6 @@ EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
     var output = new AccumulatorSink<Digest>();
     var input = md5.startChunkedConversion(output);
     var digest;
-
-
-
 
     while (numberOfDerivedWords < targetKeySize) {
       print("\n\n");
@@ -169,7 +150,6 @@ EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
       input.add(salt); // call `add` for every chunk of input data
       input.close();
       digest = output.events.single;
-
 
       // Iterations
       for (int i = 1; i < iteration; i++) {
@@ -189,8 +169,6 @@ EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
       //print(numberOfDerivedWords);
       derivedBytes += hex.encode(digest.bytes);
 
-
-
     }
 
     //print('derivedBytes : $derivedBytes');
@@ -208,10 +186,6 @@ EvpKDF(var Password, int keySize, int ivSize, var Salt, int iteration)
   } finally {}
 
 }
-
-
-
-
 
 List<int> arrayCopy(bytes, srcOffset, result, destOffset, bytesLength) {
   for (var i = srcOffset; i < bytesLength; i++) {

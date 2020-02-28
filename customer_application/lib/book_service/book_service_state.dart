@@ -43,3 +43,8 @@ class LiamAccountListState extends BookServiceState {
   @override
   List<Object> get props => [];
 }
+
+class BookingResultState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}

@@ -43,3 +43,8 @@ class FetchLiamAccount extends BookServiceEvent{
    @override
    List<Object> get props => null;
 }
+
+class BookingResult extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}

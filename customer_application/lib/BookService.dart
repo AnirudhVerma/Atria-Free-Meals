@@ -7,6 +7,7 @@ import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/Address.dart';
 import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
+import 'package:customer_application/JSONResponseClasses/BookServiceReq.dart';
 import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
 import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
@@ -55,6 +56,7 @@ class _BookServiceState extends State<BookService> {
   final myBankOTPController = TextEditingController();
   var _myFocusNode = new FocusNode();
   var _onPressed;
+  var _onPressedOnTimeSlot = null;
   bool _enabled = false;
 
 //  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
@@ -138,6 +140,9 @@ class _BookServiceState extends State<BookService> {
                 if (state is LiamAccountListState) {
                   return selectLiamAccountUI(context);
                 }
+                if( state is BookingResultState){
+                  return Container(child: Text('Booking Result UI'),);
+                }
                 return Container(
                   height: 0.0,
                   width: 0.0,
@@ -163,7 +168,7 @@ class _BookServiceState extends State<BookService> {
     "userid":$userid,
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
       Response getAddressResponse = await NetworkCommon()
           .myDio
@@ -196,7 +201,6 @@ class _BookServiceState extends State<BookService> {
             return ListView.separated(
 //            itemCount: int.parse(addressSnapShot.data.length),
               shrinkWrap: true,
-
               itemCount: addressSnapShot.data.length,
               itemBuilder: (context, index) {
                 {
@@ -209,7 +213,7 @@ class _BookServiceState extends State<BookService> {
                               new AssetImage('assets/images/address_icon.png')),
                     ),
                     title: Text(addressOutput.address),
-                    subtitle: Text(addressOutput.addressid.toString()),
+                    subtitle: Text(addressOutput.pincode.toString()),
                     onTap: () {
                       addressOutput = addressSnapShot.data[index];
                       GlobalVariables().pincode = addressOutput.pincode;
@@ -319,7 +323,7 @@ class _BookServiceState extends State<BookService> {
     "pincode":"${GlobalVariables().pincode}",
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
       Response getBankListResponse = await NetworkCommon()
           .myDio
@@ -671,7 +675,7 @@ class _BookServiceState extends State<BookService> {
     "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)"
+    "ts": "${CommonMethods().getTimeStamp()}"
     }""";
     Response getBankListResponse = await NetworkCommon()
         .myDio
@@ -934,7 +938,7 @@ class _BookServiceState extends State<BookService> {
     "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "ts": "${CommonMethods().getTimeStamp()}",
     "OTP":"${myBankOTPController.text}",
     "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].uniqrefnum}",
     "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].bankuniqrefnum}"
@@ -964,7 +968,7 @@ class _BookServiceState extends State<BookService> {
     "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "ts": "${CommonMethods().getTimeStamp()}",
     "latitude":"${GlobalVariables().latitude}",
     "longitude":"${GlobalVariables().longitude}",
     "pincode":"${GlobalVariables().pincode}"
@@ -981,6 +985,9 @@ class _BookServiceState extends State<BookService> {
 
   Future<TimeSlot> fetchTimeSlots() async {
     String date = DateTime.now().toString().substring(0, 10);
+    final now = DateTime.now();
+    final tomorrow = new DateTime(now.year, now.month, now.day + 1);
+    date = tomorrow.toString().substring(0, 10);
     String fetchTimeSlotsString = """{
           "additionalData":
     {
@@ -992,7 +999,7 @@ class _BookServiceState extends State<BookService> {
     }, 
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "ts": "${CommonMethods().getTimeStamp()}",
     "pincode":"${GlobalVariables().pincode}",
     "requesteddate":"$date"
     }""";
@@ -1010,7 +1017,7 @@ class _BookServiceState extends State<BookService> {
     var requestTime = CommonMethods().getEpochTime();
     String date = DateTime.now().toString().substring(0, 10);
 
-    String jason = json.encode(GlobalVariables().listOfParams);
+    var jason = json.encode(GlobalVariables().listOfParams);
     //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
 
     String bookServiceDynamicString = """{
@@ -1039,7 +1046,7 @@ class _BookServiceState extends State<BookService> {
     "addressid":"${GlobalVariables().addressid}",
     "address":"${GlobalVariables().address}",
     "lienmarkaccounttype":"NA",
-    "lienmarkaccount":"${GlobalVariables().lianAccount}",
+    "lienmarkaccount":"${GlobalVariables().serviceAccount}",
     "serviceaccounttype":"NA",
     "serviceaccount":"${GlobalVariables().serviceAccount}",
     "prefereddate":"$date",
@@ -1048,7 +1055,7 @@ class _BookServiceState extends State<BookService> {
     "ccagentid":"",
     "authorization":"$accessToken",
     "username":"$userName",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "ts": "${CommonMethods().getTimeStamp()}",
     "latitude":"${GlobalVariables().latitude}",
     "longitude":"${GlobalVariables().longitude}",
     "pincode":"${GlobalVariables().pincode}",
@@ -1056,14 +1063,84 @@ class _BookServiceState extends State<BookService> {
     "custom_params": $jason
     }""";
 
+   AdditionalData additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );
+
+    BookServiceReq myObj = BookServiceReq(
+      additionalData: additionalData,
+        mobilenumber:myBankPhoneNumberController.text,
+        customerid:GlobalVariables().myPortalLogin.oUTPUT.user.userid.toString(),
+        customername:GlobalVariables().firstResponse.oUTPUT[0].firstname,
+        requesttime:requestTime.toString(),
+        dEVICEID: "",
+        serviceid:serviceid.toString(),
+        servicetype:GlobalVariables().servicetype,
+        servicecategory:GlobalVariables().servicecategory,
+        servicename:GlobalVariables().servicename,
+        servicecharge:GlobalVariables().serviceCharge,
+        bankcode:GlobalVariables().bankCode,
+        bankname:GlobalVariables().bankname,
+        branchcode:GlobalVariables().branchcode,
+        branchname:GlobalVariables().branchname,
+        addressid:GlobalVariables().addressid.toString(),
+        address:GlobalVariables().address,
+        lienmarkaccounttype:"NA",
+        lienmarkaccount:GlobalVariables().serviceAccount,
+        serviceaccounttype:"NA",
+        serviceaccount:GlobalVariables().serviceAccount,
+        prefereddate:date,
+        slot:GlobalVariables().timeSlot,
+        channel:"iOS",
+        ccagentid:"",
+        authorization:accessToken,
+        username:userName,
+        ts: CommonMethods().getTimeStamp(),
+        latitude:GlobalVariables().latitude,
+        longitude:GlobalVariables().longitude,
+        pincode:GlobalVariables().pincode,
+        servicecode:GlobalVariables().servicecode,
+        customParams:GlobalVariables().listOfParams.toString()
+
+    );
+
+
+   /* myObj.additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );*/
+   /* myObj.additionalData.clientAppName= "ANIOSCUST";
+
+    myObj.additionalData.clientApptype = "DSB" ;
+
+    myObj.additionalData.clientAppVer ="1.0.0" ;
+    myObj.additionalData.platform = "ANDROID";
+
+    myObj.additionalData.vendorid ="17" ;*/
+
+   var finalBookServiceReq = jsonEncode(myObj);
+
+
     print('******************The book Service String is $bookServiceDynamicString');
 
     Response bokServiceResponse = await NetworkCommon()
         .myDio
-        .post("/bookService", data: bookServiceDynamicString);
+        .post("/bookService", data: finalBookServiceReq);
     var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
     GlobalVariables().myBookServiceResponseObject =
         BookServiceResponse.fromJson(getBranchesResponseString);
+
+    //REMOVE THIS!!
+
+//    myBookServiceBloc.add(BookingResult());
+
 
     if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
       showDialog(
@@ -1113,6 +1190,13 @@ class _BookServiceState extends State<BookService> {
         ),
       );
     }
+
+
+
+
+
+
+
 
     return GlobalVariables().myBookServiceResponseObject;
   }
@@ -1459,17 +1543,57 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
+                  var avalabilityStatus = timeSlotSnapShot.data.oUTPUT[index].avalabilityStatus;
                   print('project snapshot data is: ${timeSlotSnapShot.data}');
-                  return MaterialButton(
+
+                  if(timeSlotSnapShot.data.oUTPUT[index].avalabilityStatus != 'N')
+                 // if(index.isEven)
+                  {
+                    return MaterialButton(
+                      //title: Text(timeSlot),
+                      child: Center(
+                          child: Text(
+                            timeSlot,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
+                          )),
+                      color: Colors.blue[400],
+                      onPressed: () {
+                        timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
+                        CommonMethods().toast(
+                            context, 'You tapped on ${timeSlot.toString()}');
+                        GlobalVariables().timeSlot = timeSlot;
+                        myBookServiceBloc.add(FetchLiamAccount());
+
+                      },
+                    );
+                  }
+                  else{
+                    return MaterialButton(
+                      color: Colors.pink,
+                      child: Center(
+                          child: Text(
+                            timeSlot,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
+                          )),
+                      onPressed: null,
+                    );
+                  }
+                  /*return MaterialButton(
                     //title: Text(timeSlot),
                     child: Center(
                         child: Text(
-                      timeSlot,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
-                    )),
+                          timeSlot,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        )),
                     color: Colors.blue[400],
                     onPressed: () {
                       timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
@@ -1477,8 +1601,10 @@ class _BookServiceState extends State<BookService> {
                           context, 'You tapped on ${timeSlot.toString()}');
                       GlobalVariables().timeSlot = timeSlot;
                       myBookServiceBloc.add(FetchLiamAccount());
+
                     },
-                  );
+                  );*/
+
                 }
               },
             );
@@ -1935,5 +2061,13 @@ class _BookServiceState extends State<BookService> {
   void dispose() {
     super.dispose();
     myBookServiceBloc.close();
+  }
+
+  void whatToDoOnPressed(timeSlot, isEnabled) {
+    if(isEnabled == 'N'){
+      return null;
+    }else
+    GlobalVariables().timeSlot = timeSlot;
+    myBookServiceBloc.add(FetchLiamAccount());
   }
 }

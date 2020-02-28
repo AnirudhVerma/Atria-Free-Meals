@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'BookService.dart';
+import 'CommonMethods.dart';
 import 'GlobalVariables.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'networkConfig.dart';
@@ -102,7 +103,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
     },
     "username":"${GlobalVariables().phoneNumber}",
     "DEVICEID": "",
-    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+    "ts": "${CommonMethods().getTimeStamp()}",
     "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
