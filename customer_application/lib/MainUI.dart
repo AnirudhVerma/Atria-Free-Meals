@@ -102,9 +102,7 @@ class _MyMainPageState extends State<MyMainPage> {
 
   Map<int, Widget> icons = <int, Widget>{
     0: new CompletedServicesDialog(),
-    1: /*Center(
-      child: Center(child: Center(child: new OnGoingServiceDialog())),),*/
-        new OnGoingServiceDialog(),
+    1: new OnGoingServiceDialog(),
     /*2: Center(
       child: FlutterLogo(
         colors: Colors.cyan,
@@ -330,49 +328,68 @@ class _MyMainPageState extends State<MyMainPage> {
       future: Repository().getServices(),
       rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator()),
-        whenDone: (dynamic data) => ListView.builder(
-          itemCount: data.oUTPUT.length,
-          itemBuilder: (context, index) {
-            {
-              output = data.oUTPUT[index];
-              return Card(
-                child: ListTile(
-                  title: Text(output.servicename),
-                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                  leading: CircleAvatar(
-                    child: new Image(
-                        image:
-                        new AssetImage(getIconPath(output.servicecode))),
-                  ),
-                  onTap: () {
-                    output = data.oUTPUT[index];
-                    /*print('******************** THE OUTPUT IS ${output.toString()}');
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE !="00") {
+            print('some error occured');
+            print('project snapshot data is: $data');
+            return Center(
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
+              //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+            );
+          }else{
+            return ListView.builder(
+              itemCount: data.oUTPUT.length,
+              itemBuilder: (context, index) {
+                {
+                  output = data.oUTPUT[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(output.servicename),
+                      subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                      leading: CircleAvatar(
+                        child: new Image(
+                            image:
+                            new AssetImage(getIconPath(output.servicecode))),
+                      ),
+                      onTap: () {
+                        output = data.oUTPUT[index];
+                        /*print('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
-                    GlobalVariables().serviceid = output.serviceid;
-                    GlobalVariables().servicename = output.servicename;
-                    GlobalVariables().servicetype = output.servicetype;
-                    GlobalVariables().servicecategory =
-                        output.servicecategory;
-                    GlobalVariables().serviceCharge = output.serviceCharge;
-                    GlobalVariables().servicecode = output.servicecode;
-                    print(
-                        '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                    String servicename;
-                    return showDialog(
-                        context: context,
-                        builder: (_) {
-                          return CustomParamsDialog(
-                            selectedService: output,
-                          );
-                        });
-                  },
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-              );
-            }
-          },
-        ),
+                        GlobalVariables().serviceid = output.serviceid;
+                        GlobalVariables().servicename = output.servicename;
+                        GlobalVariables().servicetype = output.servicetype;
+                        GlobalVariables().servicecategory =
+                            output.servicecategory;
+                        GlobalVariables().serviceCharge = output.serviceCharge;
+                        GlobalVariables().servicecode = output.servicecode;
+                        print(
+                            '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                        String servicename;
+                        if(output.customParams.length != 0){
+                        return showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CustomParamsDialog(
+                                selectedService: output,
+                              );
+                            });
+                        }else{
+                          return Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (context) => BookService()));
+                        }
+                      },
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                  );
+                }
+              },
+            );
+          }
+        },
         whenNone: Center(
           child: Text(
               '/*ERROR OCCURED, Please retry */'),
@@ -596,12 +613,12 @@ class _MyMainPageState extends State<MyMainPage> {
               Container(
                   child: Column(
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
                   ),
                     SizedBox(
-                     width: 500.0,
-                     child: CupertinoSegmentedControl<int>(
+                     width: 300.0,
+                     child: CupertinoSlidingSegmentedControl<int>(
                        children: services,
                        onValueChanged: (int val) {
                          setState(() {
@@ -732,7 +749,6 @@ class _MyMainPageState extends State<MyMainPage> {
                   ],
                 ),*/
 
-
                 /*child: Column(
                   children: <Widget>[
                     FutureBuilder(
@@ -753,8 +769,6 @@ class _MyMainPageState extends State<MyMainPage> {
                   ],
                 ),*/
               ),
-
-
               Container(
                 //color: Colors.purple,
                 child: SingleChildScrollView(
@@ -1224,7 +1238,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 }
 */
 
-class MyDialog extends StatefulWidget {
+/*class MyDialog extends StatefulWidget {
   @override
   _MyDialogState createState() => new _MyDialogState();
 } //TODO: Use Imported Class instead
@@ -1449,7 +1463,7 @@ class _MyDialogState extends State<MyDialog> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  /* ... */
+                  *//* ... *//*
                 },
               ),
               MaterialButton(
@@ -1473,7 +1487,7 @@ class _MyDialogState extends State<MyDialog> {
                         new CupertinoPageRoute(
                             builder: (context) => BookService()));
                   }
-                  /* ... */
+                  *//* ... *//*
                 },
               ),
             ],
@@ -1565,7 +1579,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  /* ... */
+                  *//* ... *//*
                 },
               ),
               MaterialButton(
@@ -1585,14 +1599,14 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                       context,
                       new CupertinoPageRoute(
                           builder: (context) => BookService()));
-                  /* ... */
+                  *//* ... *//*
                 },
               ),
-              /*MaterialButton(
+              *//*MaterialButton(
                 minWidth:120,
                 color: Colors.blue,
                 child: Text('PROCEED', style: TextStyle(color: Colors.white),),
-              ),*/
+              ),*//*
             ],
           ),
         ],
@@ -1670,4 +1684,4 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
       ),
     );
   }
-}
+}*/

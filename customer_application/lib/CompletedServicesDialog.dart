@@ -134,7 +134,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
 
     print('             THE SERVICES OFFERED ARE $services                 ');
 
-    return output;
+    return getBookingHistoryResponseObject;
     //print(accessToken);
   }
 

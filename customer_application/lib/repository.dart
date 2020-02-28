@@ -3,6 +3,7 @@ import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/JSONResponseClasses/ComplaintType.dart';
 import 'package:customer_application/JSONResponseClasses/EncryptedResponse.dart';
+import 'package:customer_application/JSONResponseClasses/FetchUserReq.dart';
 import 'package:dio/dio.dart';
 import 'AesHelper.dart';
 import 'JSONResponseClasses/Address.dart';
@@ -170,9 +171,26 @@ class Repository {
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
 //      print(response);
 
+      AdditionalData myAdditionalData = AdditionalData(
+          clientAppVer:"1.0.0",
+          clientApptype:"DSB",
+          platform:"ANDROID",
+          vendorid:"17",
+          clientAppName:"ANIOSCUST"
+      );
+
+      FetchUserReq myFetchUserReq = FetchUserReq(
+        additionalData: myAdditionalData,
+        mobilenumber: phoneNumber,
+        type: "signup",
+        usertype: "C"
+      );
+
+      var finalFetchUserDetailsCall = jsonEncode(myFetchUserReq);
+
       Response fetchUserResonse = await NetworkCommon()
           .myDio
-          .post("/fetchUserDetails", data: fetchUserJSON);
+          .post("/fetchUserDetails", data: myFetchUserReq);
 
       var myFetchRespVar = jsonDecode(fetchUserResonse.toString());
 
@@ -306,11 +324,6 @@ class Repository {
         portalLogin2 = webLoginRequest;
 
       }
-
-
-
-
-
 
       Response response3 = await NetworkCommon().myDio.post(
             "/portallogin",

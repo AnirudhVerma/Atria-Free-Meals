@@ -14,6 +14,7 @@ import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart
 import 'package:customer_application/MainUI.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:customer_application/CommonMethods.dart';
@@ -58,6 +59,23 @@ class _BookServiceState extends State<BookService> {
   var _onPressed;
   var _onPressedOnTimeSlot = null;
   bool _enabled = false;
+  int currentValue = 0;
+
+  final Map<int, Widget> dates = const <int, Widget>{
+    0: Text('Today'),
+    1: Text('Tomorrow'),
+  };
+
+  Map<int, Widget> icons = <int, Widget>{
+    0: new Text("Hello"),
+    1: new Text("Yo"),
+    /*2: Center(
+      child: FlutterLogo(
+        colors: Colors.cyan,
+        size: 200.0,
+      ),
+    ),*/
+  };
 
 //  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
 
@@ -185,27 +203,33 @@ class _BookServiceState extends State<BookService> {
 
       print('             THE ADDRESSES ARE $address                 ');
 
-      return output;
+      return getAddressResponseObject;
     }
 
     Widget addressList() {
       var addressOutput;
-      return FutureBuilder(
+      return EnhancedFutureBuilder(
+        rememberFutureResult: true,
         future: getAddress(),
-        builder: (context, addressSnapShot) {
-          if (addressSnapShot.data == null) {
+        whenNotDone: Center(child: CircularProgressIndicator(),),
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE !="00") {
+            print('some error occured');
+            print('project snapshot data is: $data');
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
+              //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
             );
           } else {
             return ListView.separated(
 //            itemCount: int.parse(addressSnapShot.data.length),
               shrinkWrap: true,
-              itemCount: addressSnapShot.data.length,
+              itemCount: data.oUTPUT.length,
               itemBuilder: (context, index) {
                 {
-                  addressOutput = addressSnapShot.data[index];
-                  print('project snapshot data is: ${addressSnapShot.data}');
+                  addressOutput = data.oUTPUT[index];
+                  print('project snapshot data is: ${data}');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
@@ -215,7 +239,7 @@ class _BookServiceState extends State<BookService> {
                     title: Text(addressOutput.address),
                     subtitle: Text(addressOutput.pincode.toString()),
                     onTap: () {
-                      addressOutput = addressSnapShot.data[index];
+                      addressOutput = data.oUTPUT[index];
                       GlobalVariables().pincode = addressOutput.pincode;
                       GlobalVariables().latitude = addressOutput.latitude;
                       GlobalVariables().longitude = addressOutput.longitude;
@@ -335,28 +359,33 @@ class _BookServiceState extends State<BookService> {
 
       var output = getBankListResponseObject.oUTPUT;
 
-      return output;
+      return getBankListResponseObject;
 //    return getBankListResponseObject;
     }
 
     Widget bankList() {
       var bankOutput;
-      return FutureBuilder(
+      return EnhancedFutureBuilder(
         future: getBankList(),
-        builder: (context, bankSnapShot) {
-          if (bankSnapShot.data == null) {
+        rememberFutureResult: true,
+        whenNotDone: Center(child: CircularProgressIndicator(),),
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE != "00") {
+            print('some error occured');
+            print('project snapshot data is: $data');
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
             );
           } else {
             return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: bankSnapShot.data.length,
+              itemCount: data.oUTPUT.length,
               itemBuilder: (context, index) {
                 {
-                  bankOutput = bankSnapShot.data[index];
-                  print('project snapshot data is: ${bankSnapShot.data}');
+                  bankOutput = data.oUTPUT[index];
+                  print('project snapshot data is: $data');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
@@ -365,7 +394,7 @@ class _BookServiceState extends State<BookService> {
                     title: Text(bankOutput.bankname),
                     subtitle: Text(bankOutput.bankCode.toString()),
                     onTap: () {
-                      bankOutput = bankSnapShot.data[index];
+                      bankOutput = data.oUTPUT[index];
                       GlobalVariables().bankCode = bankOutput.bankCode;
                       GlobalVariables().bankname = bankOutput.bankname;
                       myBookServiceBloc.add(RegisteredNumber());
@@ -1086,7 +1115,7 @@ class _BookServiceState extends State<BookService> {
         bankcode:GlobalVariables().bankCode,
         bankname:GlobalVariables().bankname,
         branchcode:GlobalVariables().branchcode,
-        branchname:GlobalVariables().branchname,
+        branchname:GlobalVariables() .branchname,
         addressid:GlobalVariables().addressid.toString(),
         address:GlobalVariables().address,
         lienmarkaccounttype:"NA",
@@ -1358,22 +1387,27 @@ class _BookServiceState extends State<BookService> {
   Stack branchListUI(BuildContext context) {
     Widget branchList() {
       var branches;
-      return FutureBuilder(
+      return EnhancedFutureBuilder(
         future: fetchBranches(),
-        builder: (context, branchSnapShot) {
-          if (branchSnapShot.data == null) {
+        rememberFutureResult: true,
+        whenNotDone: Center(child: CircularProgressIndicator(),),
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE !="00") {
+            print('some error occured');
+            print('project snapshot data is: ${data}');
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
             );
           } else {
             return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: branchSnapShot.data.oUTPUT.length,
+              itemCount: data.oUTPUT.length,
               itemBuilder: (context, index) {
                 {
-                  branches = branchSnapShot.data.oUTPUT[index];
-                  print('project snapshot data is: ${branchSnapShot.data}');
+                  branches = data.oUTPUT[index];
+                  print('project snapshot data is: $data');
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
@@ -1382,7 +1416,7 @@ class _BookServiceState extends State<BookService> {
                     ),
                     title: Text(branches.branchname),
                     onTap: () {
-                      branches = branchSnapShot.data.oUTPUT[index];
+                      branches = data.oUTPUT[index];
                       CommonMethods().toast(context,
                           'You tapped on ${branches.branchname.toString()}');
                       GlobalVariables().branchcode = branches.branchcode;
@@ -1524,17 +1558,22 @@ class _BookServiceState extends State<BookService> {
   Stack selectTimeSlotUI(BuildContext context) {
     Widget slotList() {
       var timeSlot;
-      return FutureBuilder(
+      return EnhancedFutureBuilder(
         future: fetchTimeSlots(),
-        builder: (context, timeSlotSnapShot) {
-          if (timeSlotSnapShot.data == null) {
+        rememberFutureResult: true,
+        whenNotDone: Center(child: CircularProgressIndicator(),),
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE !="00") {
+            print('some error occured');
+            print('project snapshot data is: ${data}');
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
             );
           } else {
             return GridView.builder(
               shrinkWrap: true,
-              itemCount: timeSlotSnapShot.data.oUTPUT.length,
+              itemCount: data.oUTPUT.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 5.0,
@@ -1542,11 +1581,11 @@ class _BookServiceState extends State<BookService> {
               ),
               itemBuilder: (context, index) {
                 {
-                  timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
-                  var avalabilityStatus = timeSlotSnapShot.data.oUTPUT[index].avalabilityStatus;
-                  print('project snapshot data is: ${timeSlotSnapShot.data}');
+                  timeSlot = data.oUTPUT[index].slotnumber;
+                  var avalabilityStatus = data.oUTPUT[index].avalabilityStatus;
+                  print('project snapshot data is: $data');
 
-                  if(timeSlotSnapShot.data.oUTPUT[index].avalabilityStatus != 'N')
+                  if(data.oUTPUT[index].avalabilityStatus != 'N')
                  // if(index.isEven)
                   {
                     return MaterialButton(
@@ -1561,7 +1600,7 @@ class _BookServiceState extends State<BookService> {
                           )),
                       color: Colors.blue[400],
                       onPressed: () {
-                        timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
+                        timeSlot = data.oUTPUT[index].slotnumber;
                         CommonMethods().toast(
                             context, 'You tapped on ${timeSlot.toString()}');
                         GlobalVariables().timeSlot = timeSlot;
@@ -1577,7 +1616,7 @@ class _BookServiceState extends State<BookService> {
                           child: Text(
                             timeSlot,
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black54,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20.0),
                           )),
@@ -1604,7 +1643,6 @@ class _BookServiceState extends State<BookService> {
 
                     },
                   );*/
-
                 }
               },
             );
@@ -1726,7 +1764,22 @@ class _BookServiceState extends State<BookService> {
               ],
             ),
             SizedBox(
-              height: 16,
+              height: 18,
+            ),
+            SizedBox(
+              width: 300.0,
+              child: CupertinoSlidingSegmentedControl<int>(
+                children: dates,
+                onValueChanged: (int val) {
+                  setState(() {
+                    currentValue = val;
+                  });
+                },
+                groupValue: currentValue,
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Card(
               shape: RoundedRectangleBorder(
@@ -1748,22 +1801,27 @@ class _BookServiceState extends State<BookService> {
   Stack selectLiamAccountUI(BuildContext context) {
     Widget accountList() {
       var accounts;
-      return FutureBuilder(
+      return EnhancedFutureBuilder(
         future: verifyOTPAndGetAccountDetails(),
-        builder: (context, AccountSnapShot) {
-          if (AccountSnapShot.data == null) {
+        rememberFutureResult: true,
+        whenNotDone: Center(child: CircularProgressIndicator(),),
+        whenDone: (dynamic data) {
+          if (data.eRRORCODE !="00") {
+            print('some error occured');
+            print('project snapshot data is: ${data}');
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
             );
           } else {
             return ListView.separated(
               shrinkWrap: true,
 //            itemCount: int.parse(addressSnapShot.data.length),
-              itemCount: AccountSnapShot.data.oUTPUT[0].accountnumber.length,
+              itemCount: data.oUTPUT[0].accountnumber.length,
               itemBuilder: (context, index) {
                 {
-                  accounts = AccountSnapShot.data.oUTPUT[0].accountnumber[index];
-                  print('project snapshot data is: ${AccountSnapShot.data}');
+                  accounts = data.oUTPUT[0].accountnumber[index];
+                  print('project snapshot data is: $data');
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
@@ -1773,7 +1831,7 @@ class _BookServiceState extends State<BookService> {
                     title: Text(accounts),
                     onTap: () {
                       accounts =
-                          AccountSnapShot.data.oUTPUT[0].accountnumber[index];
+                          data.oUTPUT[0].accountnumber[index];
                       CommonMethods().toast(
                           context, 'You tapped on ${accounts.toString()}');
                       GlobalVariables().lianAccount = accounts;

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.dart';
 import 'package:customer_application/OnGoingServiceDetail.dart';
 import 'package:dio/dio.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,43 +23,35 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
   @override
   Widget build(BuildContext context) {
     var output;
-    return FutureBuilder(
+    return EnhancedFutureBuilder(
       future: getBookingHistory(),
-      builder: (context, servicesSnapShot) {
-        if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/fogg-booking-history-1.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-        else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/fogg-booking-history-1.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Text('Mm, Looks like you don\'t have any On-Going Services'),
+      rememberFutureResult: true,
+      whenNotDone: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/fogg-booking-history-1.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      whenDone: (dynamic data) {
+        if (data.eRRORCODE !="00") {
+          print('some error occured');
+          print('project snapshot data is: ${data}');
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
           );
         }
         else {
 //          print('The data is loaded!!!!');
           return ListView.builder(
-            itemCount: servicesSnapShot.data.length,
+            itemCount: data.oUTPUT.length,
             itemBuilder: (context, index) {
               {
-                output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
+                output = data.oUTPUT[index];
+                print('project snapshot data is: $data');
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
@@ -83,7 +76,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                     dense: true,
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     onTap: () {
-                      output = servicesSnapShot.data[index];
+                      output = data.oUTPUT[index];
                       /*print('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                       /*GlobalVariables().serviceid = output.serviceid;
@@ -166,7 +159,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 
     print('             THE SERVICES OFFERED ARE $services                 ');
 
-    return output;
+    return getBookingHistoryResponseObject;
     //print(accessToken);
   }
 

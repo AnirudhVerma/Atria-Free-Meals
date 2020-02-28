@@ -7,6 +7,8 @@ import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import 'JSONResponseClasses/BookServiceReq.dart';
+
 class GlobalVariables{
   bool encryptionEnabled = true;
   String accessToken = '90';
@@ -52,5 +54,14 @@ class GlobalVariables{
   }
 
   GlobalVariables._internal();
+
+  AdditionalData additionalData = AdditionalData(
+      clientAppVer:"1.0.0",
+      clientApptype:"DSB",
+      platform:"ANDROID",
+      vendorid:"17",
+      clientAppName:"ANIOSCUST"
+  );
+
 
 }
