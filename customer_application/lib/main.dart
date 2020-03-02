@@ -66,11 +66,12 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
-  HttpOverrides.global = new MyHttpOverrides();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-//  WidgetsFlutterBinding.ensureInitialized();
+//  HttpOverrides.global = new MyHttpOverrides();
+ // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+ // WidgetsFlutterBinding.ensureInitialized();
 //  testDatat();
   runApp(MyApp());
+
 }
 
 /*void testDatat() {

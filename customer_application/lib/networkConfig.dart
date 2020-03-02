@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AesHelper.dart';
 import 'JSONResponseClasses/EncryptedResponse.dart';
+import 'JSONResponseClasses/enReq.dart';
 
 class NetworkCommon {
   static final NetworkCommon _singleton = new NetworkCommon._internal();
@@ -167,8 +168,17 @@ class NetworkCommon {
 
               String data = """{ "ts": "$ts",
                     "username":"${GlobalVariables().phoneNumber}", "data":"$encryptedData" }""";
-              CommonMethods().printLog(data);
-              options.data = data;
+
+              enReq req = enReq(
+                data:encryptedData,
+                ts: ts,
+                username: GlobalVariables().phoneNumber
+              );
+              var finalBookServiceReq = jsonEncode(req);
+
+              //CommonMethods.printLog(finalBookServiceReq);
+              options.data = finalBookServiceReq.toString();
+
 
             }
           }
