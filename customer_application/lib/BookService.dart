@@ -197,13 +197,13 @@ class _BookServiceState extends State<BookService> {
       var getAddressResponseObject =
           Address.fromJson(getAddressResponseString); // replace with PODO class
 
-      print("THE ADDRESS RESPONSE IS $getAddressResponseObject");
+      CommonMethods().printLog("THE ADDRESS RESPONSE IS $getAddressResponseObject");
 
       var output = getAddressResponseObject.oUTPUT;
 
       List address = [];
 
-      print('             THE ADDRESSES ARE $address                 ');
+      CommonMethods().printLog('             THE ADDRESSES ARE $address                 ');
 
       return getAddressResponseObject;
     }
@@ -216,8 +216,8 @@ class _BookServiceState extends State<BookService> {
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE !="00") {
-            print('some error occured');
-            print('project snapshot data is: $data');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: $data');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -231,7 +231,7 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   addressOutput = data.oUTPUT[index];
-                  print('project snapshot data is: ${data}');
+                  CommonMethods().printLog('project snapshot data is: ${data}');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
@@ -373,8 +373,8 @@ class _BookServiceState extends State<BookService> {
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE != "00") {
-            print('some error occured');
-            print('project snapshot data is: $data');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: $data');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -387,7 +387,7 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   bankOutput = data.oUTPUT[index];
-                  print('project snapshot data is: $data');
+                  CommonMethods().printLog('project snapshot data is: $data');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
@@ -661,7 +661,7 @@ class _BookServiceState extends State<BookService> {
                               'The Phone number is ${GlobalVariables().phoneNumber}');
                           BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
                           GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
-                          print('************The problem ${myBankOTPResponse.eRRORMSG}');
+                          CommonMethods().printLog('************The problem ${myBankOTPResponse.eRRORMSG}');
                           if(myBankOTPResponse.eRRORMSG != null){
                             if (myBankOTPResponse.eRRORMSG != null && myBankOTPResponse.eRRORMSG == 'SUCCESS') {
                               myBookServiceBloc.add(EnterBankOTP());
@@ -711,7 +711,7 @@ class _BookServiceState extends State<BookService> {
     Response getBankListResponse = await NetworkCommon()
         .myDio
         .post("/generateOTPBank", data: getBankListString);
-    print('************The generateOTPBank string is $getBankListString');
+    CommonMethods().printLog('************The generateOTPBank string is $getBankListString');
     var getBankOTPResponseString = jsonDecode(getBankListResponse.toString());
     if(getBankOTPResponseString.toString().contains('"code":"ECONNREFUSED"')){
       return showDialog(context: context,builder: (_) {
@@ -974,7 +974,7 @@ class _BookServiceState extends State<BookService> {
     "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].uniqrefnum}",
     "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].bankuniqrefnum}"
     }""";
-    print('**************** The get account details call is $verifyOTPAndGetAccountDetailsString');
+    CommonMethods().printLog('**************** The get account details call is $verifyOTPAndGetAccountDetailsString');
     Response verifyOTPAndGetAccountDetailsResponse = await NetworkCommon()
         .myDio
         .post("/getAccountDetails", data: verifyOTPAndGetAccountDetailsString);
@@ -1159,7 +1159,7 @@ class _BookServiceState extends State<BookService> {
    var finalBookServiceReq = jsonEncode(myObj);
 
 
-    print('******************The book Service String is $bookServiceDynamicString');
+    CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
 
     Response bokServiceResponse = await NetworkCommon()
         .myDio
@@ -1243,7 +1243,7 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   accounts = AccountSnapShot.data.oUTPUT[0].accountnumber[index];
-                  print('project snapshot data is: ${AccountSnapShot.data}');
+                  CommonMethods().printLog('project snapshot data is: ${AccountSnapShot.data}');
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
@@ -1388,8 +1388,8 @@ class _BookServiceState extends State<BookService> {
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE !="00") {
-            print('some error occured');
-            print('project snapshot data is: ${data}');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: ${data}');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -1402,7 +1402,7 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   branches = data.oUTPUT[index];
-                  print('project snapshot data is: $data');
+                  CommonMethods().printLog('project snapshot data is: $data');
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
@@ -1559,8 +1559,8 @@ class _BookServiceState extends State<BookService> {
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE !="00") {
-            print('some error occured');
-            print('project snapshot data is: ${data}');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: ${data}');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -1578,7 +1578,7 @@ class _BookServiceState extends State<BookService> {
                 {
                   timeSlot = data.oUTPUT[index].slotnumber;
                   var avalabilityStatus = data.oUTPUT[index].avalabilityStatus;
-                  print('project snapshot data is: $data');
+                  CommonMethods().printLog('project snapshot data is: $data');
 
                   if(data.oUTPUT[index].avalabilityStatus != 'N')
                  // if(index.isEven)
@@ -1805,8 +1805,8 @@ class _BookServiceState extends State<BookService> {
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE !="00") {
-            print('some error occured');
-            print('project snapshot data is: ${data}');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: ${data}');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -1819,7 +1819,7 @@ class _BookServiceState extends State<BookService> {
               itemBuilder: (context, index) {
                 {
                   accounts = data.oUTPUT[0].accountnumber[index];
-                  print('project snapshot data is: $data');
+                  CommonMethods().printLog('project snapshot data is: $data');
                   return ListTile(
                     leading: new CircleAvatar(
                       child: new Image(
@@ -2150,8 +2150,8 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
       whenNotDone: Center(child: CircularProgressIndicator(),),
       whenDone: (dynamic data) {
         if (data.eRRORCODE !="00") {
-          print('some error occured');
-          print('project snapshot data is: ${data}');
+          CommonMethods().printLog('some error occured');
+          CommonMethods().printLog('project snapshot data is: ${data}');
           return Center(
             child: Text(
                 '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -2169,7 +2169,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
               {
                 timeSlot = data.oUTPUT[index].slotnumber;
                 var avalabilityStatus = data.oUTPUT[index].avalabilityStatus;
-                print('project snapshot data is: $data');
+                CommonMethods().printLog('project snapshot data is: $data');
 
                 if(data.oUTPUT[index].avalabilityStatus != 'N')
                   // if(index.isEven)

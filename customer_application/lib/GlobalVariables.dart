@@ -22,7 +22,7 @@ class GlobalVariables{
   PortalLogin myPortalLogin = new PortalLogin();
   final myBookServiceBloc = new BookServiceBloc();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
-  bool enableLog = false;
+  final enableLog = false;
   List<Map> listOfParams;
   String phoneNumber;
   String serviceid;

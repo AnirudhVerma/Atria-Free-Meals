@@ -26,8 +26,8 @@ class OnGoingServiceDetail extends StatelessWidget {
         future: getBookingDetails(),
         builder: (context, bookingDetailSnapShot) {
           if (bookingDetailSnapShot.data == null &&  bookingDetailSnapShot.connectionState == ConnectionState.waiting) {
-            print('The data is in loading state');
-            print('project snapshot data is: ${bookingDetailSnapShot.data}');
+            CommonMethods().printLog('The data is in loading state');
+            CommonMethods().printLog('project snapshot data is: ${bookingDetailSnapShot.data}');
             return Container(
               //child: CupertinoActivityIndicator(),
               decoration: BoxDecoration(
@@ -40,8 +40,8 @@ class OnGoingServiceDetail extends StatelessWidget {
             );
           }
           else if (bookingDetailSnapShot.data == null &&  bookingDetailSnapShot.connectionState != ConnectionState.waiting) {
-            print('The data is in loading state');
-            print('project snapshot data is: ${bookingDetailSnapShot.data}');
+            CommonMethods().printLog('The data is in loading state');
+            CommonMethods().printLog('project snapshot data is: ${bookingDetailSnapShot.data}');
             return Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -53,7 +53,7 @@ class OnGoingServiceDetail extends StatelessWidget {
             );
           }
           else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
             return SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(15),

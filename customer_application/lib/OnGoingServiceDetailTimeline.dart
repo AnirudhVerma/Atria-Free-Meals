@@ -23,11 +23,11 @@ class OnGoingServiceDetailTimeline extends StatelessWidget {
       ),
       body: Timeline(
         children: <Widget>[
-          Container(height: 100, child: Center(child: Text('Scheduled', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-          Container(height: 100, child: Center(child: Text('Started', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-          Container(height: 100, child: Center(child: Text('Document Picked', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-          Container(height: 100, child: Center(child: Text('Document Submitted', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
-          Container(height: 100, child: Center(child: Text('Completed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Colors.pink[100],borderRadius: BorderRadius.circular(5)),),
+          Container(height: 100, child: Center(child: Text('Scheduled', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Theme.of(context).primaryColor,borderRadius: BorderRadius.circular(5)),),
+          Container(height: 100, child: Center(child: Text('Started', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Theme.of(context).primaryColor,borderRadius: BorderRadius.circular(5)),),
+          Container(height: 100, child: Center(child: Text('Document Picked', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Theme.of(context).primaryColor,borderRadius: BorderRadius.circular(5)),),
+          Container(height: 100, child: Center(child: Text('Document Submitted', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Theme.of(context).primaryColor,borderRadius: BorderRadius.circular(5)),),
+          Container(height: 100, child: Center(child: Text('Completed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)), decoration: BoxDecoration( color: Theme.of(context).primaryColor,borderRadius: BorderRadius.circular(5)),),
         ],
         indicators: <Widget>[
           Icon(Icons.schedule, color: Colors.blue,),

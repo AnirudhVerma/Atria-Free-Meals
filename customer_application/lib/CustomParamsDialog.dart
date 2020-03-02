@@ -10,6 +10,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'BookService.dart';
 import 'CommonMethods.dart';
+import 'CommonMethods.dart';
 import 'CreateDropDown.dart';
 import 'GlobalVariables.dart';
 import 'JSONResponseClasses/ServiceList.dart';
@@ -73,7 +74,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                             RegExp regex = new RegExp(widget.selectedService.customParams[index].rEGEX);
                             GlobalVariables().listOfParams = new List(widget.selectedService.customParams.length);
                             if (mCust.dATATYPE == 'LIST') {
-                              print(mCust.lIST);
+                              CommonMethods().printLog(mCust.lIST.toString());
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
