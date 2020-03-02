@@ -59,8 +59,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 //      yield showProgressBar(); //Comment this
 
       String resp = await Repository().resendOTP(event.phoneNumber);
-      print('repository().resp : ${Repository().resp }');
-      print('resp : $resp ');
+      CommonMethods().printLog('repository().resp : ${Repository().resp }');
+      CommonMethods().printLog('resp : $resp ');
 
       if(Repository().resp == 'Success'){
 
@@ -83,8 +83,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       yield showProgressBar(); //Comment this
 
       String resp = await Repository().doOTPLogin(event.phoneNumber,event.otp);
-      print('repository().resp : ${Repository().resp }');
-      print('resp : $resp ');
+      CommonMethods().printLog('repository().resp : ${Repository().resp }');
+      CommonMethods().printLog('resp : $resp ');
 
       if(Repository().resp == 'Success'){
 
@@ -92,7 +92,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       }
       else{
-        yield ErrorState(errorResp: Repository().resp, stateScreen:"2" ); // print the toast message
+        yield ErrorState(errorResp: Repository().resp, stateScreen:"2" ); // CommonMethods().printLog the toast message
       }
 
     }

@@ -49,7 +49,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
 
     List<Placemark> placemark =
         await Geolocator().placemarkFromPosition(currentLocation);
-    print('Latitude is ${currentLocation.latitude}');
+    CommonMethods().printLog('Latitude is ${currentLocation.latitude}');
 //    rLatitude = currentLocation.latitude.toString();
 //    rLongitude = currentLocation.longitude.toString();
 
@@ -77,7 +77,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
       );
       _markers["Current Location"] = marker;
     });
-    print('The current location is ${_markers["Current Location"]}');
+    CommonMethods().printLog('The current location is ${_markers["Current Location"]}');
     _currentPosition = Position.fromMap(_markers[0]);
 //    _getAddressFromLatLng();
   }
@@ -94,7 +94,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
             "${place.locality}, ${place.postalCode}, ${place.country}";
       });
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -138,7 +138,7 @@ class _MyMapsAppState extends State<MyMapsApp> {
                         onPressed: () {
                           GlobalVariables().registrationLatitude = rLatitude;
                           GlobalVariables().registrationLongitude = rLongitude;
-//                          print('*******************Latitide is $rLatitude');
+//                          CommonMethods().printLog('*******************Latitide is $rLatitude');
                           if (GlobalVariables().registrationLatitude == null &&
                               GlobalVariables().registrationLongitude == null) {
                             CommonMethods()

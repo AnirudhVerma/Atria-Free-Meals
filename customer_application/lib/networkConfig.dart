@@ -26,7 +26,7 @@ class NetworkCommon {
 
   void netWorkInitilize(BuildContext context){
     mContext = context;
-    print('Context is initilized******* ${context.toString()}');
+    CommonMethods().printLog('Context is initilized******* ${context.toString()}');
 
   }
 
@@ -124,7 +124,7 @@ class NetworkCommon {
     };*/
 
    /* (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
-      print('onHttpClientCreate entered...');  // this code is never reached
+      CommonMethods().printLog('onHttpClientCreate entered...');  // this code is never reached
       client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       return client;
     };*/
@@ -146,10 +146,10 @@ class NetworkCommon {
             options.headers["Accept-Language"] = lang;
           }
 
-          // print requests
-          print("Pre request:${options.method},${options.baseUrl}${options.path}");
-          print("Pre request:${options.headers.toString()}");
-          print("Pre request Data:${options.data.toString()}");
+          // CommonMethods().printLog requests
+          CommonMethods().printLog("Pre request:${options.method},${options.baseUrl}${options.path}");
+          CommonMethods().printLog("Pre request:${options.headers.toString()}");
+          CommonMethods().printLog("Pre request Data:${options.data.toString()}");
 
 
 
@@ -161,13 +161,13 @@ class NetworkCommon {
 
             }else{
 
-              print(options.data);
+              CommonMethods().printLog(options.data);
               String ts = CommonMethods().getTimeStamp();
               String encryptedData = encrypt(options.data);
 
               String data = """{ "ts": "$ts",
                     "username":"${GlobalVariables().phoneNumber}", "data":"$encryptedData" }""";
-              print(data);
+              CommonMethods().printLog(data);
               options.data = data;
 
             }
@@ -210,7 +210,7 @@ class NetworkCommon {
           final JsonDecoder _decoder = new JsonDecoder();
           final JsonEncoder _encoder = new JsonEncoder();
           final resultContainer = _decoder.convert(response.toString());
-          print('response : ${response.toString()}');
+          CommonMethods().printLog('response : ${response.toString()}');
           prefs.setString("user", _encoder.convert((resultContainer as Map)));
         }
         if (response.request.path == "fetchUserDetails") {
@@ -219,17 +219,17 @@ class NetworkCommon {
           final JsonDecoder _decoder = new JsonDecoder();
           final JsonEncoder _encoder = new JsonEncoder();
           final resultContainer = _decoder.convert(response.toString());
-          print('response : ${response.toString()}');
+          CommonMethods().printLog('response : ${response.toString()}');
           prefs.setString("user", _encoder.convert((resultContainer as Map)));
         }
 
 
         if(GlobalVariables().encryptionEnabled){
-          print('B4 response : ${response.toString()}');
+          CommonMethods().printLog('B4 response : ${response.toString()}');
           var encryptedResponse = jsonDecode(response.toString());
           EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
           response.data = jsonDecode(decrypt(myEncriptedResponse.data).toString());
-          print('A4 response : ${response.toString()}');
+          CommonMethods().printLog('A4 response : ${response.toString()}');
         }
 
 
@@ -257,15 +257,15 @@ class NetworkCommon {
       }
 
       // log response
-      print(
+      CommonMethods().printLog(
           "Response From:${response.request.method},${response.request.baseUrl}${response.request.path}");
-      print("Response From:${response.toString()}");
+      CommonMethods().printLog("Response From:${response.toString()}");
       return response; // continue
     }, onError: (DioError dioError){
 
-      print(
+      CommonMethods().printLog(
           "<-- ${dioError.message} ${(dioError.response?.request != null ? (dioError.response.request.baseUrl + dioError.response.request.path) : 'URL')}");
-      print(
+      CommonMethods().printLog(
           "${dioError.response != null ? dioError.response.data : 'Unknown Error'}");
 
       String errMsg = "Error";
@@ -304,12 +304,12 @@ class NetworkCommon {
               ],
             ));
       }else{
-        print('Context is ${mContext}');
+        CommonMethods().printLog('Context is ${mContext}');
       }
 
-      print(
+      CommonMethods().printLog(
           "Response From:${dioError.request.method},${dioError.request.baseUrl}${dioError.request.path}");
-      print("Response From:${dioError.toString()}");
+      CommonMethods().printLog("Response From:${dioError.toString()}");
 
     }
     ));

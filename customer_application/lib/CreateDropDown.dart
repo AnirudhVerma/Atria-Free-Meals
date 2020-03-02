@@ -35,7 +35,7 @@ class _CreateDropDownState extends State<CreateDropDown> {
           myMap['name'] = widget.nameInMap;
           myMap['value'] = _mySelection;
           GlobalVariables().listOfParams.insert(widget.position - 1, myMap);
-          print('******************** The selected value is $_mySelection');*/
+          CommonMethods().printLog('******************** The selected value is $_mySelection');*/
         });
       },
       items: widget.myJson.map((Map map) {

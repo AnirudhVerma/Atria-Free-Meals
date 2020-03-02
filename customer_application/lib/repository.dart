@@ -11,6 +11,7 @@ import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'JSONResponseClasses/PortalLogin.dart';
 import 'JSONResponseClasses/ServiceList.dart';
+import 'JSONResponseClasses/TimeSlot.dart';
 import 'JSONResponseClasses/ValidateOTP.dart';
 import 'networkConfig.dart';
 
@@ -58,16 +59,16 @@ class Repository {
 
      /* String data = """{ "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
                     "username":"$phoneNumber", "data":"${encrypt(fetchUserDetailsString)}" }""";
-      print(data);*/
+      CommonMethods().printLog(data);*/
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
+//      CommonMethods().printLog(response);
 
       NetworkCommon().netWorkInitilize(GlobalVariables().myContext);
       Response response1 = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: fetchUserDetailsString);
-      print("THE Fetch User RESPONSE IS :: $response1");
+      CommonMethods().printLog("THE Fetch User RESPONSE IS :: $response1");
 
    /*   var encryptedResponse = jsonDecode(response1.toString());
       EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
@@ -77,7 +78,7 @@ class Repository {
 
 
       var myVar = jsonDecode(response1.toString());
-      print("THE Fetch User Decrypted RESPONSE IS :: $myVar");
+      CommonMethods().printLog("THE Fetch User Decrypted RESPONSE IS :: $myVar");
 
       GlobalVariables().firstResponse = FirstResponse.fromJson(myVar);
 
@@ -94,22 +95,22 @@ class Repository {
     "ts": "${CommonMethods().getTimeStamp()}"
     }""";
 
-      print("RESPONSE CODE :: ${GlobalVariables().firstResponse.eRRORCODE}");
+      CommonMethods().printLog("RESPONSE CODE :: ${GlobalVariables().firstResponse.eRRORCODE}");
       if (GlobalVariables().firstResponse.eRRORCODE == "00") {
-        print('The data is ${CommonMethods().getEncryptedRequestBeforeLogin(generateOTPJSON, phoneNumber)}');
+        CommonMethods().printLog('The data is ${CommonMethods().getEncryptedRequestBeforeLogin(generateOTPJSON, phoneNumber)}');
         Response response2 = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
 
 
 
-        print("THE OTP RESPONSE IS :: $response2");
+        CommonMethods().printLog("THE OTP RESPONSE IS :: $response2");
         var myOTPVar = jsonDecode(response2.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
         // userName = oTPResponse.oUTPUT.firstname;
-        print('');
-        //print('The User Name is ${oTPResponse.oUTPUT.firstname}');
-        print('');
+        CommonMethods().printLog('');
+        //CommonMethods().printLog('The User Name is ${oTPResponse.oUTPUT.firstname}');
+        CommonMethods().printLog('');
 
 
         if (oTPResponse.eRRORCODE == "00") {
@@ -117,25 +118,25 @@ class Repository {
           Response response3 = await NetworkCommon()
               .myDio
               .post("/validateOTP", data: validateOTPJSON);
-          print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
+          CommonMethods().printLog("THE OTP VALIDATE RESPONSE IS :: $response3");*/
 
           // mySignInBloc.add(EnterOTP());
           resp = "Success";
           return "Success";
         } else {
-          print('Something went wrong');
-          print("Response :: " + response2.toString());
+          CommonMethods().printLog('Something went wrong');
+          CommonMethods().printLog("Response :: " + response2.toString());
           resp = response2.toString();
           return response2.toString();
         }
       } else {
-        print('Something went wrong');
-        print("Response :: " + response1.toString());
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + response1.toString());
         resp = response1.toString();
         return response1.toString();
       }
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -169,7 +170,7 @@ class Repository {
     }""";
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
+//      CommonMethods().printLog(response);
 
       AdditionalData myAdditionalData = AdditionalData(
           clientAppVer:"1.0.0",
@@ -196,13 +197,13 @@ class Repository {
 
       GlobalVariables().firstResponse = FirstResponse.fromJson(myFetchRespVar);
 
-      print(fetchUserResonse.toString());
-      print(GlobalVariables().firstResponse.eRRORCODE);
-      print(GlobalVariables().firstResponse.eRRORMSG);
+      CommonMethods().printLog(fetchUserResonse.toString());
+      CommonMethods().printLog(GlobalVariables().firstResponse.eRRORCODE);
+      CommonMethods().printLog(GlobalVariables().firstResponse.eRRORMSG);
       if (GlobalVariables().firstResponse.oUTPUT[0] != null)
-        print(GlobalVariables().firstResponse.oUTPUT[0].firstname);
+        CommonMethods().printLog(GlobalVariables().firstResponse.oUTPUT[0].firstname);
 
-      print(GlobalVariables().firstResponse.toJson());
+      CommonMethods().printLog(GlobalVariables().firstResponse.toJson().toString());
 
       if (GlobalVariables().firstResponse.eRRORCODE == "00") {
         Response generateOTPResponse = await NetworkCommon()
@@ -214,22 +215,22 @@ class Repository {
           resp = "Success";
           return "Success";
         } else {
-          print('Something went wrong');
-          print("Response :: " + fetchUserResonse.toString());
+          CommonMethods().printLog('Something went wrong');
+          CommonMethods().printLog("Response :: " + fetchUserResonse.toString());
           resp = fetchUserResonse.toString();
           return fetchUserResonse.toString();
         }
-        print(fetchUserResonse.toString());
+        CommonMethods().printLog(fetchUserResonse.toString());
 //      displayToast(fetchUserResonse.toString());
 
       } else {
-        print('Something went wrong');
-        print("Response :: " + fetchUserResonse.toString());
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + fetchUserResonse.toString());
         resp = fetchUserResonse.toString();
         return fetchUserResonse.toString();
       }
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -252,7 +253,7 @@ class Repository {
             "/validateOTP",
             data: validateOTPJSON,
           );
-      print('The OTP user sent is $otp');
+      CommonMethods().printLog('The OTP user sent is $otp');
       var myOTPResponse = jsonDecode(validateOTPResponse.toString());
       var validateOTPObject = ValidateOTP.fromJson(myOTPResponse);
 
@@ -262,13 +263,13 @@ class Repository {
         resp = "Success";
         return "Success";
       } else {
-        print('Something went wrong');
-        print("Response :: " + validateOTPResponse.toString());
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + validateOTPResponse.toString());
         resp = validateOTPResponse.toString();
         return validateOTPResponse.toString();
       }
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -294,13 +295,13 @@ class Repository {
         resp = "Success";
         return "Success";
       } else {
-        print('Something went wrong');
-        print("Response :: " + resendOTPResponse.toString());
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + resendOTPResponse.toString());
         resp = resendOTPResponse.toString();
         return resendOTPResponse.toString();
       }
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -329,32 +330,32 @@ class Repository {
             "/portallogin",
             data: portalLogin2,
           );
-      print("The JSON request is :: $portalLogin2");
-      print("THE PORTAL LOGIN RESPONSE IS :: $response3");
+      CommonMethods().printLog("The JSON request is :: $portalLogin2");
+      CommonMethods().printLog("THE PORTAL LOGIN RESPONSE IS :: $response3");
 
 
       var myVar = jsonDecode(response3.toString());
 
-      print("THE Fetch User Decrypted RESPONSE IS :: $myVar");
+      CommonMethods().printLog("THE Fetch User Decrypted RESPONSE IS :: $myVar");
 
       var loginResponse = PortalLogin.fromJson(myVar);
 
       if (loginResponse.eRRORCODE == "00") {
         GlobalVariables().phoneNumber = loginResponse.oUTPUT.user.mobilenumber;
         GlobalVariables().myPortalLogin = loginResponse;
-        print("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
-        print(
+        CommonMethods().printLog("THE LOGIN RESPONSE IS + ${loginResponse.eRRORCODE}");
+        CommonMethods().printLog(
             "THE ACCESS TOKEN IS + ${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}");
         resp = "Success";
         return "Success";
       } else {
-        print('Something went wrong');
-        print("Response :: " + response3.toString());
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + response3.toString());
         resp = response3.toString();
         return response3.toString();
       }
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
     }
   }
 
@@ -385,30 +386,68 @@ class Repository {
     var getServicesResponseString = jsonDecode(getServicesResponse.toString());
     var getServicesResponseObject =
     ServiceList.fromJson(getServicesResponseString);
-    print("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    CommonMethods().printLog("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
     if (getServicesResponseObject == null) {
       return 'Something went wrong';
     } else {
-      print("THE Get Service RESPONSE IS + ${getServicesResponseObject.eRRORCODE}");
+      CommonMethods().printLog("THE Get Service RESPONSE IS + ${getServicesResponseObject.eRRORCODE}");
       return getServicesResponseObject;
     }
-    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+    /*CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
 //    return output;
   return getServicesResponseObject;*/
+  }
+
+  Future<TimeSlot> fetchTimeSlots() async {
+    String d;//pass this in parenthesis
+    String todaysDate = DateTime.now().toString().substring(0, 10);
+    final now = DateTime.now();
+    final tomorrow = new DateTime(now.year, now.month, now.day + 1);
+    String tomorrowsDate = tomorrow.toString().substring(0, 10);
+    String timeSlotDate;
+    if(d == 'today'){
+      timeSlotDate = todaysDate;
+    }
+    else{
+      timeSlotDate  = tomorrowsDate;
+    }
+    String fetchTimeSlotsString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    }, 
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}",
+    "pincode":"${GlobalVariables().pincode}",
+    "requesteddate":"$todaysDate"
+    }""";
+    Response fetchTimeSlotResponse = await NetworkCommon()
+        .myDio
+        .post("/getAvailableSlot", data: fetchTimeSlotsString);
+    var getTimeSlotResponseString =
+    jsonDecode(fetchTimeSlotResponse.toString());
+    var timeSlotObject = TimeSlot.fromJson(getTimeSlotResponseString);
+
+    return timeSlotObject;
   }
 
   registerCustomer(String phoneNumber, String name, String password, String email, String securityQuestion, String securityAnswer, String alternatemob, String address, String latitude, String longitude, String pincode) async {
@@ -437,7 +476,7 @@ class Repository {
     }''';
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
+//      CommonMethods().printLog(response);
     Response registerUserResponse = await NetworkCommon()
         .myDio
         .post("/customerRegistration", data: registerUserJSON);
@@ -475,13 +514,13 @@ class Repository {
     var getAddressResponseObject =
     Address.fromJson(getAddressResponseString); // replace with PODO class
 
-    print("THE ADDRESS RESPONSE IS $getAddressResponseObject");
+    CommonMethods().printLog("THE ADDRESS RESPONSE IS $getAddressResponseObject");
 
     var output = getAddressResponseObject.oUTPUT;
 
     List address = [];
 
-    print('             THE ADDRESSES ARE $address                 ');
+    CommonMethods().printLog('             THE ADDRESSES ARE $address                 ');
 
     return output;
   }
@@ -536,19 +575,19 @@ class Repository {
     } else {
       return 'Couldn\'t delete address,Please try again';
     }
-    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+    /*CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
 //    return output;
   return getServicesResponseObject;*/
@@ -586,19 +625,19 @@ class Repository {
     }
 
 
-    /*print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+    /*CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
 //    return output;
   return getServicesResponseObject;*/

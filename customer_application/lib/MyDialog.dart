@@ -54,7 +54,7 @@ class _MyDialogState extends State<MyDialog> {
                               containerHeight: 210.0,
                             ),
                             onChanged: (date) {
-                              print('confirm $date');
+                              CommonMethods().printLog('confirm $date');
                               _date = '${date.year} - ${date.month} - ${date.day}';
                               setState(() {
                                 _date = '${date.year} - ${date.month} - ${date.day}';
@@ -64,7 +64,7 @@ class _MyDialogState extends State<MyDialog> {
                             minTime: DateTime(2000, 1, 1),
                             maxTime: DateTime(2022, 12, 31),
                             onConfirm: (date) {
-                              print('confirm $date');
+                              CommonMethods().printLog('confirm $date');
                               _date = '${date.year} - ${date.month} - ${date.day}';
                               setState(() {
                                 _date = '${date.year} - ${date.month} - ${date.day}';
@@ -129,7 +129,7 @@ class _MyDialogState extends State<MyDialog> {
                               showTitleActions: true,
                               minTime: DateTime(2000, 1, 1),
                               maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                                print('confirm $date');
+                                CommonMethods().printLog('confirm $date');
                                 _toDate = '${date.year} - ${date.month} - ${date.day}';
                                 setState(() {});
                               }, currentTime: DateTime.now(), locale: LocaleType.en);

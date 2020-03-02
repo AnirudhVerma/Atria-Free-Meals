@@ -37,21 +37,21 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
       ),
       whenDone: (dynamic data) {
         if (data.eRRORCODE !="00") {
-          print('some error occured');
-          print('project snapshot data is: ${data}');
+          CommonMethods().printLog('some error occured');
+          CommonMethods().printLog('project snapshot data is: ${data}');
           return Center(
             child: Text(
                 '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
           );
         }
         else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
           return ListView.builder(
             itemCount: data.oUTPUT.length,
             itemBuilder: (context, index) {
               {
                 output = data.oUTPUT[index];
-                print('project snapshot data is: $data');
+                CommonMethods().printLog('project snapshot data is: $data');
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
@@ -77,7 +77,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     onTap: () {
                       output = data.oUTPUT[index];
-                      /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                       /*GlobalVariables().serviceid = output.serviceid;
                       GlobalVariables().servicename = output.servicename;
@@ -85,7 +85,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                       GlobalVariables().servicecategory = output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;*/
-                      //print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      //CommonMethods().printLog('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       Navigator.push(context, CupertinoPageRoute(builder: (context) => OnGoingServiceDetail(bookingID: output.bookingid,)));
                       String servicename;
                      /* Navigator.push(
@@ -138,29 +138,29 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     Response getBookingHistoryResponse = await NetworkCommon()
         .myDio
         .post("/getBookingList", data: getBookingHistoryString);
-    //print('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
+    //CommonMethods().printLog('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
-    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+    CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
     var output = getBookingHistoryResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].serviceName}             ');
       services.add(output[i].serviceName);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return getBookingHistoryResponseObject;
-    //print(accessToken);
+    //CommonMethods().printLog(accessToken);
   }
 
 }

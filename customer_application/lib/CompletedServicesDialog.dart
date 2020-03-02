@@ -53,19 +53,19 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
             );
           }
           else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
             return ListView.builder(
               itemCount: servicesSnapShot.data.length,
               itemBuilder: (context, index) {
                 {
                   output = servicesSnapShot.data[index];
-                  print('project snapshot data is: ${servicesSnapShot.data}');
+                  CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
                   return ListTile(
                     title: Text(output.serviceName),
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     onTap: () {
                       output = servicesSnapShot.data[index];
-                      /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                       /*GlobalVariables().serviceid = output.serviceid;
                       GlobalVariables().servicename = output.servicename;
@@ -73,7 +73,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
                       GlobalVariables().servicecategory = output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;*/
-                      print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      CommonMethods().printLog('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       String servicename;
                       /* Navigator.push(
                           context,
@@ -117,25 +117,25 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
-    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+    CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
     var output = getBookingHistoryResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].serviceName}             ');
       services.add(output[i].serviceName);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return getBookingHistoryResponseObject;
-    //print(accessToken);
+    //CommonMethods().printLog(accessToken);
   }
 
 }

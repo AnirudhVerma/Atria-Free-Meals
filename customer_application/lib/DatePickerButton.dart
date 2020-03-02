@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
+import 'CommonMethods.dart';
+
 class DatePickerButton extends StatefulWidget{
 
   int position;
@@ -35,7 +37,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
             itemStyle: TextStyle(color: Colors.white),
           ),
           onChanged: (date) {
-            print('confirm $date');
+            CommonMethods().printLog('confirm $date');
             _date = '${date.year}-${date.month}-${date.day}';
             Map myMap = new Map();
             myMap['name'] = widget.nameInMap;
@@ -50,7 +52,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
           minTime: DateTime(2000, 1, 1),
           maxTime: DateTime(2022, 12, 31),
           onConfirm: (date) {
-            print('confirm $date');
+            CommonMethods().printLog('confirm $date');
             _date = '${date.year}-${date.month}-${date.day}';
             Map myMap = new Map();
             myMap['name'] = widget.nameInMap;

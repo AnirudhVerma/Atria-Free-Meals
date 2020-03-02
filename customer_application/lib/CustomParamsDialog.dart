@@ -223,7 +223,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
     for(Map m in GlobalVariables().listOfParams){
       if (m == null){
         count++;
-        print('The number of maps in list is $count');
+        CommonMethods().printLog('The number of maps in list is $count');
         return false;
       }
       else return true;

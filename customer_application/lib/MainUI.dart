@@ -151,9 +151,9 @@ class _MyMainPageState extends State<MyMainPage> {
                   Response logoutResponse = await NetworkCommon()
                       .myDio
                       .post("/logout", data: logoutString);
-                  print(logoutResponse.toString());
+                  CommonMethods().printLog(logoutResponse.toString());
                   if (logoutResponse.toString().contains('"ERRORCODE":"00')) {
-                    print('logout success');
+                    CommonMethods().printLog('logout success');
                     Navigator.of(context).pop();
 //                    Navigator.of(context).pop();
 //                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
@@ -210,11 +210,11 @@ class _MyMainPageState extends State<MyMainPage> {
                       Response logoutResponse = await NetworkCommon()
                           .myDio
                           .post("/logout", data: logoutString);
-                      print(logoutResponse.toString());
+                      CommonMethods().printLog(logoutResponse.toString());
                       if (logoutResponse
                           .toString()
                           .contains('"ERRORCODE":"00')) {
-                        print('logout success');
+                        CommonMethods().printLog('logout success');
                         Navigator.of(context).pop();
                       }
                       Navigator.of(context).pop();
@@ -240,8 +240,8 @@ class _MyMainPageState extends State<MyMainPage> {
       future: Repository().getServices(),
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.hasError) {
-          print('some error occured');
-          print('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods().printLog('some error occured');
+          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: Text(
                 '/*ERROR OCCURED, Please retry ${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
@@ -249,13 +249,13 @@ class _MyMainPageState extends State<MyMainPage> {
           );
         } else if (servicesSnapShot.data == null &&
             servicesSnapShot.connectionState == ConnectionState.waiting) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods().printLog('The data is in loading state');
+          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.oUTPUT.length,
             itemBuilder: (context, index) {
@@ -272,7 +272,7 @@ class _MyMainPageState extends State<MyMainPage> {
                     ),
                     onTap: () {
                       output = servicesSnapShot.data.oUTPUT[index];
-                      /*print('******************** THE OUTPUT IS ${output.toString()}');
+                      /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
                       GlobalVariables().serviceid = output.serviceid;
                       GlobalVariables().servicename = output.servicename;
@@ -281,7 +281,7 @@ class _MyMainPageState extends State<MyMainPage> {
                           output.servicecategory;
                       GlobalVariables().serviceCharge = output.serviceCharge;
                       GlobalVariables().servicecode = output.servicecode;
-                      print(
+                      CommonMethods().printLog(
                           '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                       String servicename;
                       return showDialog(
@@ -330,8 +330,8 @@ class _MyMainPageState extends State<MyMainPage> {
         whenNotDone: Center(child: CircularProgressIndicator()),
         whenDone: (dynamic data) {
           if (data.eRRORCODE !="00") {
-            print('some error occured');
-            print('project snapshot data is: $data');
+            CommonMethods().printLog('some error occured');
+            CommonMethods().printLog('project snapshot data is: $data');
             return Center(
               child: Text(
                   '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
@@ -354,7 +354,7 @@ class _MyMainPageState extends State<MyMainPage> {
                       ),
                       onTap: () {
                         output = data.oUTPUT[index];
-                        /*print('******************** THE OUTPUT IS ${output.toString()}');
+                        /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
                         GlobalVariables().serviceid = output.serviceid;
                         GlobalVariables().servicename = output.servicename;
@@ -363,7 +363,7 @@ class _MyMainPageState extends State<MyMainPage> {
                             output.servicecategory;
                         GlobalVariables().serviceCharge = output.serviceCharge;
                         GlobalVariables().servicecode = output.servicecode;
-                        print(
+                        CommonMethods().printLog(
                             '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                         String servicename;
                         if(output.customParams.length != 0){
@@ -455,26 +455,26 @@ class _MyMainPageState extends State<MyMainPage> {
     var getServicesResponseString = jsonDecode(getServicesResponse.toString());
     var getServicesResponseObject =
         ServiceList.fromJson(getServicesResponseString);
-    print("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    CommonMethods().printLog("************************ THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
-    print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
+    CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT.length}");
 
     var output = getServicesResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return output;
-    print(accessToken);
-    print(getServicesResponse);
+    CommonMethods().printLog(accessToken);
+    CommonMethods().printLog(getServicesResponse);
   }*/
 
   /*static Widget bookingHistoryWidget() {
@@ -483,25 +483,25 @@ class _MyMainPageState extends State<MyMainPage> {
       future: getBookingHistory(),
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.data == null) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods().printLog('The data is in loading state');
+          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,
             itemBuilder: (context, index) {
               {
                 output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
+                CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
                 return ListTile(
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
                     output = servicesSnapShot.data[index];
-                    */ /*print('******************** THE OUTPUT IS ${output.toString()}');
+                    */ /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                     GlobalVariables().userSelectedService = output;*/ /*                   //unable to instantiate the userSelectedService
                     */ /*GlobalVariables().serviceid = output.serviceid;
                     GlobalVariables().servicename = output.servicename;
@@ -509,7 +509,7 @@ class _MyMainPageState extends State<MyMainPage> {
                     GlobalVariables().servicecategory = output.servicecategory;
                     GlobalVariables().serviceCharge = output.serviceCharge;
                     GlobalVariables().servicecode = output.servicecode;*/ /*
-                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    CommonMethods().printLog('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(
                         context,
@@ -552,25 +552,25 @@ class _MyMainPageState extends State<MyMainPage> {
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     ServiceList.fromJson(getBookingHistoryResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
-    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+    CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
     var output = getBookingHistoryResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return output;
-    //print(accessToken);
+    //CommonMethods().printLog(accessToken);
   }*/
 
   @override
@@ -1141,26 +1141,26 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
       future: getBookingHistory(),
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.data == null) {
-          print('The data is in loading state');
-          print('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods().printLog('The data is in loading state');
+          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
-//          print('The data is loaded!!!!');
+//          CommonMethods().printLog('The data is loaded!!!!');
           return ListView.builder(
             itemCount: servicesSnapShot.data.length,
             itemBuilder: (context, index) {
               {
                 output = servicesSnapShot.data[index];
-                print('project snapshot data is: ${servicesSnapShot.data}');
+                CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
                 return ListTile(
                   title: Text(output.servicename),
                   subtitle: Text('Service Charge : ${output.serviceCharge}'),
                   onTap: () {
                     output = servicesSnapShot.data[index];
                     */
-/*print('******************** THE OUTPUT IS ${output.toString()}');
+/*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                     GlobalVariables().userSelectedService = output;*/ /*
                    //unable to instantiate the userSelecteeService
                     */
@@ -1171,7 +1171,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
                     GlobalVariables().serviceCharge = output.serviceCharge;
                     GlobalVariables().servicecode = output.servicecode;*/ /*
 
-                    print('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                    CommonMethods().printLog('******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
                     String servicename;
                     Navigator.push(
                         context,
@@ -1214,25 +1214,25 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     ServiceList.fromJson(getBookingHistoryResponseString);
-    //print("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // print("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
-    print("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
+    CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
     var output = getBookingHistoryResponseObject.oUTPUT;
 
     List services = [];
 
     for (int i = 0; i < output.length; i++) {
-      print(
+      CommonMethods().printLog(
           '                SERVICE NAME IS $i : ${output[i].servicename}             ');
       services.add(output[i].servicename);
     }
 
-    print('             THE SERVICES OFFERED ARE $services                 ');
+    CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return output;
-    //print(accessToken);
+    //CommonMethods().printLog(accessToken);
   }
 
 }
@@ -1299,7 +1299,7 @@ class _MyDialogState extends State<MyDialog> {
                               itemStyle: TextStyle(color: Colors.white),
                             ),
                             onChanged: (date) {
-                              print('confirm $date');
+                              CommonMethods().printLog('confirm $date');
                               _date = '${date.year}-${date.month}-${date.day}';
                               setState(() {
                                 _date =
@@ -1310,7 +1310,7 @@ class _MyDialogState extends State<MyDialog> {
                             minTime: DateTime(2000, 1, 1),
                             maxTime: DateTime(2022, 12, 31),
                             onConfirm: (date) {
-                              print('confirm $date');
+                              CommonMethods().printLog('confirm $date');
                               _date = '${date.year}-${date.month}-${date.day}';
                               setState(() {
                                 _date =
@@ -1388,7 +1388,7 @@ class _MyDialogState extends State<MyDialog> {
                               minTime: DateTime(2000, 1, 1),
                               maxTime: DateTime(2022, 12, 31),
                               onConfirm: (date) {
-                            print('confirm $date');
+                            CommonMethods().printLog('confirm $date');
                             _toDate = '${date.year}-${date.month}-${date.day}';
                             setState(() {
                               _toDate =

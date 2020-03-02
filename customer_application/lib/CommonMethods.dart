@@ -44,4 +44,10 @@ class CommonMethods {
     return data;
   }
 
+  void printLog(String dataTobePrinted){
+    if(GlobalVariables().enableLog){
+      print(dataTobePrinted);
+    }
+  }
+
 }

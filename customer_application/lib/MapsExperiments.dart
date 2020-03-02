@@ -47,7 +47,7 @@ class MyMapsExperimentsMapSampleState extends State<MyMapsExperimentsMap> {
   void _getLocation() async {
     var currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    print('Latitude is ${currentLocation.latitude}');
+    CommonMethods().printLog('Latitude is ${currentLocation.latitude}');
 
     rLatitude = currentLocation.latitude.toString();
     rLongitude = currentLocation.longitude.toString();
@@ -60,13 +60,13 @@ class MyMapsExperimentsMapSampleState extends State<MyMapsExperimentsMap> {
     GlobalVariables().addressFromLocation = first.addressLine;
     GlobalVariables().pinCodeFromLocation = first.postalCode;
 
-    print('Postal Code is ${first.postalCode}');
-    print(('Address Line is ${first.addressLine}'));
+    CommonMethods().printLog('Postal Code is ${first.postalCode}');
+    CommonMethods().printLog(('Address Line is ${first.addressLine}'));
 
-    print('Global Address is ${GlobalVariables().addressFromLocation}');
-    print('Global pincode is ${GlobalVariables().pinCodeFromLocation}');
-    print('Global latitude is ${GlobalVariables().registrationLatitude}');
-    print('Global longitude is ${GlobalVariables().addressFromLocation}');
+    CommonMethods().printLog('Global Address is ${GlobalVariables().addressFromLocation}');
+    CommonMethods().printLog('Global pincode is ${GlobalVariables().pinCodeFromLocation}');
+    CommonMethods().printLog('Global latitude is ${GlobalVariables().registrationLatitude}');
+    CommonMethods().printLog('Global longitude is ${GlobalVariables().addressFromLocation}');
 
     setState(() {
       _markers.clear();
@@ -157,7 +157,7 @@ class MyMapsExperimentsMapSampleState extends State<MyMapsExperimentsMap> {
                                   GlobalVariables().registrationLongitude = null;
                                   GlobalVariables().addressFromLocation = null ;
                                   GlobalVariables().pinCodeFromLocation = null;
-                                  print('*******************The address response is $addAddressResponse');
+                                  CommonMethods().printLog('*******************The address response is $addAddressResponse');
                                   CommonMethods().toast(context, addAddressResponse.toString());
                                   Navigator.pop(context, () {
                                     setState(() {});

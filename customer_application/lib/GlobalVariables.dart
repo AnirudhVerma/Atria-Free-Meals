@@ -8,6 +8,7 @@ import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'JSONResponseClasses/BookServiceReq.dart';
+import 'book_service/book_service_bloc.dart';
 
 class GlobalVariables{
   bool encryptionEnabled = true;
@@ -19,7 +20,9 @@ class GlobalVariables{
   SelectedService userSelectedService = new SelectedService();
   ServiceList myServiceList = new ServiceList();
   PortalLogin myPortalLogin = new PortalLogin();
+  final myBookServiceBloc = new BookServiceBloc();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
+  bool enableLog = false;
   List<Map> listOfParams;
   String phoneNumber;
   String serviceid;
@@ -44,6 +47,11 @@ class GlobalVariables{
   String registrationLatitude;
   String pinCodeFromLocation;
   String addressFromLocation;
+
+  void dispose() {
+    myBookServiceBloc.close();
+  }
+
 
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 

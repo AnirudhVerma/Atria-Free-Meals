@@ -1025,11 +1025,11 @@ class _MyHomePageState extends State<MyHomePage> {
     "type":"login"
     }""";
 
-      print('Context is not null ${context.toString()}');
-      print("Resquest111 :: " + fetchUserDetailsString);
+      CommonMethods().printLog('Context is not null ${context.toString()}');
+      CommonMethods().printLog("Resquest111 :: " + fetchUserDetailsString);
 
 //      Response response = await Dio().post("http://192.168.0.135:30000/kiosk/doorstep/generateOTP", data: formData);
-//      print(response);
+//      CommonMethods().printLog(response);
       // NetworkCommon().netWorkInitilize(context);
 
       Response response1 = await NetworkCommon()
@@ -1053,12 +1053,12 @@ class _MyHomePageState extends State<MyHomePage> {
     "mobilenumber":"$phoneNumber"
     }""";
 
-      print("RESPONSE CODE :: ${firstResponse.eRRORCODE}");
+      CommonMethods().printLog("RESPONSE CODE :: ${firstResponse.eRRORCODE}");
       if (firstResponse.eRRORCODE == "00") {
         Response response2 = await NetworkCommon()
             .myDio
             .post("/generateOTP", data: generateOTPJSON);
-        print("THE GENERATE OTP RESPONSE IS :: $response2");
+        CommonMethods().printLog("THE GENERATE OTP RESPONSE IS :: $response2");
         var myOTPVar = jsonDecode(response2.toString());
         var oTPResponse = GeneratedOTP.fromJson(myOTPVar);
         // userName = oTPResponse.oUTPUT.firstname;
@@ -1081,16 +1081,16 @@ class _MyHomePageState extends State<MyHomePage> {
           Response response3 = await NetworkCommon()
               .myDio
               .post("/validateOTP", data: validateOTPJSON);
-          print("THE OTP VALIDATE RESPONSE IS :: $response3");*/
+          CommonMethods().printLog("THE OTP VALIDATE RESPONSE IS :: $response3");*/
           mySignInBloc.add(EnterOTP());
         }
       } else {
-        print('Something went wrong');
+        CommonMethods().printLog('Something went wrong');
       }
 
 //        var parsedJson = json.decode(response1);
 
-      print("Response :: " + response1.toString());
+      CommonMethods().printLog("Response :: " + response1.toString());
       Fluttertoast.showToast(
           msg: response1.toString(),
           toastLength: Toast.LENGTH_SHORT,
@@ -1099,7 +1099,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.blue,
           textColor: Colors.white);
     } catch (e) {
-      print(e);
+      CommonMethods().printLog(e);
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -1130,7 +1130,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }""";
     Response response2 =
         await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
-    print('GENERATE OTP RESPONSE IS $response2');
+    CommonMethods().printLog('GENERATE OTP RESPONSE IS $response2');
   } // Delete
 
   Future navigateTosignUp(context) async {

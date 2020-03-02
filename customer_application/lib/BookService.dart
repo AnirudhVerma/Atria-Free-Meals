@@ -13,6 +13,7 @@ import 'package:customer_application/JSONResponseClasses/BookingHistoryResponse.
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:customer_application/MainUI.dart';
 import 'package:customer_application/bloc.dart';
+import 'package:customer_application/repository.dart';
 import 'package:dio/dio.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,7 +49,8 @@ class _BookServiceState extends State<BookService> {
       GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
   final String userName = GlobalVariables().phoneNumber;
   bool _autoValidate = false;
-  final myBookServiceBloc = new BookServiceBloc();
+//  final myBookServiceBloc = new BookServiceBloc();
+  final myBookServiceBloc = GlobalVariables().myBookServiceBloc;
   final nonDigit = new RegExp(r"(\D+)");
   final GlobalKey<FormState> _phoneNumberKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _OTPKey = GlobalKey<FormState>();
@@ -67,7 +69,7 @@ class _BookServiceState extends State<BookService> {
   };
 
   Map<int, Widget> icons = <int, Widget>{
-    0: new Text("Hello"),
+    0: new TimeSlotWidget(),
     1: new Text("Yo"),
     /*2: Center(
       child: FlutterLogo(
@@ -1026,8 +1028,8 @@ class _BookServiceState extends State<BookService> {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     }, 
-    "authorization":"$accessToken",
-    "username":"$userName",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}",
     "pincode":"${GlobalVariables().pincode}",
     "requesteddate":"$date"
@@ -1219,13 +1221,6 @@ class _BookServiceState extends State<BookService> {
         ),
       );
     }
-
-
-
-
-
-
-
 
     return GlobalVariables().myBookServiceResponseObject;
   }
@@ -1559,7 +1554,7 @@ class _BookServiceState extends State<BookService> {
     Widget slotList() {
       var timeSlot;
       return EnhancedFutureBuilder(
-        future: fetchTimeSlots(),
+        future: Repository().fetchTimeSlots(),
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
@@ -1781,15 +1776,18 @@ class _BookServiceState extends State<BookService> {
             SizedBox(
               height: 10,
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              elevation: 20,
-              margin: EdgeInsets.all(18),
-              child: Padding(
-                child: slotList(),
-                padding: EdgeInsets.all(5.0),
+            Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                elevation: 20,
+                margin: EdgeInsets.all(18),
+                child: Padding(
+                  //child: icons[currentValue],
+                  child: slotList(),
+                  padding: EdgeInsets.all(5.0),
+                ),
               ),
             ),
           ],
@@ -2128,4 +2126,115 @@ class _BookServiceState extends State<BookService> {
     GlobalVariables().timeSlot = timeSlot;
     myBookServiceBloc.add(FetchLiamAccount());
   }
+}
+
+
+class TimeSlotWidget extends StatefulWidget {
+
+  var date = 0;
+
+  TimeSlotWidget({this.date});
+
+  @override
+  _TimeSlotWidgetState createState({date}) => new _TimeSlotWidgetState();
+}
+
+class _TimeSlotWidgetState extends State<TimeSlotWidget> {
+
+  @override
+  Widget build(BuildContext context) {
+    var timeSlot;
+    return EnhancedFutureBuilder(
+      future: Repository().fetchTimeSlots(),
+      rememberFutureResult: true,
+      whenNotDone: Center(child: CircularProgressIndicator(),),
+      whenDone: (dynamic data) {
+        if (data.eRRORCODE !="00") {
+          print('some error occured');
+          print('project snapshot data is: ${data}');
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
+          );
+        } else {
+          return GridView.builder(
+            shrinkWrap: true,
+            itemCount: data.oUTPUT.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+            ),
+            itemBuilder: (context, index) {
+              {
+                timeSlot = data.oUTPUT[index].slotnumber;
+                var avalabilityStatus = data.oUTPUT[index].avalabilityStatus;
+                print('project snapshot data is: $data');
+
+                if(data.oUTPUT[index].avalabilityStatus != 'N')
+                  // if(index.isEven)
+                    {
+                  return MaterialButton(
+                    //title: Text(timeSlot),
+                    child: Center(
+                        child: Text(
+                          timeSlot,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        )),
+                    color: Colors.blue[400],
+                    onPressed: () {
+                      timeSlot = data.oUTPUT[index].slotnumber;
+                      CommonMethods().toast(
+                          context, 'You tapped on ${timeSlot.toString()}');
+                      GlobalVariables().timeSlot = timeSlot;
+                      GlobalVariables().myBookServiceBloc.add(FetchLiamAccount());
+
+                    },
+                  );
+                }
+                else{
+                  return MaterialButton(
+                    color: Colors.pink,
+                    child: Center(
+                        child: Text(
+                          timeSlot,
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        )),
+                    onPressed: null,
+                  );
+                }
+                /*return MaterialButton(
+                    //title: Text(timeSlot),
+                    child: Center(
+                        child: Text(
+                          timeSlot,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0),
+                        )),
+                    color: Colors.blue[400],
+                    onPressed: () {
+                      timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
+                      CommonMethods().toast(
+                          context, 'You tapped on ${timeSlot.toString()}');
+                      GlobalVariables().timeSlot = timeSlot;
+                      myBookServiceBloc.add(FetchLiamAccount());
+
+                    },
+                  );*/
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+
 }

@@ -57,7 +57,7 @@ class _ManageAddressState extends State<ManageAddress> {
               itemBuilder: (context, index) {
                 {
                   addressOutput = addressSnapShot.data[index];
-                  print('project snapshot data is: ${addressSnapShot.data}');
+                  CommonMethods().printLog('project snapshot data is: ${addressSnapShot.data}');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
@@ -79,7 +79,7 @@ class _ManageAddressState extends State<ManageAddress> {
               itemBuilder: (context, index) {
                 {
                   addressOutput = addressSnapShot.data[index];
-                  print('project snapshot data is: ${addressSnapShot.data}');
+                  CommonMethods().printLog('project snapshot data is: ${addressSnapShot.data}');
                   return ListTile(
                     leading: CircleAvatar(
                       child: new Image(
