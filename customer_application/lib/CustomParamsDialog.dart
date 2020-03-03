@@ -14,6 +14,7 @@ import 'CommonMethods.dart';
 import 'CreateDropDown.dart';
 import 'GlobalVariables.dart';
 import 'JSONResponseClasses/ServiceList.dart';
+import 'book_service/book_service_bloc.dart';
 import 'networkConfig.dart';
 
 class CustomParamsDialog extends StatefulWidget {
@@ -164,6 +165,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                       onPressed: () {
 
                         if (allParamsFilled()) {
+                          GlobalVariables().myBookServiceBloc = new BookServiceBloc();
                           Navigator.pop(context);
                           Navigator.push(
                               context,

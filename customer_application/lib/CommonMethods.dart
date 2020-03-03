@@ -8,13 +8,15 @@ import 'AesHelper.dart';
 class CommonMethods {
 
   void toast(context, String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white);
+   if(GlobalVariables().enableToast){
+     Fluttertoast.showToast(
+         msg: msg,
+         toastLength: Toast.LENGTH_SHORT,
+         gravity: ToastGravity.TOP,
+         timeInSecForIos: 1,
+         backgroundColor: Colors.red,
+         textColor: Colors.white);
+   }
   }
 
   int getEpochTime() {

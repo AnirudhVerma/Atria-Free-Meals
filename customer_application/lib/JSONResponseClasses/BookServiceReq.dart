@@ -31,7 +31,7 @@ class BookServiceReq {
   String longitude;
   String pincode;
   String servicecode;
-  String customParams;
+  var customParams;
 
   BookServiceReq(
       {this.additionalData,

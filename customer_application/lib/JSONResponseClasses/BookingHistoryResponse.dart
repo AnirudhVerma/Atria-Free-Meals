@@ -10,9 +10,14 @@ class BookingHistoryResponse {
     eRRORMSG = json['ERRORMSG'];
     if (json['OUTPUT'] != null) {
       oUTPUT = new List<OUTPUT>();
-      json['OUTPUT'].forEach((v) {
-        oUTPUT.add(new OUTPUT.fromJson(v));
-      });
+
+      try {
+        json['OUTPUT'].forEach((v) {
+                oUTPUT.add(new OUTPUT.fromJson(v));
+              });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 

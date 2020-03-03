@@ -36,7 +36,13 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
         child: Center(child: CircularProgressIndicator()),
       ),
       whenDone: (dynamic data) {
-        if (data.eRRORCODE !="00") {
+        if(data == null){
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry, the data was null*/'),
+          );
+        }
+        if (data.eRRORCODE == null ||  data.eRRORCODE !="00") {
           CommonMethods().printLog('some error occured');
           CommonMethods().printLog('project snapshot data is: ${data}');
           return Center(
@@ -140,6 +146,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
         .post("/getBookingList", data: getBookingHistoryString);
     //CommonMethods().printLog('The booking history request is ***********************  $getBookingHistoryString   ***************************************');
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
+    CommonMethods().printLog('getBookingHistoryResponseString $getBookingHistoryResponseString' );
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);
     //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
@@ -147,7 +154,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
 
     CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
-    var output = getBookingHistoryResponseObject.oUTPUT;
+   /* var output = getBookingHistoryResponseObject.oUTPUT;
 
     List services = [];
 
@@ -158,7 +165,7 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     }
 
     CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
-
+*/
     return getBookingHistoryResponseObject;
     //CommonMethods().printLog(accessToken);
   }

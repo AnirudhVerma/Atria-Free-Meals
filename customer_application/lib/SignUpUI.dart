@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/MapsExperiments.dart';
+import 'package:customer_application/MapsWeb.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/bloc.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -448,6 +450,9 @@ class _MySignUpPageState extends State<MySignUpPage> {
                             securityAnswerInput(),
                             SizedBox(height: 10,),
                             CupertinoButton(child: Text('Mark Address on Map'), onPressed: () {
+                              if(kIsWeb){
+//                                Navigator.push(context, CupertinoPageRoute(builder: (context) => MapsWeb(0)));
+                              }else
                               Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(0)));
                             },),
                             SizedBox(height: 10,),

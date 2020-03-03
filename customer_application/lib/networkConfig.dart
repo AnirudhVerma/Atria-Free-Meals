@@ -70,14 +70,13 @@ class NetworkCommon {
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
 //    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
-//    dio.options.baseUrl = 'http://10.10.20.120:30000/doorstep';  // kavyananda local server
-    dio.options.baseUrl = 'http://10.10.20.40:30001/doorstep';  // Bhuvaneswari local server
-//    dio.options.baseUrl = ' https://dsbuat.imfast.co.in:30001/doorstep';   //UAT Server
+    dio.options.baseUrl = 'http://10.10.20.120:30000/doorstep';  // kavyananda local server
+//    dio.options.baseUrl = 'http://10.10.20.40:30001/doorstep';  // Bhuvaneswari local server
+//    dio.options.baseUrl = 'https://dsbuat.imfast.co.in:30001/doorstep';   //UAT Server
 
     // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s
     dio.options.receiveTimeout = 50000;
-
 
     //dio.httpClientAdapter = new DefaultHttpClientAdapter();
 
@@ -152,11 +151,6 @@ class NetworkCommon {
           CommonMethods().printLog("Pre request:${options.headers.toString()}");
           CommonMethods().printLog("Pre request Data:${options.data.toString()}");
 
-
-
-
-
-
           if(GlobalVariables().encryptionEnabled){
             if(options.path == '/portallogin'){
 
@@ -178,7 +172,6 @@ class NetworkCommon {
 
               //CommonMethods.printLog(finalBookServiceReq);
               options.data = finalBookServiceReq.toString();
-
 
             }
           }
@@ -239,6 +232,8 @@ class NetworkCommon {
           var encryptedResponse = jsonDecode(response.toString());
           EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
           response.data = jsonDecode(decrypt(myEncriptedResponse.data).toString());
+          var resp = response.toString();
+          CommonMethods().printLog('resp=====> $resp ');
           CommonMethods().printLog('A4 response : ${response.toString()}');
         }
 

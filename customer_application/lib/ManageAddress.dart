@@ -3,9 +3,11 @@ import 'package:customer_application/MapsExperiments.dart';
 import 'package:customer_application/MyMapsApp.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'GlobalVariables.dart';
+import 'MapsWeb.dart';
 
 class ManageAddress extends StatefulWidget {
 
@@ -34,6 +36,9 @@ class _ManageAddressState extends State<ManageAddress> {
             onPressed: () {
               GlobalVariables().longitude = null;
               GlobalVariables().longitude = null;
+              if(kIsWeb){
+//                Navigator.push(context, CupertinoPageRoute(builder: (context) => MapsWeb(0)));
+              }else
               Navigator.push(context, CupertinoPageRoute(builder: (context) => MyMapsExperimentsMap(1)));
             }
           ),

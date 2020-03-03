@@ -20,9 +20,10 @@ class GlobalVariables{
   SelectedService userSelectedService = new SelectedService();
   ServiceList myServiceList = new ServiceList();
   PortalLogin myPortalLogin = new PortalLogin();
-  final myBookServiceBloc = new BookServiceBloc();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
-  final enableLog = false;
+  BookServiceBloc myBookServiceBloc = null;
+  final enableToast = false;
+  final enableLog = true;
   List<Map> listOfParams;
   String phoneNumber;
   String serviceid;
@@ -52,7 +53,6 @@ class GlobalVariables{
     myBookServiceBloc.close();
   }
 
-
   static final GlobalVariables myGlobalVariables = new GlobalVariables._internal();
 
   BuildContext myContext;
@@ -70,6 +70,5 @@ class GlobalVariables{
       vendorid:"17",
       clientAppName:"ANIOSCUST"
   );
-
 
 }

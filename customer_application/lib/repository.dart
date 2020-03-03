@@ -412,14 +412,14 @@ class Repository {
   return getServicesResponseObject;*/
   }
 
-  Future<TimeSlot> fetchTimeSlots() async {
+  Future<TimeSlot> fetchTimeSlots(String theDate) async {
     String d;//pass this in parenthesis
     String todaysDate = DateTime.now().toString().substring(0, 10);
     final now = DateTime.now();
     final tomorrow = new DateTime(now.year, now.month, now.day + 1);
     String tomorrowsDate = tomorrow.toString().substring(0, 10);
     String timeSlotDate;
-    if(d == 'today'){
+    if(theDate == 'today'){
       timeSlotDate = todaysDate;
     }
     else{
@@ -438,7 +438,7 @@ class Repository {
     "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}",
     "pincode":"${GlobalVariables().pincode}",
-    "requesteddate":"$todaysDate"
+    "requesteddate":"$timeSlotDate"
     }""";
     Response fetchTimeSlotResponse = await NetworkCommon()
         .myDio
@@ -613,7 +613,8 @@ class Repository {
     "address": "$address",
     "latitude": "$latitude",
     "longitude": "$longitude",
-    "pincode":"$pinCode"
+    "pincode":"$pinCode",
+    "ts":"$ts"
     }""";
     Response addAddressResponse = await NetworkCommon()
         .myDio

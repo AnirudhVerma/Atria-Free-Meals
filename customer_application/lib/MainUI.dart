@@ -329,7 +329,7 @@ class _MyMainPageState extends State<MyMainPage> {
       rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator()),
         whenDone: (dynamic data) {
-          if (data.eRRORCODE !="00") {
+          if (data.eRRORCODE == null || data.eRRORCODE !="00") {
             CommonMethods().printLog('some error occured');
             CommonMethods().printLog('project snapshot data is: $data');
             return Center(
@@ -375,6 +375,7 @@ class _MyMainPageState extends State<MyMainPage> {
                               );
                             });
                         }else{
+                          GlobalVariables().myBookServiceBloc = new BookServiceBloc();
                           return Navigator.push(
                               context,
                               new CupertinoPageRoute(

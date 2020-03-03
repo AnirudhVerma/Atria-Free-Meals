@@ -69,8 +69,8 @@ class _BookServiceState extends State<BookService> {
   };
 
   Map<int, Widget> icons = <int, Widget>{
-    0: new TimeSlotWidget(),
-    1: new Text("Yo"),
+    0: new TimeSlotWidget(date: 'today',),
+    1: new TimeSlotWidget(date: 'tomorrow',),
     /*2: Center(
       child: FlutterLogo(
         colors: Colors.cyan,
@@ -78,6 +78,13 @@ class _BookServiceState extends State<BookService> {
       ),
     ),*/
   };
+
+  @override
+  void dispose(){
+    super.dispose();
+    myBookServiceBloc.close();
+    GlobalVariables().myBookServiceBloc.close();
+  }
 
 //  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
 
@@ -215,12 +222,12 @@ class _BookServiceState extends State<BookService> {
         future: getAddress(),
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
-          if (data.eRRORCODE !="00") {
+          if (data.eRRORCODE == null || data.eRRORCODE !="00") {
             CommonMethods().printLog('some error occured');
             CommonMethods().printLog('project snapshot data is: $data');
             return Center(
               child: Text(
-                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
+                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/\n This may be caused because we\'re unable to connect to internet'),
               //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
             );
           } else {
@@ -329,7 +336,6 @@ class _BookServiceState extends State<BookService> {
                ),
             ],
           ),
-
       ],
     );
   }
@@ -372,7 +378,7 @@ class _BookServiceState extends State<BookService> {
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
-          if (data.eRRORCODE != "00") {
+          if (data.eRRORCODE == null || data.eRRORCODE != "00") {
             CommonMethods().printLog('some error occured');
             CommonMethods().printLog('project snapshot data is: $data');
             return Center(
@@ -1135,7 +1141,7 @@ class _BookServiceState extends State<BookService> {
         longitude:GlobalVariables().longitude,
         pincode:GlobalVariables().pincode,
         servicecode:GlobalVariables().servicecode,
-        customParams:GlobalVariables().listOfParams.toString()
+        customParams:GlobalVariables().listOfParams
 
     );
 
@@ -1387,7 +1393,7 @@ class _BookServiceState extends State<BookService> {
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
-          if (data.eRRORCODE !="00") {
+          if (data.eRRORCODE == null || data.eRRORCODE !="00") {
             CommonMethods().printLog('some error occured');
             CommonMethods().printLog('project snapshot data is: ${data}');
             return Center(
@@ -1551,100 +1557,6 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack selectTimeSlotUI(BuildContext context) {
-    Widget slotList() {
-      var timeSlot;
-      return EnhancedFutureBuilder(
-        future: Repository().fetchTimeSlots(),
-        rememberFutureResult: true,
-        whenNotDone: Center(child: CircularProgressIndicator(),),
-        whenDone: (dynamic data) {
-          if (data.eRRORCODE !="00") {
-            CommonMethods().printLog('some error occured');
-            CommonMethods().printLog('project snapshot data is: ${data}');
-            return Center(
-              child: Text(
-                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
-            );
-          } else {
-            return GridView.builder(
-              shrinkWrap: true,
-              itemCount: data.oUTPUT.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-              ),
-              itemBuilder: (context, index) {
-                {
-                  timeSlot = data.oUTPUT[index].slotnumber;
-                  var avalabilityStatus = data.oUTPUT[index].avalabilityStatus;
-                  CommonMethods().printLog('project snapshot data is: $data');
-
-                  if(data.oUTPUT[index].avalabilityStatus != 'N')
-                 // if(index.isEven)
-                  {
-                    return MaterialButton(
-                      //title: Text(timeSlot),
-                      child: Center(
-                          child: Text(
-                            timeSlot,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0),
-                          )),
-                      color: Colors.blue[400],
-                      onPressed: () {
-                        timeSlot = data.oUTPUT[index].slotnumber;
-                        CommonMethods().toast(
-                            context, 'You tapped on ${timeSlot.toString()}');
-                        GlobalVariables().timeSlot = timeSlot;
-                        myBookServiceBloc.add(FetchLiamAccount());
-
-                      },
-                    );
-                  }
-                  else{
-                    return MaterialButton(
-                      color: Colors.pink,
-                      child: Center(
-                          child: Text(
-                            timeSlot,
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0),
-                          )),
-                      onPressed: null,
-                    );
-                  }
-                  /*return MaterialButton(
-                    //title: Text(timeSlot),
-                    child: Center(
-                        child: Text(
-                          timeSlot,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0),
-                        )),
-                    color: Colors.blue[400],
-                    onPressed: () {
-                      timeSlot = timeSlotSnapShot.data.oUTPUT[index].slotnumber;
-                      CommonMethods().toast(
-                          context, 'You tapped on ${timeSlot.toString()}');
-                      GlobalVariables().timeSlot = timeSlot;
-                      myBookServiceBloc.add(FetchLiamAccount());
-
-                    },
-                  );*/
-                }
-              },
-            );
-          }
-        },
-      );
-    }
 
     return Stack(
       children: <Widget>[
@@ -1655,142 +1567,149 @@ class _BookServiceState extends State<BookService> {
             height: 200,
           ),
         ),
-        Column(
-          children: <Widget>[
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(AddressEvent());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(FetchBankList());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(RegisteredNumber());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(EnterBankOTP());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(FetchAccountList());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    myBookServiceBloc.add(FetchBranchList());
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                CircleAvatar(
-                  child: Text(
-                    '7',
-                    style: TextStyle(color: Colors.blue[900]),
-                  ),
-                  backgroundColor: Colors.blue[100],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Flexible(
-                  child: Text(
-                    'Pick your time',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 18,
-            ),
-            SizedBox(
-              width: 300.0,
-              child: CupertinoSlidingSegmentedControl<int>(
-                children: dates,
-                onValueChanged: (int val) {
-                  setState(() {
-                    currentValue = val;
-                  });
-                },
-                groupValue: currentValue,
+        SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 16,
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                elevation: 20,
-                margin: EdgeInsets.all(18),
-                child: Padding(
-                  //child: icons[currentValue],
-                  child: slotList(),
-                  padding: EdgeInsets.all(5.0),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 16,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(AddressEvent());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(FetchBankList());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(RegisteredNumber());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(EnterBankOTP());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(FetchAccountList());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      myBookServiceBloc.add(FetchBranchList());
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  CircleAvatar(
+                    child: Text(
+                      '7',
+                      style: TextStyle(color: Colors.blue[900]),
+                    ),
+                    backgroundColor: Colors.blue[100],
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    child: Text(
+                      'Pick your time',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 18,
+              ),
+              SizedBox(
+                width: 300.0,
+                child: CupertinoSlidingSegmentedControl<int>(
+                  children: dates,
+                  onValueChanged: (int val) {
+                    setState(() {
+                      currentValue = val;
+                    });
+                  },
+                  groupValue: currentValue,
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+//                constraints: BoxConstraints(
+//                  maxHeight: 500,
+//                ),
+                child: SingleChildScrollView(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    elevation: 20,
+                    margin: EdgeInsets.all(18),
+                    child: Padding(
+                      child: icons[currentValue],
+//                  child: slotList(),
+                      padding: EdgeInsets.all(5.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -1804,7 +1723,7 @@ class _BookServiceState extends State<BookService> {
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
-          if (data.eRRORCODE !="00") {
+          if (data.eRRORCODE == null || data.eRRORCODE !="00") {
             CommonMethods().printLog('some error occured');
             CommonMethods().printLog('project snapshot data is: ${data}');
             return Center(
@@ -2114,11 +2033,6 @@ class _BookServiceState extends State<BookService> {
     }
   }
 
-  void dispose() {
-    super.dispose();
-    myBookServiceBloc.close();
-  }
-
   void whatToDoOnPressed(timeSlot, isEnabled) {
     if(isEnabled == 'N'){
       return null;
@@ -2131,7 +2045,7 @@ class _BookServiceState extends State<BookService> {
 
 class TimeSlotWidget extends StatefulWidget {
 
-  var date = 0;
+  var date = null;
 
   TimeSlotWidget({this.date});
 
@@ -2145,11 +2059,11 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
   Widget build(BuildContext context) {
     var timeSlot;
     return EnhancedFutureBuilder(
-      future: Repository().fetchTimeSlots(),
+      future: Repository().fetchTimeSlots(widget.date.toString().trim()),
       rememberFutureResult: true,
       whenNotDone: Center(child: CircularProgressIndicator(),),
       whenDone: (dynamic data) {
-        if (data.eRRORCODE !="00") {
+        if (data.eRRORCODE == null || data.eRRORCODE !="00") {
           CommonMethods().printLog('some error occured');
           CommonMethods().printLog('project snapshot data is: ${data}');
           return Center(
