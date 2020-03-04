@@ -48,3 +48,4 @@ class BookingResultState extends BookServiceState {
   @override
   List<Object> get props => [];
 }
+
