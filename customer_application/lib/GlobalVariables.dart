@@ -22,7 +22,7 @@ class GlobalVariables{
   PortalLogin myPortalLogin = new PortalLogin();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
   BookServiceBloc myBookServiceBloc = null;
-  final enableToast = false;
+  final enableToast = true;
   final enableLog = true;
   List<Map> listOfParams;
   String phoneNumber;
@@ -48,6 +48,8 @@ class GlobalVariables{
   String registrationLatitude;
   String pinCodeFromLocation;
   String addressFromLocation;
+
+  String timeStamp;
 
   void dispose() {
     myBookServiceBloc.close();

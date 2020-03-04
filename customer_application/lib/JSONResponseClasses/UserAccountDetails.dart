@@ -37,7 +37,8 @@ class OUTPUT {
   OUTPUT.fromJson(Map<String, dynamic> json) {
     bankuniqrefnum = json['bankuniqrefnum'];
     uniqrefnum = json['uniqrefnum'];
-    accountnumber = json['accountnumber'].cast<String>();
+    if(json['accountnumber']!=null)
+      accountnumber = json['accountnumber'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {

@@ -118,7 +118,8 @@ class _OnGoingServiceDialogState extends State<OnGoingServiceDialog> {
     }
     if (serviceName == 'Request Account Statement'){
       return 'assets/images/bank-statement.png';
-    }
+    }else
+      return'assets/images/bank-statement.png';
   }
 
   Future<void> getBookingHistory() async {

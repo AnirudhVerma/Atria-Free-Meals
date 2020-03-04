@@ -70,9 +70,9 @@ class NetworkCommon {
 //    dio.options.baseUrl = 'https://dsb.imfast.co.in:9699/doorstep'; // production server
 //    dio.options.baseUrl = 'http://10.10.20.80:30000/doorstep';    //office local server
 //    dio.options.baseUrl = 'https://10.10.20.62:30000/doorstep';    //office local server
-    dio.options.baseUrl = 'http://10.10.20.120:30000/doorstep';  // kavyananda local server
+//    dio.options.baseUrl = 'http://10.10.20.120:30000/doorstep';  // kavyananda local server
 //    dio.options.baseUrl = 'http://10.10.20.40:30001/doorstep';  // Bhuvaneswari local server
-//    dio.options.baseUrl = 'https://dsbuat.imfast.co.in:30001/doorstep';   //UAT Server
+    dio.options.baseUrl = 'https://dsbuat.imfast.co.in:30001/doorstep';   //UAT Server
 
     // handle timeouts //Bhuvaneswari
     dio.options.connectTimeout = 50000; //5s
@@ -157,7 +157,7 @@ class NetworkCommon {
             }else{
 
               CommonMethods().printLog(options.data);
-              String ts = CommonMethods().getTimeStamp();
+              String ts = GlobalVariables().timeStamp;
               String encryptedData = encrypt(options.data);
 
               String data = """{ "ts": "$ts",

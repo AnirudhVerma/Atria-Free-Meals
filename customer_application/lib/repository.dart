@@ -284,7 +284,8 @@ class Repository {
                              "vendorid":"17",
                              "ClientAppName":"ANIOSCUST"
                              },
-                             "mobilenumber":"$phoneNumber"
+                             "mobilenumber":"$phoneNumber",
+                             "ts":"${CommonMethods().getTimeStamp()}"
                              }""";
       Response resendOTPResponse = await NetworkCommon().myDio.post("/generateOTP", data: generateOTPJSON);
       var myOTPResponse = jsonDecode(resendOTPResponse.toString());

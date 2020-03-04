@@ -661,12 +661,16 @@ class _BookServiceState extends State<BookService> {
                           // stopLoading();
                           _validatePhoneInput1();
 
-                          if(_validatePhoneInput1() == 0){
+                          if(_validatePhoneInput1() == 0 && btnState == ButtonState.Idle){
                             startLoading();
                             CommonMethods().toast(context,
                               'The Phone number is ${GlobalVariables().phoneNumber}');
+                            btnState = ButtonState.Busy;
+//                            setState(() {
+//                              btnState = ButtonState.Busy;
+//                            });
                           BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
-                          GlobalVariables().myBankOTPResponse = await fetchUserAccountDetails();
+                          GlobalVariables().myBankOTPResponse = myBankOTPResponse;
                           CommonMethods().printLog('************The problem ${myBankOTPResponse.eRRORMSG}');
                           if(myBankOTPResponse.eRRORMSG != null){
                             if (myBankOTPResponse.eRRORMSG != null && myBankOTPResponse.eRRORMSG == 'SUCCESS') {
@@ -674,11 +678,22 @@ class _BookServiceState extends State<BookService> {
                             } else {
                               CommonMethods()
                                   .toast(context, myBankOTPResponse.eRRORMSG);
+                              stopLoading();
+                              btnState = ButtonState.Idle;
+//                              setState(() {
+//                                btnState = ButtonState.Idle;
+//                                stopLoading();
+//                              });
                             }
                           }
                           else{
                             CommonMethods().toast(context,'Couldn\'t get Response from bank');
                             stopLoading();
+                            btnState = ButtonState.Idle;
+//                            setState(() {
+//                              btnState = ButtonState.Idle;
+//                              stopLoading();
+//                            });
                           }
                           }
 
@@ -714,10 +729,11 @@ class _BookServiceState extends State<BookService> {
     "username":"$userName",
     "ts": "${CommonMethods().getTimeStamp()}"
     }""";
+    CommonMethods().printLog('************The generateOTPBank string is $getBankListString');
     Response getBankListResponse = await NetworkCommon()
         .myDio
         .post("/generateOTPBank", data: getBankListString);
-    CommonMethods().printLog('************The generateOTPBank string is $getBankListString');
+    CommonMethods().printLog('************The generateOTPBank  reposnse string is ${getBankListResponse.toString()}');
     var getBankOTPResponseString = jsonDecode(getBankListResponse.toString());
     if(getBankOTPResponseString.toString().contains('"code":"ECONNREFUSED"')){
       return showDialog(context: context,builder: (_) {
@@ -921,18 +937,29 @@ class _BookServiceState extends State<BookService> {
 //                          startLoading();
 //                          _validateOTPInput();
 
-                          _validateOTPInput1();
-                          if(_validateOTPInput1() == 0){
+//                          _validateOTPInput1();
+                          if(_validateOTPInput1() == 0 && btnState == ButtonState.Idle){
                             CommonMethods().toast(context,
                                 'The Entered OTP is ${myBankOTPController.text}');
                             startLoading();
+                            btnState = ButtonState.Busy;
+//                            setState(() {
+//                              btnState = ButtonState.Busy;
+//                            });
                             GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
                             if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
                               myBookServiceBloc.add(FetchAccountList());
                             }
                             else{
                               CommonMethods().toast(context, GlobalVariables().myUserAccountDetails.eRRORMSG);
+                              btnState = ButtonState.Idle;
+                              stopLoading();
+//                              setState(() {
+//                                btnState = ButtonState.Idle;
+//                                stopLoading();
+//                              });
                             }
+                          // CommonMethods().toast(context, 'inside Button');
                           }
                           /*CommonMethods().toast(context,
                               'The Entered OTP is ${myBankOTPController.text}');
@@ -1234,7 +1261,41 @@ class _BookServiceState extends State<BookService> {
   Stack userAccountDetailsUI(BuildContext context) {
     Widget accountList() {
       var accounts;
-      return FutureBuilder(
+      var data = GlobalVariables().myUserAccountDetails;
+      return ListView.separated(
+        shrinkWrap: true,
+//            itemCount: int.parse(addressSnapShot.data.length),
+        itemCount: data.oUTPUT[0].accountnumber.length,
+        itemBuilder: (context, index) {
+          {
+            accounts = data.oUTPUT[0].accountnumber[index];
+            CommonMethods().printLog('project snapshot data is: ${data.toString()}');
+            return ListTile(
+              leading: new CircleAvatar(
+                child: new Image(
+                    image: new AssetImage(
+                        'assets/images/bank_account_icon.png')),
+              ),
+              title: Text(accounts),
+              onTap: () {
+                accounts =
+                data.oUTPUT[0].accountnumber[index];
+                CommonMethods().toast(
+                    context, 'You tapped on ${accounts.toString()}');
+                GlobalVariables().serviceAccount = accounts;
+                myBookServiceBloc.add(FetchBranchList());
+              },
+            );
+          }
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            indent: 16,
+            endIndent: 16,
+          );
+        },
+      );
+     /* return FutureBuilder(
         future: verifyOTPAndGetAccountDetails(),
         builder: (context, AccountSnapShot) {
           if (AccountSnapShot.data == null) {
@@ -1277,7 +1338,7 @@ class _BookServiceState extends State<BookService> {
             );
           }
         },
-      );
+      );*/
     }
 
     return Stack(
@@ -1556,6 +1617,188 @@ class _BookServiceState extends State<BookService> {
     );
   }
 
+
+ /* Future<BookServiceResponse> bookService1() async {
+    var requestTime = CommonMethods().getEpochTime();
+    String date = DateTime.now().toString().substring(0, 10);
+
+    var jason = json.encode(GlobalVariables().listOfParams);
+    //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
+
+    String bookServiceDynamicString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"${myBankPhoneNumberController.text}",  
+    "customerid":"${GlobalVariables().myPortalLogin.oUTPUT.user.userid}",
+    "customername":"${GlobalVariables().firstResponse.oUTPUT[0].firstname}",
+    "requesttime":"$requestTime",
+    "DEVICEID": "",
+    "serviceid":"$serviceid",
+    "servicetype":"${GlobalVariables().servicetype}",
+    "servicecategory":"${GlobalVariables().servicecategory}",
+    "servicename":"${GlobalVariables().servicename}",
+    "servicecharge":"${GlobalVariables().serviceCharge}",
+    "bankcode":"${GlobalVariables().bankCode}",
+    "bankname":"${GlobalVariables().bankname}",
+    "branchcode":"${GlobalVariables().branchcode}",
+    "branchname":"${GlobalVariables().branchname}",
+    "addressid":"${GlobalVariables().addressid}",
+    "address":"${GlobalVariables().address}",
+    "lienmarkaccounttype":"NA",
+    "lienmarkaccount":"${GlobalVariables().serviceAccount}",
+    "serviceaccounttype":"NA",
+    "serviceaccount":"${GlobalVariables().serviceAccount}",
+    "prefereddate":"$date",
+    "slot":"${GlobalVariables().timeSlot}",
+    "channel":"iOS",
+    "ccagentid":"",
+    "authorization":"$accessToken",
+    "username":"$userName",
+    "ts": "${CommonMethods().getTimeStamp()}",
+    "latitude":"${GlobalVariables().latitude}",
+    "longitude":"${GlobalVariables().longitude}",
+    "pincode":"${GlobalVariables().pincode}",
+    "servicecode":"${GlobalVariables().servicecode}",
+    "custom_params": $jason
+    }""";
+
+    AdditionalData additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );
+
+    BookServiceReq myObj = BookServiceReq(
+        additionalData: additionalData,
+        mobilenumber:myBankPhoneNumberController.text,
+        customerid:GlobalVariables().myPortalLogin.oUTPUT.user.userid.toString(),
+        customername:GlobalVariables().firstResponse.oUTPUT[0].firstname,
+        requesttime:requestTime.toString(),
+        dEVICEID: "",
+        serviceid:serviceid.toString(),
+        servicetype:GlobalVariables().servicetype,
+        servicecategory:GlobalVariables().servicecategory,
+        servicename:GlobalVariables().servicename,
+        servicecharge:GlobalVariables().serviceCharge,
+        bankcode:GlobalVariables().bankCode,
+        bankname:GlobalVariables().bankname,
+        branchcode:GlobalVariables().branchcode,
+        branchname:GlobalVariables() .branchname,
+        addressid:GlobalVariables().addressid.toString(),
+        address:GlobalVariables().address,
+        lienmarkaccounttype:"NA",
+        lienmarkaccount:GlobalVariables().serviceAccount,
+        serviceaccounttype:"NA",
+        serviceaccount:GlobalVariables().serviceAccount,
+        prefereddate:date,
+        slot:GlobalVariables().timeSlot,
+        channel:"iOS",
+        ccagentid:"",
+        authorization:accessToken,
+        username:userName,
+        ts: CommonMethods().getTimeStamp(),
+        latitude:GlobalVariables().latitude,
+        longitude:GlobalVariables().longitude,
+        pincode:GlobalVariables().pincode,
+        servicecode:GlobalVariables().servicecode,
+        customParams:GlobalVariables().listOfParams
+
+    );
+
+
+    *//* myObj.additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );*//*
+    *//* myObj.additionalData.clientAppName= "ANIOSCUST";
+
+    myObj.additionalData.clientApptype = "DSB" ;
+
+    myObj.additionalData.clientAppVer ="1.0.0" ;
+    myObj.additionalData.platform = "ANDROID";
+
+    myObj.additionalData.vendorid ="17" ;*//*
+
+    var finalBookServiceReq = jsonEncode(myObj);
+
+
+    CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
+
+    Response bokServiceResponse = await NetworkCommon()
+        .myDio
+        .post("/bookService", data: finalBookServiceReq);
+    var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
+    GlobalVariables().myBookServiceResponseObject =
+        BookServiceResponse.fromJson(getBranchesResponseString);
+
+    //REMOVE THIS!!
+
+//    myBookServiceBloc.add(BookingResult());
+
+
+    if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
+      showDialog(
+        context: context,
+        child: CupertinoAlertDialog(
+          title: Text('Success'),
+          content: Text('Your Booking was Successful'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        child: CupertinoAlertDialog(
+          title: Text('Sorry'),
+          content:
+          Text('${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GlobalVariables().myBookServiceResponseObject;
+  }*/
+
   Stack selectTimeSlotUI(BuildContext context) {
 
     return Stack(
@@ -1567,8 +1810,7 @@ class _BookServiceState extends State<BookService> {
             height: 200,
           ),
         ),
-        SingleChildScrollView(
-          child: Column(
+         Column(
             children: <Widget>[
               SizedBox(
                 height: 16,
@@ -1693,7 +1935,6 @@ class _BookServiceState extends State<BookService> {
 //                constraints: BoxConstraints(
 //                  maxHeight: 500,
 //                ),
-                child: SingleChildScrollView(
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -1706,11 +1947,11 @@ class _BookServiceState extends State<BookService> {
                       padding: EdgeInsets.all(5.0),
                     ),
                   ),
-                ),
+
               ),
             ],
           ),
-        ),
+
       ],
     );
   }
@@ -2060,9 +2301,15 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
     var timeSlot;
     return EnhancedFutureBuilder(
       future: Repository().fetchTimeSlots(widget.date.toString().trim()),
-      rememberFutureResult: true,
+      rememberFutureResult: false,
       whenNotDone: Center(child: CircularProgressIndicator(),),
       whenDone: (dynamic data) {
+        if(data == null){
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry, the data was null*/'),
+          );
+        }
         if (data.eRRORCODE == null || data.eRRORCODE !="00") {
           CommonMethods().printLog('some error occured');
           CommonMethods().printLog('project snapshot data is: ${data}');
@@ -2104,7 +2351,84 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                       CommonMethods().toast(
                           context, 'You tapped on ${timeSlot.toString()}');
                       GlobalVariables().timeSlot = timeSlot;
-                      GlobalVariables().myBookServiceBloc.add(FetchLiamAccount());
+
+
+                        showDialog(
+                          context: context,
+                          child: CupertinoAlertDialog(
+                            title: Text('Confirm Booking'),
+                            content: Column(
+                              children: <Widget>[
+                                Text(
+                                    'Name : ${GlobalVariables().firstResponse.oUTPUT[0].firstname}'),
+                                Text(
+                                    'Service Type : ${GlobalVariables().servicetype}'),
+                                Text(
+                                    'Service Charge : ${GlobalVariables().serviceCharge}'),
+                                Text('Bank : ${GlobalVariables().bankname}'),
+                                Text('Branch : ${GlobalVariables().branchname}'),
+                                Text('Address : ${GlobalVariables().address}'),
+                                Text(
+                                    'Service Delivery Account : ${GlobalVariables().serviceAccount}'),
+                                Text(
+                                    'Payment Account : ${GlobalVariables().lianAccount}'),
+                                Text(
+                                    'Prefered Time : ${GlobalVariables().timeSlot}'),
+                                /*Material(
+                                child: Checkbox(
+                                  value: _enabled,
+                                  onChanged: (bool value){
+                                    setState((){
+                                      _enabled = value;
+                                    });
+                                  },
+                                ),
+                              ),*/
+                              ],
+                            ),
+                            /*actions: <Widget>[
+                            RaisedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                                bookService();
+                              },
+                              child: Text(
+                                'Confirm',
+                                style: TextStyle(
+                                    color: Colors.blue, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],*/
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  bookService(context);
+                                },
+                                child: Text(
+                                  'Confirm',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+//                      bookService();
+
+                     // GlobalVariables().myBookServiceBloc.add(FetchLiamAccount());
 
                     },
                   );
@@ -2151,4 +2475,144 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
     );
   }
 
+}
+
+Future<BookServiceResponse> bookService([BuildContext context]) async {
+  var requestTime = CommonMethods().getEpochTime();
+  String date = DateTime.now().toString().substring(0, 10);
+
+  var jason = json.encode(GlobalVariables().listOfParams);
+  //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
+
+
+
+  AdditionalData additionalData = AdditionalData(
+      clientAppVer:"1.0.0",
+      clientApptype:"DSB",
+      platform:"ANDROID",
+      vendorid:"17",
+      clientAppName:"ANIOSCUST"
+  );
+
+  BookServiceReq myObj = BookServiceReq(
+      additionalData: additionalData,
+      mobilenumber:GlobalVariables().phoneNumber,
+      customerid:GlobalVariables().myPortalLogin.oUTPUT.user.userid.toString(),
+      customername:GlobalVariables().firstResponse.oUTPUT[0].firstname,
+      requesttime:requestTime.toString(),
+      dEVICEID: "",
+      serviceid:GlobalVariables().serviceid,
+      servicetype:GlobalVariables().servicetype,
+      servicecategory:GlobalVariables().servicecategory,
+      servicename:GlobalVariables().servicename,
+      servicecharge:GlobalVariables().serviceCharge,
+      bankcode:GlobalVariables().bankCode,
+      bankname:GlobalVariables().bankname,
+      branchcode:GlobalVariables().branchcode,
+      branchname:GlobalVariables() .branchname,
+      addressid:GlobalVariables().addressid.toString(),
+      address:GlobalVariables().address,
+      lienmarkaccounttype:"NA",
+      lienmarkaccount:GlobalVariables().serviceAccount,
+      serviceaccounttype:"NA",
+      serviceaccount:GlobalVariables().serviceAccount,
+      prefereddate:date,
+      slot:GlobalVariables().timeSlot,
+      channel:"iOS",
+      ccagentid:"",
+      authorization:GlobalVariables().myPortalLogin.oUTPUT.token.accessToken,
+      username:GlobalVariables().phoneNumber,
+      ts: CommonMethods().getTimeStamp(),
+      latitude:GlobalVariables().latitude,
+      longitude:GlobalVariables().longitude,
+      pincode:GlobalVariables().pincode,
+      servicecode:GlobalVariables().servicecode,
+      customParams:GlobalVariables().listOfParams
+
+  );
+
+
+  /* myObj.additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );*/
+  /* myObj.additionalData.clientAppName= "ANIOSCUST";
+
+    myObj.additionalData.clientApptype = "DSB" ;
+
+    myObj.additionalData.clientAppVer ="1.0.0" ;
+    myObj.additionalData.platform = "ANDROID";
+
+    myObj.additionalData.vendorid ="17" ;*/
+
+  var finalBookServiceReq = jsonEncode(myObj);
+
+
+//  CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
+
+  Response bokServiceResponse = await NetworkCommon()
+      .myDio
+      .post("/bookService", data: finalBookServiceReq);
+  var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
+  GlobalVariables().myBookServiceResponseObject =
+      BookServiceResponse.fromJson(getBranchesResponseString);
+
+  //REMOVE THIS!!
+
+//    myBookServiceBloc.add(BookingResult());
+
+
+  if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
+    showDialog(
+      context: GlobalVariables().myContext,
+      child: CupertinoAlertDialog(
+        title: Text('Success'),
+        content: Text('Your Booking was Successful'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              GlobalVariables().listOfParams = null;
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyMainPage()));
+            },
+            child: Text(
+              'OK',
+              style:
+              TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  } else {
+    showDialog(
+      context: GlobalVariables().myContext,
+      child: CupertinoAlertDialog(
+        title: Text('Sorry'),
+        content:
+        Text('${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              GlobalVariables().listOfParams = null;
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyMainPage()));
+            },
+            child: Text(
+              'OK',
+              style:
+              TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  return GlobalVariables().myBookServiceResponseObject;
 }

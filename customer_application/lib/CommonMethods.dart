@@ -31,6 +31,7 @@ class CommonMethods {
     DateTime date = new DateTime(now.year, now.month, now.day);
     String dayFormat = DateFormat('E MMM d y').format(date);
     String timeStamp = '$dayFormat ${now.toString().substring(11,19)} GMT + 0530(India Standard Time)';
+    GlobalVariables().timeStamp = timeStamp;
     return timeStamp;
   }
 
