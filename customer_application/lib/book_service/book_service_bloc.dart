@@ -37,6 +37,9 @@ class BookServiceBloc extends Bloc<BookServiceEvent, BookServiceState> {
     if (event is BookingResult){
       yield BookingResultState();
     }
+    if (event is ShowProgressIndicator){
+      yield ProgressIndicatorState();
+    }
     // TODO: Add Logic
   }
 }

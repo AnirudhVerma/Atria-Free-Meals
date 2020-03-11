@@ -1,18 +1,30 @@
 import 'dart:convert';
 import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
+import 'package:customer_application/JSONResponseClasses/ComplaintList.dart';
 import 'package:customer_application/JSONResponseClasses/ComplaintType.dart';
 import 'package:customer_application/JSONResponseClasses/EncryptedResponse.dart';
 import 'package:customer_application/JSONResponseClasses/FetchUserReq.dart';
+import 'package:customer_application/LoadingIndicator.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'AesHelper.dart';
+import 'JSONResponseClasses/AdditionalData.dart';
 import 'JSONResponseClasses/Address.dart';
+import 'JSONResponseClasses/Bank.dart';
+import 'JSONResponseClasses/BankOTPResponse.dart';
+import 'JSONResponseClasses/BookServiceReq.dart';
+import 'JSONResponseClasses/BookServiceResponse.dart';
 import 'JSONResponseClasses/FirstResponse.dart';
 import 'JSONResponseClasses/GeneratedOTP.dart';
 import 'JSONResponseClasses/PortalLogin.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'JSONResponseClasses/TimeSlot.dart';
+import 'JSONResponseClasses/UserAccountDetails.dart';
 import 'JSONResponseClasses/ValidateOTP.dart';
+import 'MainUI.dart';
+import 'main.dart';
 import 'networkConfig.dart';
 
 class Repository {
@@ -74,8 +86,6 @@ class Repository {
       EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
 
       var myVar = jsonDecode(decrypt(myEncriptedResponse.data).toString());*/
-
-
 
       var myVar = jsonDecode(response1.toString());
       CommonMethods().printLog("THE Fetch User Decrypted RESPONSE IS :: $myVar");
@@ -545,10 +555,8 @@ class Repository {
         .myDio
         .post("/getComplaintType", data: getComplaintType);
     var getComplaintTypeResponseString = jsonDecode(getComplaintTypeResponse.toString());
-    var getComplaintTypeResponseObject =
-    ComplaintType.fromJson(getComplaintTypeResponseString);
 
-    return getComplaintTypeResponseObject;
+    return getComplaintTypeResponseString;
   }
 
   removeAddress(String addressId) async {
@@ -643,6 +651,418 @@ class Repository {
 
 //    return output;
   return getServicesResponseObject;*/
+  }
+
+  Future<void> fetchAddress() async {
+    String getBankString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}"
+    }""";
+    Response getAddressResponse = await NetworkCommon()
+        .myDio
+        .post("/getAddressList", data: getBankString);
+    var getAddressResponseString = jsonDecode(getAddressResponse.toString());
+    var getAddressResponseObject =
+    Address.fromJson(getAddressResponseString); // replace with PODO class
+
+    CommonMethods().printLog("THE ADDRESS RESPONSE IS $getAddressResponseObject");
+
+    var output = getAddressResponseObject.oUTPUT;
+
+    List address = [];
+
+    CommonMethods().printLog('             THE ADDRESSES ARE $address                 ');
+
+    return getAddressResponseObject;
+  }
+
+  Future<void> getBankList() async {
+    String getBankListString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "serviceid":"${GlobalVariables().serviceid}",      
+    "pincode":"${GlobalVariables().pincode}",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}"
+    }""";
+    Response getBankListResponse = await NetworkCommon()
+        .myDio
+        .post("/getBankList", data: getBankListString);
+    var getBankListResponseString =
+    jsonDecode(getBankListResponse.toString());
+    var getBankListResponseObject =
+    Bank.fromJson(getBankListResponseString); // replace with PODO class
+
+    var output = getBankListResponseObject.oUTPUT;
+
+    return getBankListResponseObject;
+//    return getBankListResponseObject;
+  }
+
+  Future<BankOTPResponse> fetchUserAccountDetails(String bankPhoneNumber) async {
+    String getBankListString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"$bankPhoneNumber",      
+    "bankcode":"${GlobalVariables().bankCode}",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}"
+    }""";
+    CommonMethods().printLog('************The generateOTPBank string is $getBankListString');
+    Response getBankListResponse = await NetworkCommon()
+        .myDio
+        .post("/generateOTPBank", data: getBankListString);
+    CommonMethods().printLog('************The generateOTPBank  reposnse string is ${getBankListResponse.toString()}');
+    var getBankOTPResponseString = jsonDecode(getBankListResponse.toString());
+    if(getBankOTPResponseString.toString().contains('"code":"ECONNREFUSED"')){
+      NetworkCommon().showMyDialog('Error', 'ECONNREFUSED');
+    }else{
+      var getBankOTPResponseObject =
+      BankOTPResponse.fromJson(getBankOTPResponseString);
+
+      var output = getBankOTPResponseObject.oUTPUT;
+      return getBankOTPResponseObject;
+    }
+  }
+
+  Future<UserAccountDetails> verifyOTPAndGetAccountDetails(String phoneNumber, String OTP) async {
+    String verifyOTPAndGetAccountDetailsString = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "mobilenumber":"$phoneNumber",      
+    "bankcode":"${GlobalVariables().bankCode}",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}",
+    "OTP":"$OTP",
+    "uniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].uniqrefnum}",
+    "bankuniqrefnum":"${GlobalVariables().myBankOTPResponse.oUTPUT[0].bankuniqrefnum}"
+    }""";
+    CommonMethods().printLog('**************** The get account details call is $verifyOTPAndGetAccountDetailsString');
+    Response verifyOTPAndGetAccountDetailsResponse = await NetworkCommon()
+        .myDio
+        .post("/getAccountDetails", data: verifyOTPAndGetAccountDetailsString);
+    var verifyOTPString =
+    jsonDecode(verifyOTPAndGetAccountDetailsResponse.toString());
+    var verifyOTPResponseObject = UserAccountDetails.fromJson(verifyOTPString);
+
+    return verifyOTPResponseObject;
+  }
+
+  Future<void> logout() async {
+    return showDialog(
+      context: GlobalVariables().myContext,
+      child: CupertinoAlertDialog(
+//            shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        title: Text('Do you want to Logout from account ${GlobalVariables().phoneNumber}?'),
+        content: Text('We\'d hate to see you leave...'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(GlobalVariables().myContext).pop(false);
+            },
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                  color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+          ),
+          FlatButton(
+            onPressed: () async {
+              Navigator.push(GlobalVariables().myContext, CupertinoPageRoute(builder: (context) => LoadingIndicator()));
+              String logoutString = """{
+                          "additionalData":
+                    {
+                    "client_app_ver":"1.0.0",
+                    "client_apptype":"DSB",
+                    "platform":"ANDROID",
+                    "vendorid":"17",
+                    "ClientAppName":"ANIOSCUST"
+                    },
+                    "ts": "${CommonMethods().getTimeStamp()}",
+                    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+                    "username":"${GlobalVariables().phoneNumber}"
+                
+                    }""";
+              Response logoutResponse = await NetworkCommon()
+                  .myDio
+                  .post("/logout", data: logoutString);
+              CommonMethods().printLog(logoutResponse.toString());
+              if (logoutResponse.toString().contains('"ERRORCODE":"00')) {
+                CommonMethods().printLog('logout success');
+                Navigator.of(GlobalVariables().myContext).pop();
+//                    Navigator.of(context).pop();
+//                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+              }
+              Navigator.of(GlobalVariables().myContext).pop();
+              Navigator.push(GlobalVariables().myContext,
+                  MaterialPageRoute(builder: (context) => MyHomePage()));
+            },
+            child: Text(
+              'Logout',
+              style:
+              TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    ) ??
+        false;
+
+    /*showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(
+            scale: a1.value,
+            child: Opacity(
+              opacity: a1.value,
+              child: CupertinoAlertDialog(
+//                shape: RoundedRectangleBorder(
+//                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                title: Text('Do you want to Logout from  account $phoneNumber?'),
+                content: Text(' We\'d hate to see you leave...'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text('No', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      String logoutString = """{
+                          "additionalData":
+                    {
+                    "client_app_ver":"1.0.0",
+                    "client_apptype":"DSB",
+                    "platform":"ANDROID",
+                    "vendorid":"17"
+                    },
+                    "ts": "Mon Dec 16 2019 13:19:41 GMT + 0530(India Standard Time)",
+                    "authorization":"$accessToken",
+                    "username":"$phoneNumber"
+
+                    }""";
+                      Response logoutResponse = await NetworkCommon()
+                          .myDio
+                          .post("/logout", data: logoutString);
+                      CommonMethods().printLog(logoutResponse.toString());
+                      if (logoutResponse
+                          .toString()
+                          .contains('"ERRORCODE":"00')) {
+                        CommonMethods().printLog('logout success');
+                        Navigator.of(context).pop();
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Logout', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {}
+        );*/
+  }
+
+  Future<BookServiceResponse> bookService([BuildContext context]) async {
+    var requestTime = CommonMethods().getEpochTime();
+    String date = DateTime.now().toString().substring(0, 10);
+
+    var jason = json.encode(GlobalVariables().listOfParams);
+    //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
+
+
+
+    AdditionalData additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );
+
+    BookServiceReq myObj = BookServiceReq(
+        additionalData: additionalData,
+        mobilenumber:GlobalVariables().phoneNumber,
+        customerid:GlobalVariables().myPortalLogin.oUTPUT.user.userid.toString(),
+        customername:GlobalVariables().firstResponse.oUTPUT[0].firstname,
+        requesttime:requestTime.toString(),
+        dEVICEID: "",
+        serviceid:GlobalVariables().serviceid,
+        servicetype:GlobalVariables().servicetype,
+        servicecategory:GlobalVariables().servicecategory,
+        servicename:GlobalVariables().servicename,
+        servicecharge:GlobalVariables().serviceCharge,
+        bankcode:GlobalVariables().bankCode,
+        bankname:GlobalVariables().bankname,
+        branchcode:GlobalVariables().branchcode,
+        branchname:GlobalVariables() .branchname,
+        addressid:GlobalVariables().addressid.toString(),
+        address:GlobalVariables().address,
+        lienmarkaccounttype:"NA",
+        lienmarkaccount:GlobalVariables().serviceAccount,
+        serviceaccounttype:"NA",
+        serviceaccount:GlobalVariables().serviceAccount,
+        prefereddate:date,
+        slot:GlobalVariables().timeSlot,
+        channel:"iOS",
+        ccagentid:"",
+        authorization:GlobalVariables().myPortalLogin.oUTPUT.token.accessToken,
+        username:GlobalVariables().phoneNumber,
+        ts: CommonMethods().getTimeStamp(),
+        latitude:GlobalVariables().latitude,
+        longitude:GlobalVariables().longitude,
+        pincode:GlobalVariables().pincode,
+        servicecode:GlobalVariables().servicecode,
+        customParams:GlobalVariables().listOfParams
+
+    );
+
+
+    /* myObj.additionalData = AdditionalData(
+        clientAppVer:"1.0.0",
+        clientApptype:"DSB",
+        platform:"ANDROID",
+        vendorid:"17",
+        clientAppName:"ANIOSCUST"
+    );*/
+    /* myObj.additionalData.clientAppName= "ANIOSCUST";
+
+    myObj.additionalData.clientApptype = "DSB" ;
+
+    myObj.additionalData.clientAppVer ="1.0.0" ;
+    myObj.additionalData.platform = "ANDROID";
+
+    myObj.additionalData.vendorid ="17" ;*/
+
+    var finalBookServiceReq = jsonEncode(myObj);
+
+
+//  CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
+
+    Response bokServiceResponse = await NetworkCommon()
+        .myDio
+        .post("/bookService", data: finalBookServiceReq);
+    var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
+    GlobalVariables().myBookServiceResponseObject =
+        BookServiceResponse.fromJson(getBranchesResponseString);
+
+    //REMOVE THIS!!
+
+//    myBookServiceBloc.add(BookingResult());
+
+
+    if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
+      showDialog(
+        context: GlobalVariables().myContext,
+        child: CupertinoAlertDialog(
+          title: Text('Success'),
+          content: Text('Your Booking was Successful'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: GlobalVariables().myContext,
+        child: CupertinoAlertDialog(
+          title: Text('Sorry'),
+          content:
+          Text('${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                GlobalVariables().listOfParams = null;
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyMainPage()));
+              },
+              child: Text(
+                'OK',
+                style:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GlobalVariables().myBookServiceResponseObject;
+  }
+
+  Future<ComplaintList> getComplaintList() async {
+    String getComplaintType = """{
+          "additionalData":
+    {
+    "client_app_ver":"1.0.0",
+    "client_apptype":"DSB",
+    "platform":"ANDROID",
+    "vendorid":"17",
+    "ClientAppName":"ANIOSCUST"
+    },
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
+    "ts": "${CommonMethods().getTimeStamp()}",
+    "ComplaintType":"System"
+    }""";
+    Response getComplaintTypeResponse = await NetworkCommon()
+        .myDio
+        .post("/getComplaintList", data: getComplaintType);
+    var getComplaintTypeResponseString = jsonDecode(getComplaintTypeResponse.toString());
+
+    return ComplaintList.fromJson(getComplaintTypeResponseString);
   }
 
 }

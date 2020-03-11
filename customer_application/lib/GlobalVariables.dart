@@ -1,5 +1,6 @@
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
 import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
+import 'package:customer_application/JSONResponseClasses/ComplaintList.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/JSONResponseClasses/SelectedService.dart';
@@ -7,6 +8,7 @@ import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import 'JSONResponseClasses/AdditionalData.dart';
 import 'JSONResponseClasses/BookServiceReq.dart';
 import 'book_service/book_service_bloc.dart';
 
@@ -22,6 +24,7 @@ class GlobalVariables{
   PortalLogin myPortalLogin = new PortalLogin();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
   BookServiceBloc myBookServiceBloc = null;
+  ComplaintList myComplaintList;
   final enableToast = true;
   final enableLog = true;
   List<Map> listOfParams;
@@ -68,7 +71,7 @@ class GlobalVariables{
   AdditionalData additionalData = AdditionalData(
       clientAppVer:"1.0.0",
       clientApptype:"DSB",
-      platform:"ANDROID",
+      platform:"iOS",
       vendorid:"17",
       clientAppName:"ANIOSCUST"
   );

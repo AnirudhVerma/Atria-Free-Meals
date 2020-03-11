@@ -1,3 +1,5 @@
+import 'AdditionalData.dart';
+
 class FetchUserReq {
   AdditionalData additionalData;
   String mobilenumber;
@@ -19,7 +21,7 @@ class FetchUserReq {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.additionalData != null) {
-      data['additionalData'] = this.additionalData.toJson();
+      data['additionalData'] = additionalData.toJson();
     }
     data['mobilenumber'] = this.mobilenumber;
     data['type'] = this.type;
@@ -28,7 +30,7 @@ class FetchUserReq {
   }
 }
 
-class AdditionalData {
+/*class AdditionalData {
   String clientAppVer;
   String clientApptype;
   String platform;
@@ -59,4 +61,4 @@ class AdditionalData {
     data['ClientAppName'] = this.clientAppName;
     return data;
   }
-}
+}*/

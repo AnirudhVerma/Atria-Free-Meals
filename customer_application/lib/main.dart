@@ -228,7 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text('This is blocbuilder screen'),
                     );
                   }
-
                   if (state is ErrorState) {
                     var data = state.errorResp;
                     if (state.errorResp == null) {
@@ -1552,4 +1551,5 @@ class _MyHomePageState extends State<MyHomePage> {
     myController.dispose();
     mySignInBloc.close();
   }
+
 }

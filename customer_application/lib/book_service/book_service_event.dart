@@ -48,3 +48,8 @@ class BookingResult extends BookServiceEvent{
    @override
    List<Object> get props => null;
 }
+
+class ShowProgressIndicator extends BookServiceEvent{
+   @override
+   List<Object> get props => null;
+}

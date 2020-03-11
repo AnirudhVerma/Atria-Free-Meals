@@ -320,4 +320,28 @@ class NetworkCommon {
     ));
     return dio;
   }
+
+  showMyDialog(String title, String dialogContent){
+    return showDialog(context: mContext,
+        builder: (context) => CupertinoAlertDialog(
+          title: Text(title),
+          /*content: Text('${dioError.toString()} \n '
+                  '${dioError.type} \n'
+                  '$errMsg \n'
+                  '${dioError.response.toString()} \n'
+                  '${dioError.request.toString()} \n'),*/
+          content: Text(
+              dialogContent),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('OK', style: TextStyle(color: Colors.blue),),
+                onPressed: (){
+                  Navigator.pop(context);
+                }
+
+            ),
+          ],
+        ));
+  }
+
 }

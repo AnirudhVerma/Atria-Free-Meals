@@ -1,3 +1,5 @@
+import 'AdditionalData.dart';
+
 class BookServiceReq {
   AdditionalData additionalData;
   String mobilenumber;
@@ -150,7 +152,7 @@ class BookServiceReq {
   }
 }
 
-class AdditionalData {
+/*class AdditionalData {
   String clientAppVer;
   String clientApptype;
   String platform;
@@ -181,7 +183,7 @@ class AdditionalData {
     data['ClientAppName'] = this.clientAppName;
     return data;
   }
-}
+}*/
 
 class CustomParams {
   String name;

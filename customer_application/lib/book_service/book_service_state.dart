@@ -49,3 +49,7 @@ class BookingResultState extends BookServiceState {
   List<Object> get props => [];
 }
 
+class ProgressIndicatorState extends BookServiceState {
+  @override
+  List<Object> get props => [];
+}

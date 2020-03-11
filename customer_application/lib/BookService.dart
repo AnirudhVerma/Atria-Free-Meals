@@ -22,6 +22,7 @@ import 'package:customer_application/CommonMethods.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'JSONResponseClasses/AdditionalData.dart';
 import 'JSONResponseClasses/Branch.dart';
 import 'JSONResponseClasses/ServiceList.dart';
 import 'JSONResponseClasses/TimeSlot.dart';
@@ -92,10 +93,11 @@ class _BookServiceState extends State<BookService> {
 
   @override
   Widget build(BuildContext context) {
+    ///TODO check this
     if (_enabled) {
       _onPressed = () {
         Navigator.of(context).pop(false);
-        bookService();
+        Repository().bookService();
       };
     }
 
@@ -170,6 +172,21 @@ class _BookServiceState extends State<BookService> {
                 if( state is BookingResultState){
                   return Container(child: Text('Booking Result UI'),);
                 }
+                if( state is ProgressIndicatorState){
+                  return  Container(
+                    //color: Colors.lightBlue,
+                    child: Center(
+                      //child: Loading(indicator: BallPulseIndicator(), size: 100.0,color: Colors.blue),
+                      child: Column(
+                        children: <Widget>[
+                          SpinKitWave(color: Colors.blue,size: 50,),
+                          Container(height: 20,),
+                          Text('Please wait while we confirm your Request')
+                        ],
+                      ),
+                    ),
+                  );
+                }
                 return Container(
                   height: 0.0,
                   width: 0.0,
@@ -182,7 +199,7 @@ class _BookServiceState extends State<BookService> {
 
   Stack addressUI(BuildContext context) {
 
-    Future<void> getAddress() async {
+    /*Future<void> getAddress() async {
       String getBankString = """{
           "additionalData":
     {
@@ -192,9 +209,9 @@ class _BookServiceState extends State<BookService> {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "userid":$userid,
-    "authorization":"$accessToken",
-    "username":"$userName",
+    "userid":${GlobalVariables().myPortalLogin.oUTPUT.user.userid},
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}"
     }""";
       Response getAddressResponse = await NetworkCommon()
@@ -213,13 +230,13 @@ class _BookServiceState extends State<BookService> {
       CommonMethods().printLog('             THE ADDRESSES ARE $address                 ');
 
       return getAddressResponseObject;
-    }
+    }*/
 
     Widget addressList() {
       var addressOutput;
       return EnhancedFutureBuilder(
         rememberFutureResult: true,
-        future: getAddress(),
+        future: Repository().fetchAddress(),  // in case of error replace this by getAddress()
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
           if (data.eRRORCODE == null || data.eRRORCODE !="00") {
@@ -341,7 +358,8 @@ class _BookServiceState extends State<BookService> {
   }
 
   Stack bankListUI(BuildContext context) {
-    Future<void> getBankList() async {
+
+    /*Future<void> getBankList() async {
       String getBankListString = """{
           "additionalData":
     {
@@ -353,8 +371,8 @@ class _BookServiceState extends State<BookService> {
     },
     "serviceid":"${GlobalVariables().serviceid}",      
     "pincode":"${GlobalVariables().pincode}",
-    "authorization":"$accessToken",
-    "username":"$userName",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}"
     }""";
       Response getBankListResponse = await NetworkCommon()
@@ -369,12 +387,12 @@ class _BookServiceState extends State<BookService> {
 
       return getBankListResponseObject;
 //    return getBankListResponseObject;
-    }
+    }*/
 
     Widget bankList() {
       var bankOutput;
       return EnhancedFutureBuilder(
-        future: getBankList(),
+        future: Repository().getBankList(), //in case of error, replace this with getBank list from above
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
@@ -445,9 +463,12 @@ class _BookServiceState extends State<BookService> {
                   onTap: () {
                     myBookServiceBloc.add(AddressEvent());
                   },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue[100],
-                    maxRadius: 10,
+                  child: Tooltip(
+                    message: 'Tap on the Circle Avatars to go back',
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue[100],
+                      maxRadius: 10,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -669,7 +690,7 @@ class _BookServiceState extends State<BookService> {
 //                            setState(() {
 //                              btnState = ButtonState.Busy;
 //                            });
-                          BankOTPResponse myBankOTPResponse = await fetchUserAccountDetails();
+                          BankOTPResponse myBankOTPResponse = await Repository().fetchUserAccountDetails(myBankPhoneNumberController.text);  //in case of error, uncomment the code and and replace it with await fetchUserAccountDetails()
                           GlobalVariables().myBankOTPResponse = myBankOTPResponse;
                           CommonMethods().printLog('************The problem ${myBankOTPResponse.eRRORMSG}');
                           if(myBankOTPResponse.eRRORMSG != null){
@@ -713,7 +734,7 @@ class _BookServiceState extends State<BookService> {
     );
   }
 
-  Future<BankOTPResponse> fetchUserAccountDetails() async {
+  /*Future<BankOTPResponse> fetchUserAccountDetails() async {
     String getBankListString = """{
           "additionalData":
     {
@@ -725,8 +746,8 @@ class _BookServiceState extends State<BookService> {
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",      
     "bankcode":"${GlobalVariables().bankCode}",
-    "authorization":"$accessToken",
-    "username":"$userName",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}"
     }""";
     CommonMethods().printLog('************The generateOTPBank string is $getBankListString');
@@ -763,7 +784,7 @@ class _BookServiceState extends State<BookService> {
       var output = getBankOTPResponseObject.oUTPUT;
       return getBankOTPResponseObject;
     }
-  }
+  }*/
 
   Stack enterOTPUI(BuildContext context) {
     return Stack(
@@ -946,7 +967,7 @@ class _BookServiceState extends State<BookService> {
 //                            setState(() {
 //                              btnState = ButtonState.Busy;
 //                            });
-                            GlobalVariables().myUserAccountDetails = await verifyOTPAndGetAccountDetails();
+                            GlobalVariables().myUserAccountDetails = await Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text);
                             if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
                               myBookServiceBloc.add(FetchAccountList());
                             }
@@ -988,7 +1009,7 @@ class _BookServiceState extends State<BookService> {
     );
   }
 
-  Future<UserAccountDetails> verifyOTPAndGetAccountDetails() async {
+  /*Future<UserAccountDetails> verifyOTPAndGetAccountDetails() async {
     String verifyOTPAndGetAccountDetailsString = """{
           "additionalData":
     {
@@ -1016,7 +1037,7 @@ class _BookServiceState extends State<BookService> {
     var verifyOTPResponseObject = UserAccountDetails.fromJson(verifyOTPString);
 
     return verifyOTPResponseObject;
-  }
+  }*/
 
   Future<Branch> fetchBranches() async {
     String fetchBranchesString = """{
@@ -1030,8 +1051,8 @@ class _BookServiceState extends State<BookService> {
     },
     "mobilenumber":"${myBankPhoneNumberController.text}",      
     "bankcode":"${GlobalVariables().bankCode}",
-    "authorization":"$accessToken",
-    "username":"$userName",
+    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
+    "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}",
     "latitude":"${GlobalVariables().latitude}",
     "longitude":"${GlobalVariables().longitude}",
@@ -1047,37 +1068,7 @@ class _BookServiceState extends State<BookService> {
     return branchListObject;
   }
 
-  Future<TimeSlot> fetchTimeSlots() async {
-    String date = DateTime.now().toString().substring(0, 10);
-    final now = DateTime.now();
-    final tomorrow = new DateTime(now.year, now.month, now.day + 1);
-    date = tomorrow.toString().substring(0, 10);
-    String fetchTimeSlotsString = """{
-          "additionalData":
-    {
-    "client_app_ver":"1.0.0",
-    "client_apptype":"DSB",
-    "platform":"ANDROID",
-    "vendorid":"17",
-    "ClientAppName":"ANIOSCUST"
-    }, 
-    "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
-    "username":"${GlobalVariables().phoneNumber}",
-    "ts": "${CommonMethods().getTimeStamp()}",
-    "pincode":"${GlobalVariables().pincode}",
-    "requesteddate":"$date"
-    }""";
-    Response fetchTimeSlotResponse = await NetworkCommon()
-        .myDio
-        .post("/getAvailableSlot", data: fetchTimeSlotsString);
-    var getTimeSlotResponseString =
-        jsonDecode(fetchTimeSlotResponse.toString());
-    var timeSlotObject = TimeSlot.fromJson(getTimeSlotResponseString);
-
-    return timeSlotObject;
-  }
-
-  Future<BookServiceResponse> bookService() async {
+  /*Future<BookServiceResponse> bookService() async {
     var requestTime = CommonMethods().getEpochTime();
     String date = DateTime.now().toString().substring(0, 10);
 
@@ -1173,26 +1164,23 @@ class _BookServiceState extends State<BookService> {
     );
 
 
-   /* myObj.additionalData = AdditionalData(
+   *//* myObj.additionalData = AdditionalData(
         clientAppVer:"1.0.0",
         clientApptype:"DSB",
         platform:"ANDROID",
         vendorid:"17",
         clientAppName:"ANIOSCUST"
-    );*/
-   /* myObj.additionalData.clientAppName= "ANIOSCUST";
+    );*//*
+   *//* myObj.additionalData.clientAppName= "ANIOSCUST";
 
     myObj.additionalData.clientApptype = "DSB" ;
 
     myObj.additionalData.clientAppVer ="1.0.0" ;
     myObj.additionalData.platform = "ANDROID";
 
-    myObj.additionalData.vendorid ="17" ;*/
+    myObj.additionalData.vendorid ="17" ;*//*
 
    var finalBookServiceReq = jsonEncode(myObj);
-
-
-    CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
 
     Response bokServiceResponse = await NetworkCommon()
         .myDio
@@ -1256,7 +1244,7 @@ class _BookServiceState extends State<BookService> {
     }
 
     return GlobalVariables().myBookServiceResponseObject;
-  }
+  }*/
 
   Stack userAccountDetailsUI(BuildContext context) {
     Widget accountList() {
@@ -1960,7 +1948,7 @@ class _BookServiceState extends State<BookService> {
     Widget accountList() {
       var accounts;
       return EnhancedFutureBuilder(
-        future: verifyOTPAndGetAccountDetails(),
+        future: Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text),
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
@@ -2054,7 +2042,7 @@ class _BookServiceState extends State<BookService> {
                             FlatButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                bookService();
+                                Repository().bookService();
                               },
                               child: Text(
                                 'Confirm',
@@ -2260,7 +2248,7 @@ class _BookServiceState extends State<BookService> {
       CommonMethods()
           .toast(context, 'The Entered OTP is ${myBankOTPController.text}');
       GlobalVariables().myUserAccountDetails =
-          await verifyOTPAndGetAccountDetails();
+          await Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text);
       if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS') {
         myBookServiceBloc.add(FetchAccountList());
       } else {
@@ -2414,7 +2402,8 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                               FlatButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  bookService(context);
+                                  Repository().bookService();
+                                  GlobalVariables().myBookServiceBloc.add(ShowProgressIndicator());
                                 },
                                 child: Text(
                                   'Confirm',
@@ -2477,7 +2466,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
 
 }
 
-Future<BookServiceResponse> bookService([BuildContext context]) async {
+/*Future<BookServiceResponse> bookService([BuildContext context]) async {
   var requestTime = CommonMethods().getEpochTime();
   String date = DateTime.now().toString().substring(0, 10);
 
@@ -2532,21 +2521,21 @@ Future<BookServiceResponse> bookService([BuildContext context]) async {
   );
 
 
-  /* myObj.additionalData = AdditionalData(
+  *//* myObj.additionalData = AdditionalData(
         clientAppVer:"1.0.0",
         clientApptype:"DSB",
         platform:"ANDROID",
         vendorid:"17",
         clientAppName:"ANIOSCUST"
-    );*/
-  /* myObj.additionalData.clientAppName= "ANIOSCUST";
+    );*//*
+  *//* myObj.additionalData.clientAppName= "ANIOSCUST";
 
     myObj.additionalData.clientApptype = "DSB" ;
 
     myObj.additionalData.clientAppVer ="1.0.0" ;
     myObj.additionalData.platform = "ANDROID";
 
-    myObj.additionalData.vendorid ="17" ;*/
+    myObj.additionalData.vendorid ="17" ;*//*
 
   var finalBookServiceReq = jsonEncode(myObj);
 
@@ -2615,4 +2604,4 @@ Future<BookServiceResponse> bookService([BuildContext context]) async {
   }
 
   return GlobalVariables().myBookServiceResponseObject;
-}
+}*/

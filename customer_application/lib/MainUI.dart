@@ -5,7 +5,8 @@ import 'package:customer_application/CreateDropDown.dart';
 import 'package:customer_application/CreateHorizontalDropDown.dart';
 import 'package:customer_application/CustomParamsDialog.dart';
 import 'package:customer_application/GlobalVariables.dart';
-import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
+
+//import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/ManageAddress.dart';
 import 'package:customer_application/bloc.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'CompletedServicesDialog.dart';
+import 'JSONResponseClasses/ComplaintList.dart';
 import 'JSONResponseClasses/ComplaintType.dart';
 import 'OnGoingServiceDialog.dart';
 import 'SizeConfig.dart';
@@ -69,11 +71,16 @@ class _MyMainPageState extends State<MyMainPage> {
   String phoneNumber = GlobalVariables().phoneNumber;
   String accessToken = GlobalVariables().myPortalLogin.oUTPUT.token.accessToken;
   int userid = GlobalVariables().myPortalLogin.oUTPUT.user.userid;
-
+  static List<Map> myList;
 //  FirstResponse myUserData = FirstResponse().myFirstResponse;
-  FirstResponse fr = new FirstResponse();
+//  FirstResponse fr = new FirstResponse();
 
   _MyMainPageState();
+
+  final Map<int, Widget> grivence = const <int, Widget>{
+    0: Text('Completed'),
+    1: Text('On-Going'),
+  };
 
   /*GoogleMapController mapController;
 
@@ -87,6 +94,13 @@ class _MyMainPageState extends State<MyMainPage> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    intialiseComplaintList();
+  }
+
+  intialiseComplaintList() async {
+    GlobalVariables().myComplaintList = await Repository().getComplaintList();
+    CommonMethods().printLog(GlobalVariables().myComplaintList.toString());
+    myList = convertOutputToMap2(GlobalVariables().myComplaintList.oUTPUT);
   }
 
   @override
@@ -111,9 +125,173 @@ class _MyMainPageState extends State<MyMainPage> {
     ),*/
   };
 
-  int currentValue = 0;
+  Map<int, Widget> grievanceUI = <int, Widget>{
+    0: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 20,
+        margin: EdgeInsets.all(18),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 300,
+              ),
+//            CreateDropDown(myJson: convertOutputToMap2(GlobalVariables().myComplaintList.oUTPUT),),
+              EnhancedFutureBuilder(
+                rememberFutureResult: true,
+                future: Repository().getComplaintList(),
+                whenNotDone: CircularProgressIndicator(),
+                whenDone: (dynamic data){
+                  return CreateDropDown(myJson: myList);
+                },
+              ),
+              new TextField(
+                expands: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Booking ID',
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              new TextField(
+                expands: false,
+                maxLines: 5,
+                minLines: 5,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Remarks',
+                )
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                  child: CupertinoButton(
+                child: Text(
+                  'Lodge Grievance',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: Repository().logout,
+                color: Colors.blue,
+              )),
+            ],
+          ),
+        )),
+    1: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 20,
+        margin: EdgeInsets.all(18),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 300,
+              ),
+//            CreateDropDown(myJson: convertOutputToMap2(GlobalVariables().myComplaintList.oUTPUT),),
+              TextField(
+                expands: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Booking ID',
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              new TextField(
+                expands: false,
+                maxLines: 5,
+                minLines: 5,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Remarks',
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                  child: CupertinoButton(
+                child: Text(
+                  'Lodge Grievance',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: Repository().logout,
+                color: Colors.blue,
+              )),
+            ],
+          ),
+        )),
+    2: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 20,
+        margin: EdgeInsets.all(18),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 300,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              new TextField(
+                expands: false,
+                maxLines: 5,
+                minLines: 5,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Remarks',
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                  child: CupertinoButton(
+                child: Text(
+                  'Lodge Grievance',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: Repository().logout,
+                color: Colors.blue,
+              )),
+            ],
+          ),
+        )),
+    /*2: Center(
+      child: FlutterLogo(
+        colors: Colors.cyan,
+        size: 200.0,
+      ),
+    ),*/
+  };
 
-  Future<void> logout() async {
+  final Map<int, Widget> grievanceTypes = const <int, Widget>{
+    0: Text('System'),
+    1: Text('Service'),
+    2: Text('Others'),
+  };
+
+  int currentValue = 0;
+  int currentValueGrievance = 0;
+
+  /*Future<void> logout() async {
     return showDialog(
           context: context,
           child: CupertinoAlertDialog(
@@ -173,7 +351,7 @@ class _MyMainPageState extends State<MyMainPage> {
         ) ??
         false;
 
-    /*showGeneralDialog(
+    */ /*showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
           return Transform.scale(
@@ -231,17 +409,19 @@ class _MyMainPageState extends State<MyMainPage> {
         barrierLabel: '',
         context: context,
         pageBuilder: (context, animation1, animation2) {}
-        );*/
-  }
+        );*/ /*
+  }*/
 
   Widget servicesWidget1() {
+    ///TODO: Delete This
     var output;
     return FutureBuilder(
       future: Repository().getServices(),
       builder: (context, servicesSnapShot) {
         if (servicesSnapShot.hasError) {
           CommonMethods().printLog('some error occured');
-          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods()
+              .printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: Text(
                 '/*ERROR OCCURED, Please retry ${servicesSnapShot.data} : ${servicesSnapShot.data}*/'),
@@ -250,7 +430,8 @@ class _MyMainPageState extends State<MyMainPage> {
         } else if (servicesSnapShot.data == null &&
             servicesSnapShot.connectionState == ConnectionState.waiting) {
           CommonMethods().printLog('The data is in loading state');
-          CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
+          CommonMethods()
+              .printLog('project snapshot data is: ${servicesSnapShot.data}');
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -327,46 +508,53 @@ class _MyMainPageState extends State<MyMainPage> {
     return EnhancedFutureBuilder(
       future: Repository().getServices(),
       rememberFutureResult: true,
-        whenNotDone: Center(child: CircularProgressIndicator()),
-        whenDone: (dynamic data) {
-          if (data.eRRORCODE == null || data.eRRORCODE !="00") {
-            CommonMethods().printLog('some error occured');
-            CommonMethods().printLog('project snapshot data is: $data');
-            return Center(
-              child: Text(
-                  '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
-              //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
-            );
-          }else{
-            return ListView.builder(
-              itemCount: data.oUTPUT.length,
-              itemBuilder: (context, index) {
-                {
-                  output = data.oUTPUT[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(output.servicename),
-                      subtitle: Text('Service Charge : ${output.serviceCharge}'),
-                      leading: CircleAvatar(
-                        child: new Image(
-                            image:
-                            new AssetImage(getIconPath(output.servicecode))),
-                      ),
-                      onTap: () {
-                        output = data.oUTPUT[index];
-                        /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
+      whenNotDone: Center(child: CircularProgressIndicator()),
+      whenDone: (dynamic data) {
+        if (data == null) {
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry the data was null\n This may happen due to error in connecting with server*/'),
+            //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+          );
+        }
+        if (data.eRRORCODE == null || data.eRRORCODE != "00") {
+          CommonMethods().printLog('some error occured');
+          CommonMethods().printLog('project snapshot data is: $data');
+          return Center(
+            child: Text(
+                '/*ERROR OCCURED, Please retry ${data.eRRORCODE} : ${data.eRRORMSG}*/'),
+            //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: data.oUTPUT.length,
+            itemBuilder: (context, index) {
+              {
+                output = data.oUTPUT[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(output.servicename),
+                    subtitle: Text('Service Charge : ${output.serviceCharge}'),
+                    leading: CircleAvatar(
+                      child: new Image(
+                          image:
+                              new AssetImage(getIconPath(output.servicecode))),
+                    ),
+                    onTap: () {
+                      output = data.oUTPUT[index];
+                      /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/ //unable to instantiate the userSelecteeService
-                        GlobalVariables().serviceid = output.serviceid;
-                        GlobalVariables().servicename = output.servicename;
-                        GlobalVariables().servicetype = output.servicetype;
-                        GlobalVariables().servicecategory =
-                            output.servicecategory;
-                        GlobalVariables().serviceCharge = output.serviceCharge;
-                        GlobalVariables().servicecode = output.servicecode;
-                        CommonMethods().printLog(
-                            '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
-                        String servicename;
-                        if(output.customParams.length != 0){
+                      GlobalVariables().serviceid = output.serviceid;
+                      GlobalVariables().servicename = output.servicename;
+                      GlobalVariables().servicetype = output.servicetype;
+                      GlobalVariables().servicecategory =
+                          output.servicecategory;
+                      GlobalVariables().serviceCharge = output.serviceCharge;
+                      GlobalVariables().servicecode = output.servicecode;
+                      CommonMethods().printLog(
+                          '******************** THE SERVICE ID IS ${GlobalVariables().serviceid}');
+                      String servicename;
+                      if (output.customParams.length != 0) {
                         return showDialog(
                             context: context,
                             builder: (_) {
@@ -374,31 +562,30 @@ class _MyMainPageState extends State<MyMainPage> {
                                 selectedService: output,
                               );
                             });
-                        }else{
-                          GlobalVariables().myBookServiceBloc = new BookServiceBloc();
-                          return Navigator.push(
-                              context,
-                              new CupertinoPageRoute(
-                                  builder: (context) => BookService()));
-                        }
-                      },
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                  );
-                }
-              },
-            );
-          }
-        },
-        whenNone: Center(
-          child: Text(
-              '/*ERROR OCCURED, Please retry */'),
-          //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
-        ),
+                      } else {
+                        GlobalVariables().myBookServiceBloc =
+                            new BookServiceBloc();
+                        return Navigator.push(
+                            context,
+                            new CupertinoPageRoute(
+                                builder: (context) => BookService()));
+                      }
+                    },
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                );
+              }
+            },
+          );
+        }
+      },
+      whenNone: Center(
+        child: Text('/*ERROR OCCURED, Please retry */'),
+        //    child: Text('/*${servicesSnapShot.data.eRRORCODE} : ${servicesSnapShot.data.eRRORMSG}*/'),
+      ),
     );
   }
-
 
   String getIconPath(String serviceCode) {
     if (serviceCode == 'CHQCTL') {
@@ -426,6 +613,28 @@ class _MyMainPageState extends State<MyMainPage> {
       Map myMap1 = new Map();
       myMap1['complaintType'] = listObject.complaintType;
       myMap1['complaintType'] = listObject.complaintType;
+      listOfMap.add(myMap1);
+//      myMap.clear();
+      myMap1 = null;
+    }
+//    listOfMap.add(myMap);
+    return listOfMap;
+  }
+
+    List<Map> convertOutputToMap2(List<OUTPUT2> ml) {
+    List<Map> _myJson = [
+      {"name": "1", "value": "1"},
+      {"name": "2", "value": "2"},
+      {"name": "3", "value": "3"},
+      {"name": "4", "value": "4"},
+      {"name": "5", "value": "Five"}
+    ];
+
+    var myMap = new Map();
+    List<Map> listOfMap = [];
+    for (var listObject in ml) {
+      Map myMap1 = new Map();
+      myMap1['complaintType'] = listObject.complaintList;
       listOfMap.add(myMap1);
 //      myMap.clear();
       myMap1 = null;
@@ -614,20 +823,20 @@ class _MyMainPageState extends State<MyMainPage> {
               Container(
                   child: Column(
                 children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                   ),
-                    SizedBox(
-                     width: 300.0,
-                     child: CupertinoSlidingSegmentedControl<int>(
-                       children: services,
-                       onValueChanged: (int val) {
-                         setState(() {
-                           currentValue = val;
-                         });
-                       },
-                       groupValue: currentValue,
-                     ),
+                  SizedBox(
+                    width: 300.0,
+                    child: CupertinoSlidingSegmentedControl<int>(
+                      children: services,
+                      onValueChanged: (int val) {
+                        setState(() {
+                          currentValue = val;
+                        });
+                      },
+                      groupValue: currentValue,
+                    ),
                   ),
                   Expanded(
                     child: Padding(
@@ -681,7 +890,66 @@ class _MyMainPageState extends State<MyMainPage> {
                 ),*/
                   ),
               Container(
-//                color: Colors.blue,
+                child: Column(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    SizedBox(
+                      width: 300.0,
+                      child: CupertinoSlidingSegmentedControl<int>(
+                        children: grievanceTypes,
+                        onValueChanged: (int val) {
+                          setState(() {
+                            currentValueGrievance = val;
+                          });
+                        },
+                        groupValue: currentValueGrievance,
+                      ),
+                    ),
+                    grievanceUI[currentValueGrievance],
+                    /*Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 32.0,
+                          horizontal: 16.0,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.white,
+                            borderRadius: BorderRadius.circular(3.0),
+                            boxShadow: const <BoxShadow>[
+                              BoxShadow(
+                                offset: Offset(0.0, 3.0),
+                                blurRadius: 5.0,
+                                spreadRadius: -1.0,
+                                color: _colorOne,
+                              ),
+                              BoxShadow(
+                                offset: Offset(0.0, 6.0),
+                                blurRadius: 10.0,
+                                spreadRadius: 0.0,
+                                color: _colorTwo,
+                              ),
+                              BoxShadow(
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 18.0,
+                                spreadRadius: 0.0,
+                                color: _colorThree,
+                              ),
+                            ],
+                          ),
+                          child: grievanceUI[currentValueGrievance],
+                        ),
+                      ),
+                    ),*/
+                  ],
+                ),
+
                 /*child: ListView(
                   children: <Widget>[
                     ListTile(
@@ -749,7 +1017,6 @@ class _MyMainPageState extends State<MyMainPage> {
                     ),
                   ],
                 ),*/
-
                 /*child: Column(
                   children: <Widget>[
                     FutureBuilder(
@@ -994,7 +1261,7 @@ class _MyMainPageState extends State<MyMainPage> {
                           'LOGOUT',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: logout,
+                        onPressed: Repository().logout,
                         color: Colors.red,
                       )),
                       SizedBox(
@@ -1464,7 +1731,7 @@ class _MyDialogState extends State<MyDialog> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  *//* ... *//*
+                  */ /* ... */ /*
                 },
               ),
               MaterialButton(
@@ -1488,7 +1755,7 @@ class _MyDialogState extends State<MyDialog> {
                         new CupertinoPageRoute(
                             builder: (context) => BookService()));
                   }
-                  *//* ... *//*
+                  */ /* ... */ /*
                 },
               ),
             ],
@@ -1580,7 +1847,7 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  *//* ... *//*
+                  */ /* ... */ /*
                 },
               ),
               MaterialButton(
@@ -1600,14 +1867,14 @@ class _MyChequeDialogState extends State<MyChequeDialog> {
                       context,
                       new CupertinoPageRoute(
                           builder: (context) => BookService()));
-                  *//* ... *//*
+                  */ /* ... */ /*
                 },
               ),
-              *//*MaterialButton(
+              */ /*MaterialButton(
                 minWidth:120,
                 color: Colors.blue,
                 child: Text('PROCEED', style: TextStyle(color: Colors.white),),
-              ),*//*
+              ),*/ /*
             ],
           ),
         ],
