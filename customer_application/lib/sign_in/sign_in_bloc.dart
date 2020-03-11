@@ -1,5 +1,6 @@
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/repository.dart';
+import 'package:dio/dio.dart';
 import '../CommonMethods.dart';
 import '../bloc.dart';
 import 'dart:async';
@@ -38,9 +39,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       yield showProgressBar(); //Comment this
 
-      String resp = await Repository().getOTP(event.phoneNumber);
-      print('repository().resp : ${Repository().resp }');
-      print('resp : $resp ');
+      try {
+        String resp = await Repository().getOTP(event.phoneNumber);
+
+        print('repository().resp : ${Repository().resp }');
+        print('resp : $resp ');
+      } catch (e) {
+        print(e);
+      }
 
       if(Repository().resp == 'Success'){
 

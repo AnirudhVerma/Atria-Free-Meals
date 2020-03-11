@@ -75,8 +75,11 @@ class NetworkCommon {
     dio.options.baseUrl = 'https://dsbuat.imfast.co.in:30001/doorstep';   //UAT Server
 
     // handle timeouts //Bhuvaneswari
-    dio.options.connectTimeout = 50000; //5s
-    dio.options.receiveTimeout = 50000;
+//    dio.options.connectTimeout = 50000; //5s
+//    dio.options.receiveTimeout = 50000;
+    dio.options.connectTimeout = 5000; //5s
+    dio.options.receiveTimeout = 5000;
+
 
     //dio.httpClientAdapter = new DefaultHttpClientAdapter();
 
@@ -151,6 +154,11 @@ class NetworkCommon {
           CommonMethods().printLog("Pre request:${options.headers.toString()}");
           CommonMethods().printLog("Pre request Data:${options.data.toString()}");
 
+
+
+
+
+
           if(GlobalVariables().encryptionEnabled){
             if(options.path == '/portallogin'){
 
@@ -172,6 +180,7 @@ class NetworkCommon {
 
               //CommonMethods.printLog(finalBookServiceReq);
               options.data = finalBookServiceReq.toString();
+
 
             }
           }
@@ -232,9 +241,8 @@ class NetworkCommon {
           var encryptedResponse = jsonDecode(response.toString());
           EncryptedResponse myEncriptedResponse = EncryptedResponse.fromJson(encryptedResponse);
           response.data = jsonDecode(decrypt(myEncriptedResponse.data).toString());
-          var resp = response.toString();
-          CommonMethods().printLog('resp=====> $resp ');
           CommonMethods().printLog('A4 response : ${response.toString()}');
+          print('A4 response : ${response.toString()}');
         }
 
 
@@ -290,7 +298,7 @@ class NetworkCommon {
         showDialog(context: mContext,
             builder: (context) => CupertinoAlertDialog(
               title: Text(' Connection Error'),
-              /*content: Text('${dioError.toString()} \n '
+             /* content: Text('${dioError.toString()} \n '
                   '${dioError.type} \n'
                   '$errMsg \n'
                   '${dioError.response.toString()} \n'
@@ -315,6 +323,7 @@ class NetworkCommon {
       CommonMethods().printLog(
           "Response From:${dioError.request.method},${dioError.request.baseUrl}${dioError.request.path}");
       CommonMethods().printLog("Response From:${dioError.toString()}");
+      return dioError;
 
     }
     ));

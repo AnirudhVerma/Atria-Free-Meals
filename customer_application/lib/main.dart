@@ -468,7 +468,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
 //                  SizedBox(height: 35.0),
                       Text(
-                        ' Door Step Banking',
+                        ' DoorStep Banking',
                         style: TextStyle(
                           fontSize: 26,
                           color: Colors.blue,

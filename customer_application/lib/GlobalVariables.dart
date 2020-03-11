@@ -26,7 +26,7 @@ class GlobalVariables{
   BookServiceBloc myBookServiceBloc = null;
   ComplaintList myComplaintList;
   final enableToast = true;
-  final enableLog = true;
+  final enableLog = false;
   List<Map> listOfParams;
   String phoneNumber;
   String serviceid;
