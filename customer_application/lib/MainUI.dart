@@ -150,6 +150,15 @@ class _MyMainPageState extends State<MyMainPage> {
                   return CreateDropDown(myJson: myList);
                 },
               ),
+              StreamBuilder(
+                stream: Repository().getComplaintList().asStream(),
+                builder: (context, complaintListSnapshot){
+                  if (!complaintListSnapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }else
+                  return CreateDropDown(myJson: myList);
+                },
+              ),
               new TextField(
                 expands: false,
                 decoration: InputDecoration(
