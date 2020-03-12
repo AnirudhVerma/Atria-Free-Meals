@@ -31,6 +31,7 @@ class Repository {
   static final Repository _singleton = new Repository._internal();
 
   var resp = null;
+  bool dioError = false;
 
   factory Repository() {
     return _singleton;
@@ -80,6 +81,15 @@ class Repository {
       Response response1 = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: fetchUserDetailsString);
+
+/*
+      if(resp is DioError){
+        print('response1 : ${response1.statusMessage }');
+        print('resp : $resp ');
+
+      }*/
+
+
       CommonMethods().printLog("THE Fetch User RESPONSE IS :: $response1");
 
    /*   var encryptedResponse = jsonDecode(response1.toString());
@@ -147,6 +157,13 @@ class Repository {
       }
     } catch (e) {
       CommonMethods().printLog(e);
+      if(e is DioError){
+        CommonMethods().printLog('Something went wrong');
+        CommonMethods().printLog("Response :: " + e.error);
+        dioError = true;
+        resp = e.error;
+        return e.error;
+      }
     }
   }
 
@@ -202,6 +219,11 @@ class Repository {
       Response fetchUserResonse = await NetworkCommon()
           .myDio
           .post("/fetchUserDetails", data: myFetchUserReq);
+
+      if(fetchUserResonse is DioError){
+
+        CommonMethods().toast(GlobalVariables().myContext, fetchUserResonse.toString());
+      }
 
       var myFetchRespVar = jsonDecode(fetchUserResonse.toString());
 
