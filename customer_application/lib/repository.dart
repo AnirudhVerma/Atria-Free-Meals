@@ -59,10 +59,9 @@ class Repository {
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
-    "platform":"ANDROID",
+    "platform":"iOS",
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
-
     },
     "mobilenumber":"$phoneNumber",
     "type":"login",
@@ -174,7 +173,7 @@ class Repository {
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
-    "platform":"ANDROID",
+    "platform":"iOS",
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
 
@@ -189,7 +188,7 @@ class Repository {
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
-    "platform":"ANDROID",
+    "platform":"iOS",
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
@@ -202,7 +201,7 @@ class Repository {
       AdditionalData myAdditionalData = AdditionalData(
           clientAppVer:"1.0.0",
           clientApptype:"DSB",
-          platform:"ANDROID",
+          platform:"iOS",
           vendorid:"17",
           clientAppName:"ANIOSCUST"
       );
@@ -558,7 +557,7 @@ class Repository {
     return output;
   }
 
-  Future<void> getComplaintTypes() async {
+  getComplaintTypes() async {
     String getComplaintType = """{
           "additionalData":
     {
@@ -578,7 +577,8 @@ class Repository {
         .post("/getComplaintType", data: getComplaintType);
     var getComplaintTypeResponseString = jsonDecode(getComplaintTypeResponse.toString());
 
-    return getComplaintTypeResponseString;
+    ComplaintType.fromJson(getComplaintTypeResponseString);
+    return ComplaintType.fromJson(getComplaintTypeResponseString);;
   }
 
   removeAddress(String addressId) async {
@@ -722,7 +722,8 @@ class Repository {
     "pincode":"${GlobalVariables().pincode}",
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
-    "ts": "${CommonMethods().getTimeStamp()}"
+    "ts": "${CommonMethods().getTimeStamp()}",
+    "type":"ALL"
     }""";
     Response getBankListResponse = await NetworkCommon()
         .myDio
@@ -738,7 +739,7 @@ class Repository {
 //    return getBankListResponseObject;
   }
 
-  Future<BankOTPResponse> fetchUserAccountDetails(String bankPhoneNumber) async {
+  Future<BankOTPResponse>  fetchUserAccountDetails(String bankCode) async {
     String getBankListString = """{
           "additionalData":
     {
@@ -748,8 +749,8 @@ class Repository {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "mobilenumber":"$bankPhoneNumber",      
-    "bankcode":"${GlobalVariables().bankCode}",
+    "mobilenumber":"${GlobalVariables().phoneNumber}",      
+    "bankcode":"$bankCode",
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}"
@@ -771,7 +772,7 @@ class Repository {
     }
   }
 
-  Future<UserAccountDetails> verifyOTPAndGetAccountDetails(String phoneNumber, String OTP) async {
+  Future<UserAccountDetails> verifyOTPAndGetAccountDetails(String OTP) async {
     String verifyOTPAndGetAccountDetailsString = """{
           "additionalData":
     {
@@ -781,7 +782,7 @@ class Repository {
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
     },
-    "mobilenumber":"$phoneNumber",      
+    "mobilenumber":"${GlobalVariables().phoneNumber}",      
     "bankcode":"${GlobalVariables().bankCode}",
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
@@ -1063,7 +1064,7 @@ class Repository {
     return GlobalVariables().myBookServiceResponseObject;
   }
 
-  Future<ComplaintList> getComplaintList() async {
+  Future<ComplaintList> getComplaintList(String complaintType) async {
     String getComplaintType = """{
           "additionalData":
     {
@@ -1077,7 +1078,7 @@ class Repository {
     "authorization":"${GlobalVariables().myPortalLogin.oUTPUT.token.accessToken}",
     "username":"${GlobalVariables().phoneNumber}",
     "ts": "${CommonMethods().getTimeStamp()}",
-    "ComplaintType":"System"
+    "ComplaintType":"$complaintType"
     }""";
     Response getComplaintTypeResponse = await NetworkCommon()
         .myDio

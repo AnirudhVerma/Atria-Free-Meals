@@ -26,7 +26,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         yield InitialSignInState();
       } catch (e) {
         yield ErrorSignInState('error Message');
-        print(e);
+        CommonMethods().printLog(e);
       }
     }
     if (event is DoSignInwithOTP) {
@@ -42,10 +42,10 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       try {
         String resp = await Repository().getOTP(event.phoneNumber);
 
-        print('repository().resp : ${Repository().resp }');
-        print('resp : $resp ');
+        CommonMethods().printLog('repository().resp : ${Repository().resp }');
+        CommonMethods().printLog('resp : $resp ');
       } catch (e) {
-        print(e);
+        CommonMethods().printLog(e);
       }
 
       if(Repository().resp == 'Success'){
@@ -56,7 +56,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       }
       else{
 
-        yield ErrorState(errorResp: Repository().resp, stateScreen: "1"); // print the toast message
+        yield ErrorState(errorResp: Repository().resp, stateScreen: "1"); // CommonMethods().printLog the toast message
       }
 
     }
@@ -91,14 +91,20 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       String resp = await Repository().doOTPLogin(event.phoneNumber,event.otp);
       CommonMethods().printLog('repository().resp : ${Repository().resp }');
       CommonMethods().printLog('resp : $resp ');
+      CommonMethods().toast(GlobalVariables().myContext, 'resp : $resp ');
 
       if(Repository().resp == 'Success'){
 
+       /* try {
+          GlobalVariables().complaintTypes = await Repository().getComplaintTypes();
+        } catch (e) {
+          CommonMethods().printLog(e);
+        }*/
         yield LoginSuccessState();
 
       }
       else{
-        yield ErrorState(errorResp: Repository().resp, stateScreen:"2" ); // CommonMethods().printLog the toast message
+        yield ErrorState(errorResp: Repository().resp, stateScreen:"2" ); // CommonMethods().CommonMethods().printLogLog the toast message
       }
 
     }

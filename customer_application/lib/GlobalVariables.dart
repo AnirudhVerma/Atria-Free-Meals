@@ -1,11 +1,13 @@
 import 'package:customer_application/JSONResponseClasses/BankOTPResponse.dart';
 import 'package:customer_application/JSONResponseClasses/BookServiceResponse.dart';
 import 'package:customer_application/JSONResponseClasses/ComplaintList.dart';
+import 'package:customer_application/JSONResponseClasses/ComplaintType.dart';
 import 'package:customer_application/JSONResponseClasses/FirstResponse.dart';
 import 'package:customer_application/JSONResponseClasses/PortalLogin.dart';
 import 'package:customer_application/JSONResponseClasses/SelectedService.dart';
 import 'package:customer_application/JSONResponseClasses/ServiceList.dart';
 import 'package:customer_application/JSONResponseClasses/UserAccountDetails.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'JSONResponseClasses/AdditionalData.dart';
@@ -14,6 +16,8 @@ import 'book_service/book_service_bloc.dart';
 
 class GlobalVariables{
   bool encryptionEnabled = true;
+  final enableToast = true;
+  final enableLog = true;
   String accessToken = '90';
   String otherString;
   FirstResponse firstResponse = new FirstResponse();
@@ -25,8 +29,7 @@ class GlobalVariables{
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();
   BookServiceBloc myBookServiceBloc = null;
   ComplaintList myComplaintList;
-  final enableToast = true;
-  final enableLog = false;
+  ComplaintType complaintTypes;
   List<Map> listOfParams;
   String phoneNumber;
   String serviceid;
@@ -51,6 +54,8 @@ class GlobalVariables{
   String registrationLatitude;
   String pinCodeFromLocation;
   String addressFromLocation;
+  var myFocusNode = new FocusNode();
+  final nonDigit = new RegExp(r"(\D+)");
 
   String timeStamp;
 

@@ -1,6 +1,9 @@
+import 'package:customer_application/CommonMethods.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'JSONResponseClasses/ComplaintList.dart';
 
 class CreateDropDown extends StatefulWidget {
 
@@ -29,6 +32,8 @@ class _CreateDropDownState extends State<CreateDropDown> {
         myMap['name'] = widget.nameInMap;
         myMap['value'] = newValue;
         GlobalVariables().listOfParams[widget.position - 1] = myMap;
+        CommonMethods().printLog(widget.myJson.toString());
+        CommonMethods().toast(context, widget.myJson.toString());
         setState(() {
           _mySelection = newValue;
           /*Map myMap = new Map();
@@ -53,19 +58,17 @@ class _CreateDropDownState extends State<CreateDropDown> {
 
 }
 
-class CreateDropDown2 extends StatefulWidget {
+class CreateDropDownGrievance extends StatefulWidget {
 
   List<Map> myJson;
-  int position;
-  String nameInMap;
 
-  CreateDropDown2({this.myJson, this.position, this.nameInMap});
+  CreateDropDownGrievance({this.myJson});
 
   @override
-  _CreateDropDown2State createState() => new _CreateDropDown2State();
+  _CreateDropDownGrievanceState createState() => new _CreateDropDownGrievanceState();
 }
 
-class _CreateDropDown2State extends State<CreateDropDown2> {
+class _CreateDropDownGrievanceState extends State<CreateDropDownGrievance> {
 
   String _mySelection;
 
@@ -77,9 +80,10 @@ class _CreateDropDown2State extends State<CreateDropDown2> {
       value: _mySelection,
       onChanged: (String newValue) {
         Map myMap = new Map();
-        myMap['name'] = widget.nameInMap;
+        myMap['name'] = newValue;
         myMap['value'] = newValue;
-        GlobalVariables().listOfParams[widget.position - 1] = myMap;
+        CommonMethods().printLog(widget.myJson.toString());
+        CommonMethods().toast(context, widget.myJson.toString());
         setState(() {
           _mySelection = newValue;
           /*Map myMap = new Map();

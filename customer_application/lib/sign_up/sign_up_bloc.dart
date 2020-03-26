@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import '../CommonMethods.dart';
 import '../bloc.dart';
 import '../repository.dart';
 
@@ -26,8 +27,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       yield showProgressBarSignUp();
 
       String resp = await Repository().getOTPSignUp(event.phoneNumber);
-      print('repository().resp : ${Repository().resp }');
-      print('resp : $resp ');
+      CommonMethods().printLog('repository().resp : ${Repository().resp }');
+      CommonMethods().printLog('resp : $resp ');
 
       if(Repository().resp == 'Success'){
 
@@ -35,7 +36,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
       }
       else{
-        yield ErrorStateSignUp(errorResp: Repository().resp ); // print the toast message
+        yield ErrorStateSignUp(errorResp: Repository().resp ); // CommonMethods().printLog the toast message
       }
 
     }
@@ -45,8 +46,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       yield showProgressBarSignUp();
 
       String resp = await Repository().doOTPSignUp(event.phoneNumber, event.otp);
-      print('repository().resp : ${Repository().resp }');
-      print('resp : $resp ');
+      CommonMethods().printLog('repository().resp : ${Repository().resp }');
+      CommonMethods().printLog('resp : $resp ');
 
       if(Repository().resp == 'Success'){
 
@@ -54,7 +55,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
       }
       else{
-        yield ErrorStateSignUpOtp(errorResp: Repository().resp ); // print the toast message
+        yield ErrorStateSignUpOtp(errorResp: Repository().resp ); // CommonMethods().printLog the toast message
       }
 
     }

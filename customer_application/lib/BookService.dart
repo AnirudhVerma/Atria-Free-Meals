@@ -87,10 +87,6 @@ class _BookServiceState extends State<BookService> {
     GlobalVariables().myBookServiceBloc.close();
   }
 
-//  BookService(this.title, this.userid, this.serviceid, this.accessToken, this.userName);
-
-//  BookService(){};
-
   @override
   Widget build(BuildContext context) {
     ///TODO check this
@@ -717,7 +713,6 @@ class _BookServiceState extends State<BookService> {
 //                            });
                           }
                           }
-
                         },
                       ),
                     ),
@@ -967,7 +962,7 @@ class _BookServiceState extends State<BookService> {
 //                            setState(() {
 //                              btnState = ButtonState.Busy;
 //                            });
-                            GlobalVariables().myUserAccountDetails = await Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text);
+                            GlobalVariables().myUserAccountDetails = await Repository().verifyOTPAndGetAccountDetails( myBankOTPController.text);
                             if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS'){
                               myBookServiceBloc.add(FetchAccountList());
                             }
@@ -1935,7 +1930,6 @@ class _BookServiceState extends State<BookService> {
                       padding: EdgeInsets.all(5.0),
                     ),
                   ),
-
               ),
             ],
           ),
@@ -1948,7 +1942,7 @@ class _BookServiceState extends State<BookService> {
     Widget accountList() {
       var accounts;
       return EnhancedFutureBuilder(
-        future: Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text),
+        future: Repository().verifyOTPAndGetAccountDetails(myBankOTPController.text),
         rememberFutureResult: true,
         whenNotDone: Center(child: CircularProgressIndicator(),),
         whenDone: (dynamic data) {
@@ -2248,7 +2242,7 @@ class _BookServiceState extends State<BookService> {
       CommonMethods()
           .toast(context, 'The Entered OTP is ${myBankOTPController.text}');
       GlobalVariables().myUserAccountDetails =
-          await Repository().verifyOTPAndGetAccountDetails(myBankPhoneNumberController.text, myBankOTPController.text);
+          await Repository().verifyOTPAndGetAccountDetails(myBankOTPController.text);
       if (GlobalVariables().myUserAccountDetails.eRRORMSG == 'SUCCESS') {
         myBookServiceBloc.add(FetchAccountList());
       } else {
@@ -2465,143 +2459,3 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
   }
 
 }
-
-/*Future<BookServiceResponse> bookService([BuildContext context]) async {
-  var requestTime = CommonMethods().getEpochTime();
-  String date = DateTime.now().toString().substring(0, 10);
-
-  var jason = json.encode(GlobalVariables().listOfParams);
-  //String toBeSent = jason.toString().substring(1, jason.toString().length - 1);
-
-
-
-  AdditionalData additionalData = AdditionalData(
-      clientAppVer:"1.0.0",
-      clientApptype:"DSB",
-      platform:"ANDROID",
-      vendorid:"17",
-      clientAppName:"ANIOSCUST"
-  );
-
-  BookServiceReq myObj = BookServiceReq(
-      additionalData: additionalData,
-      mobilenumber:GlobalVariables().phoneNumber,
-      customerid:GlobalVariables().myPortalLogin.oUTPUT.user.userid.toString(),
-      customername:GlobalVariables().firstResponse.oUTPUT[0].firstname,
-      requesttime:requestTime.toString(),
-      dEVICEID: "",
-      serviceid:GlobalVariables().serviceid,
-      servicetype:GlobalVariables().servicetype,
-      servicecategory:GlobalVariables().servicecategory,
-      servicename:GlobalVariables().servicename,
-      servicecharge:GlobalVariables().serviceCharge,
-      bankcode:GlobalVariables().bankCode,
-      bankname:GlobalVariables().bankname,
-      branchcode:GlobalVariables().branchcode,
-      branchname:GlobalVariables() .branchname,
-      addressid:GlobalVariables().addressid.toString(),
-      address:GlobalVariables().address,
-      lienmarkaccounttype:"NA",
-      lienmarkaccount:GlobalVariables().serviceAccount,
-      serviceaccounttype:"NA",
-      serviceaccount:GlobalVariables().serviceAccount,
-      prefereddate:date,
-      slot:GlobalVariables().timeSlot,
-      channel:"iOS",
-      ccagentid:"",
-      authorization:GlobalVariables().myPortalLogin.oUTPUT.token.accessToken,
-      username:GlobalVariables().phoneNumber,
-      ts: CommonMethods().getTimeStamp(),
-      latitude:GlobalVariables().latitude,
-      longitude:GlobalVariables().longitude,
-      pincode:GlobalVariables().pincode,
-      servicecode:GlobalVariables().servicecode,
-      customParams:GlobalVariables().listOfParams
-
-  );
-
-
-  *//* myObj.additionalData = AdditionalData(
-        clientAppVer:"1.0.0",
-        clientApptype:"DSB",
-        platform:"ANDROID",
-        vendorid:"17",
-        clientAppName:"ANIOSCUST"
-    );*//*
-  *//* myObj.additionalData.clientAppName= "ANIOSCUST";
-
-    myObj.additionalData.clientApptype = "DSB" ;
-
-    myObj.additionalData.clientAppVer ="1.0.0" ;
-    myObj.additionalData.platform = "ANDROID";
-
-    myObj.additionalData.vendorid ="17" ;*//*
-
-  var finalBookServiceReq = jsonEncode(myObj);
-
-
-//  CommonMethods().printLog('******************The book Service String is $bookServiceDynamicString');
-
-  Response bokServiceResponse = await NetworkCommon()
-      .myDio
-      .post("/bookService", data: finalBookServiceReq);
-  var getBranchesResponseString = jsonDecode(bokServiceResponse.toString());
-  GlobalVariables().myBookServiceResponseObject =
-      BookServiceResponse.fromJson(getBranchesResponseString);
-
-  //REMOVE THIS!!
-
-//    myBookServiceBloc.add(BookingResult());
-
-
-  if (GlobalVariables().myBookServiceResponseObject.eRRORCODE == '00') {
-    showDialog(
-      context: GlobalVariables().myContext,
-      child: CupertinoAlertDialog(
-        title: Text('Success'),
-        content: Text('Your Booking was Successful'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              GlobalVariables().listOfParams = null;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyMainPage()));
-            },
-            child: Text(
-              'OK',
-              style:
-              TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
-  } else {
-    showDialog(
-      context: GlobalVariables().myContext,
-      child: CupertinoAlertDialog(
-        title: Text('Sorry'),
-        content:
-        Text('${GlobalVariables().myBookServiceResponseObject.eRRORMSG}'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              GlobalVariables().listOfParams = null;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyMainPage()));
-            },
-            child: Text(
-              'OK',
-              style:
-              TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  return GlobalVariables().myBookServiceResponseObject;
-}*/

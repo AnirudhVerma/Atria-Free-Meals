@@ -27,8 +27,8 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
         future: getBookingHistory(),
         builder: (context, servicesSnapShot) {
           if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState == ConnectionState.waiting) {
-            print('The data is in loading state');
-            print('project snapshot data is: ${servicesSnapShot.data}');
+            CommonMethods().printLog('The data is in loading state');
+            CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
             return Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -40,8 +40,8 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
             );
           }
           else if (servicesSnapShot.data == null &&  servicesSnapShot.connectionState != ConnectionState.waiting) {
-            print('The data is in loading state');
-            print('project snapshot data is: ${servicesSnapShot.data}');
+            CommonMethods().printLog('The data is in loading state');
+            CommonMethods().printLog('project snapshot data is: ${servicesSnapShot.data}');
             return Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -53,7 +53,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
             );
           }
           else {
-//          CommonMethods().printLog('The data is loaded!!!!');
+//          CommonMethods().CommonMethods().printLogLog('The data is loaded!!!!');
             return ListView.builder(
               itemCount: servicesSnapShot.data.length,
               itemBuilder: (context, index) {
@@ -65,7 +65,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
 //                  subtitle: Text('Service Charge : ${output.serviceCharge}'),
                     onTap: () {
                       output = servicesSnapShot.data[index];
-                      /*CommonMethods().printLog('******************** THE OUTPUT IS ${output.toString()}');
+                      /*CommonMethods().CommonMethods().printLogLog('******************** THE OUTPUT IS ${output.toString()}');
                       GlobalVariables().userSelectedService = output;*/                   //unable to instantiate the userSelecteeService
                       /*GlobalVariables().serviceid = output.serviceid;
                       GlobalVariables().servicename = output.servicename;
@@ -117,8 +117,8 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
     var getBookingHistoryResponseString = jsonDecode(getBookingHistoryResponse.toString());
     var getBookingHistoryResponseObject =
     BookingHistoryResponse.fromJson(getBookingHistoryResponseString);
-    //CommonMethods().printLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
-    // CommonMethods().printLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
+    //CommonMethods().CommonMethods().printLogLog("THE SERVICE RESPONSE IS $getServicesResponseObject");
+    // CommonMethods().CommonMethods().printLogLog("THE SERVICE RESPONSE IS ${getServicesResponseObject.oUTPUT[0].serviceCharge}");
 
     CommonMethods().printLog("THE SERVICE RESPONSE IS ${getBookingHistoryResponseObject.oUTPUT.length}");
 
@@ -135,7 +135,7 @@ class _CompletedServicesDialogState extends State<CompletedServicesDialog> {
     CommonMethods().printLog('             THE SERVICES OFFERED ARE $services                 ');
 
     return getBookingHistoryResponseObject;
-    //CommonMethods().printLog(accessToken);
+    //CommonMethods().CommonMethods().printLogLog(accessToken);
   }
 
 }

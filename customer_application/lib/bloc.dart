@@ -7,3 +7,6 @@ export 'sign_up/sign_up_state.dart';
 export 'book_service/book_service_bloc.dart';
 export 'book_service/book_service_event.dart';
 export 'book_service/book_service_state.dart';
+export 'book_service_new_flow/book_service_new_bloc.dart';
+export 'book_service_new_flow/book_service_new_event.dart';
+export 'book_service_new_flow/book_service_new_state.dart';

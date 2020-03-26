@@ -1,3 +1,5 @@
+import '../CommonMethods.dart';
+
 class BookingHistoryResponse {
   String eRRORCODE;
   String eRRORMSG;
@@ -16,7 +18,7 @@ class BookingHistoryResponse {
                 oUTPUT.add(new OUTPUT.fromJson(v));
               });
       } catch (e) {
-        print(e);
+        CommonMethods().printLog(e);
       }
     }
   }

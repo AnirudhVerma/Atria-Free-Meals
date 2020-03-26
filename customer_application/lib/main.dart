@@ -223,11 +223,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     );
                   }
-                  if (state is LoginSuccessState) {
+                  /*if (state is LoginSuccessState) {
                     return Center(
                       child: Text('This is blocbuilder screen'),
                     );
-                  }
+                  }*/
                   if (state is ErrorState) {
                     var data = state.errorResp;
                     if (state.errorResp == null) {
@@ -259,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     );
                   }
-                  return null;
+                  return Container();
                 }),
           ),
         ),
@@ -1005,10 +1005,11 @@ class _MyHomePageState extends State<MyHomePage> {
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
-    "platform":"ANDROID",
+    "platform":"iOS",
     "vendorid":"17"
     },
-    "mobilenumber":"$phoneNumber"
+    "mobilenumber":"$phoneNumber",
+    "client_app_ver":"1.0.0"
     }""";
 
       String fetchUserDetailsString = """{
@@ -1016,10 +1017,9 @@ class _MyHomePageState extends State<MyHomePage> {
     {
     "client_app_ver":"1.0.0",
     "client_apptype":"DSB",
-    "platform":"ANDROID",
+    "platform":"iOS",
     "vendorid":"17",
     "ClientAppName":"ANIOSCUST"
-
     },
     "mobilenumber":"$phoneNumber",
     "type":"login"
