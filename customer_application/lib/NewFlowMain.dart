@@ -1,4 +1,5 @@
 import 'package:customer_application/BookServiceNewFlow.dart';
+import 'package:customer_application/CustomParamsDialog.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,17 +70,12 @@ class _NewFlowMainState extends State<NewFlowMain> {
                           CommonMethods().printLog('project snapshot data is: ${bankListSnapshot.data}');
                           return GestureDetector(
                             onTap: () async {
-                              bankOutput = bankListSnapshot.data.oUTPUT[index];
-//                              BankOTPResponse myBankOTPResponse = await Repository().fetchUserAccountDetails(bankOutput.bankCode);
+                              return CustomParamsDialog(selectedService: bankOutput.fetchAccparams,);
+                             /* bankOutput = bankListSnapshot.data.oUTPUT[index];
 //                              Repository().fetchUserAccountDetails(bankOutput.bankCode);
                               GlobalVariables().myBankOTPResponse = await Repository().fetchUserAccountDetails(bankOutput.bankCode);
-                              /*if(myBankOTPResponse.eRRORCODE == "00"){
-                                GlobalVariables().bankname = bankOutput.bankname;
-                                Navigator.push(context, CupertinoPageRoute(builder :(context) => BookServiceNewFlow()));
-                              }
-                              else CommonMethods().toast(context, 'Couldn\'t generate OTP request, please try again');*/
                               GlobalVariables().bankname = bankOutput.bankname;
-                              Navigator.push(context, CupertinoPageRoute(builder :(context) => BookServiceNewFlow()));
+                              Navigator.push(context, CupertinoPageRoute(builder :(context) => BookServiceNewFlow()));*/
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(

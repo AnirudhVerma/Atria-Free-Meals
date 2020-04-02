@@ -1,32 +1,25 @@
-import 'dart:convert';
-
+import 'package:customer_application/JSONResponseClasses/Bank.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:customer_application/CreateTextField.dart';
 import 'package:customer_application/DatePickerButton.dart';
 import 'package:customer_application/MyAlertDialog.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-
 import 'BookService.dart';
-import 'CommonMethods.dart';
 import 'CommonMethods.dart';
 import 'CreateDropDown.dart';
 import 'GlobalVariables.dart';
-import 'JSONResponseClasses/ServiceList.dart';
 import 'book_service/book_service_bloc.dart';
-import 'networkConfig.dart';
 
-class CustomParamsDialog extends StatefulWidget {
+class FetchAccountParamsDialog extends StatefulWidget {
 
-  CustomParamsDialog({this.selectedService});
-  OUTPUT selectedService;
+  FetchAccountParamsDialog({this.selectedBank});
+  FetchAccparams selectedBank;
 
   @override
-  _CustomParamsDialogState createState() => new _CustomParamsDialogState();
+  _FetchAccountParamsDialogState createState() => new _FetchAccountParamsDialogState();
 }
 
-class _CustomParamsDialogState extends State<CustomParamsDialog> {
+class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
 
 //  String _date = "Not set";
 //  String _toDate = 'Not Set';
@@ -49,7 +42,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                   height: 15,
                 ),
                 Text(
-                  '${widget.selectedService.servicename}',
+                  '${widget.selectedBank}',
                   style: TextStyle(
                       color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -68,20 +61,20 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: widget.selectedService.customParams.length,
+                          itemCount: widget.selectedBank.,
                           itemBuilder: (BuildContext context, int index) {
-                            CustomParams mCust =
-                            widget.selectedService.customParams[index];
-                            RegExp regex = new RegExp(widget.selectedService.customParams[index].rEGEX);
-                            GlobalVariables().listOfParams = new List(widget.selectedService.customParams.length);
-                            if (mCust.dATATYPE == 'LIST') {
-                              CommonMethods().printLog(mCust.lIST.toString());
+                            FetchAccparams mParams =
+                            widget.selectedBank;
+                            RegExp regex = new RegExp(widget.selectedBank.rEGEX);
+                            GlobalVariables().listOfParams = new List(widget.selectedBank.length);
+                            if (mParams.dATATYPE == 'LIST') {
+                              CommonMethods().printLog(mParams.);
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
-                                  Text('${mCust.nAME}  '),
+                                  Text('${mParams.nAME}  '),
 //                            dropDown(convertListToMap(mCust.lIST)),
-                                  new CreateDropDown(myJson: convertListToMap(mCust.lIST), position: int.parse(widget.selectedService.customParams[index].sEQUENCE, ),nameInMap: mCust.nAME,),
+                                  new CreateDropDown(myJson: convertListToMap(mParams.lIST), position: int.parse(widget.selectedService.customParams[index].sEQUENCE, ),nameInMap: mCust.nAME,),
                                 ],
                               );
                             }
@@ -148,6 +141,7 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
+                        /* ... */
                       },
                     ),
                     MaterialButton(
@@ -170,10 +164,16 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
                               context,
                               new CupertinoPageRoute(
                                   builder: (context) => BookService()));
-                      }
+                        }
                         else{
                           CommonMethods().toast(context, 'Please fill all the Mandatory fields!');
+                          /*Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (context) => BookService()));*/
                         }
+                        /* ... */
                       },
                     ),
                   ],
@@ -197,6 +197,8 @@ class _CustomParamsDialogState extends State<CustomParamsDialog> {
   }
 
   List<Map> convertListToMap(List<LIST> ml){
+
+    List<Map> _myJson = [{"name":"1", "value":"1"},{"name":"2", "value":"2"},{"name":"3", "value":"3"},{"name":"4", "value":"4"},{"name":"5", "value":"Five"}];
 
     var myMap = new Map();
     List<Map> listOfMap = [];

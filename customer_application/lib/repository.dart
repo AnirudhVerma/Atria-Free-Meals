@@ -28,6 +28,7 @@ import 'main.dart';
 import 'networkConfig.dart';
 
 class Repository {
+
   static final Repository _singleton = new Repository._internal();
 
   var resp = null;
@@ -728,6 +729,7 @@ class Repository {
     Response getBankListResponse = await NetworkCommon()
         .myDio
         .post("/getBankList", data: getBankListString);
+    CommonMethods().printLog('#############The bank list response is ${getBankListResponse.toString()}');
     var getBankListResponseString =
     jsonDecode(getBankListResponse.toString());
     var getBankListResponseObject =
