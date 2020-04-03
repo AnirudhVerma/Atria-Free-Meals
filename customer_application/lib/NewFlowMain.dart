@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:customer_application/BookServiceNewFlow.dart';
 import 'package:customer_application/CustomParamsDialog.dart';
+import 'package:customer_application/FetchAccountParamsDialog.dart';
 import 'package:customer_application/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +73,7 @@ class _NewFlowMainState extends State<NewFlowMain> {
                           CommonMethods().printLog('project snapshot data is: ${bankListSnapshot.data}');
                           return GestureDetector(
                             onTap: () async {
-                              return CustomParamsDialog(selectedService: bankOutput.fetchAccparams,);
+                              return FetchAccountParamsDialog(selectedBank: bankOutput);
                              /* bankOutput = bankListSnapshot.data.oUTPUT[index];
 //                              Repository().fetchUserAccountDetails(bankOutput.bankCode);
                               GlobalVariables().myBankOTPResponse = await Repository().fetchUserAccountDetails(bankOutput.bankCode);
@@ -89,8 +92,9 @@ class _NewFlowMainState extends State<NewFlowMain> {
                                   Hero(
                                     tag: bankOutput.bankname,
                                     child: CircleAvatar(
-                                      child: new Image(
-                                          image: new AssetImage('assets/images/bank_icon.png')),
+                                       child: Image.memory(base64Decode(bankOutput.icon.toString().split(',').last))
+                                      /*child: new Image(
+                                          image: new AssetImage('assets/images/bank_icon.png')),*/
                                     ),
                                   ),
                                   SizedBox(height: 10,),

@@ -156,6 +156,8 @@ class OUTPUT {
 }
 
 class FetchAccparams {
+  List<LIST> lIST;
+  List<VALIDATE> vALIDATE;
   String nAME;
   String rEGEX;
   String sEQUENCE;
@@ -165,7 +167,9 @@ class FetchAccparams {
   String iSMANDATORY;
 
   FetchAccparams(
-      {this.nAME,
+      { this.lIST,
+        this.vALIDATE,
+        this.nAME,
         this.rEGEX,
         this.sEQUENCE,
         this.dATATYPE,
@@ -174,6 +178,18 @@ class FetchAccparams {
         this.iSMANDATORY});
 
   FetchAccparams.fromJson(Map<String, dynamic> json) {
+    if (json['LIST'] != null) {
+      lIST = new List<Null>();
+      json['LIST'].forEach((v) {
+        lIST.add(new LIST.fromJson(v));
+      });
+    }
+    if (json['VALIDATE'] != null) {
+      vALIDATE = new List<Null>();
+      json['VALIDATE'].forEach((v) {
+        vALIDATE.add(new VALIDATE.fromJson(v));
+      });
+    }
     nAME = json['NAME'];
     rEGEX = json['REGEX'];
     sEQUENCE = json['SEQUENCE'];
@@ -192,6 +208,44 @@ class FetchAccparams {
     data['MAX_LENGTH'] = this.mAXLENGTH;
     data['MIN_LENGTH'] = this.mINLENGTH;
     data['IS_MANDATORY'] = this.iSMANDATORY;
+    return data;
+  }
+}
+
+class LIST {
+  String name;
+  String value;
+
+  LIST({this.name, this.value});
+
+  LIST.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['value'] = this.value;
+    return data;
+  }
+}
+
+class VALIDATE {
+  String name;
+  String value;
+
+  VALIDATE({this.name, this.value});
+
+  VALIDATE.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['value'] = this.value;
     return data;
   }
 }

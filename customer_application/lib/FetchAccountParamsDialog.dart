@@ -13,7 +13,7 @@ import 'book_service/book_service_bloc.dart';
 class FetchAccountParamsDialog extends StatefulWidget {
 
   FetchAccountParamsDialog({this.selectedBank});
-  FetchAccparams selectedBank;
+  OUTPUT selectedBank;
 
   @override
   _FetchAccountParamsDialogState createState() => new _FetchAccountParamsDialogState();
@@ -61,38 +61,37 @@ class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: widget.selectedBank.,
+                          itemCount: widget.selectedBank.fetchAccparams.length,
                           itemBuilder: (BuildContext context, int index) {
                             FetchAccparams mParams =
-                            widget.selectedBank;
-                            RegExp regex = new RegExp(widget.selectedBank.rEGEX);
-                            GlobalVariables().listOfParams = new List(widget.selectedBank.length);
+                            widget.selectedBank.fetchAccparams[index];
+                            RegExp regex = new RegExp(widget.selectedBank.fetchAccparams[index].rEGEX);
+                            GlobalVariables().fetchAccountParamsList = new List(widget.selectedBank.fetchAccparams.length);
                             if (mParams.dATATYPE == 'LIST') {
-                              CommonMethods().printLog(mParams.);
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Text('${mParams.nAME}  '),
 //                            dropDown(convertListToMap(mCust.lIST)),
-                                  new CreateDropDown(myJson: convertListToMap(mParams.lIST), position: int.parse(widget.selectedService.customParams[index].sEQUENCE, ),nameInMap: mCust.nAME,),
+                                  new CreateDropDown(myJson: convertListToMap(mParams.lIST), position: int.parse(widget.selectedBank.fetchAccparams[index].sEQUENCE, ),nameInMap: mParams.nAME,),
                                 ],
                               );
                             }
-                            if (mCust.dATATYPE == 'DOUBLE' || mCust.dATATYPE == 'NAMESTRING' || mCust.dATATYPE == 'NUMBER' || mCust.dATATYPE == 'alphanumeric') {
+                            if (mParams.dATATYPE == 'DOUBLE' || mParams.dATATYPE == 'NAMESTRING' || mParams.dATATYPE == 'NUMBER' || mParams.dATATYPE == 'alphanumeric') {
                               return Column(
                                 children: <Widget>[
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
 //                                  Text('${mCust.nAME}  '),
-                                      Expanded(child: CreateTextField(hint: mCust.nAME, position: int.parse(widget.selectedService.customParams[index].sEQUENCE), regex: regex,)),
+                                      Expanded(child: CreateTextField(hint: mParams.nAME, position: int.parse(widget.selectedBank.fetchAccparams[index].sEQUENCE), regex: regex,)),
                                     ],
                                   ),
                                   SizedBox(height: 10,)
                                 ],
                               );
                             }
-                            if (mCust.dATATYPE == 'DATE') {
+                            if (mParams.dATATYPE == 'DATE') {
                               return Column(
                                 children: <Widget>[
                                   SizedBox(
@@ -102,8 +101,8 @@ class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      Text('${mCust.nAME}  '),
-                                      new DatePickerButton(position: int.parse(widget.selectedService.customParams[index].sEQUENCE)),
+                                      Text('${mParams.nAME}  '),
+                                      new DatePickerButton(position: int.parse(widget.selectedBank.fetchAccparams[index].sEQUENCE)),
                                     ],
                                   ),
                                   SizedBox(
@@ -115,7 +114,7 @@ class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
                             }
                             return ListTile(
                               title: Text(
-                                  'The service name is ${widget.selectedService.servicename}'),
+                                  'The service name is ${widget.selectedBank.fetchAccparams[index].nAME}'),
                             );//Container(child: Text('Hello ${index}'),);
                           },
                         )

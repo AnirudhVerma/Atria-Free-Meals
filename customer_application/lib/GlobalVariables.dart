@@ -31,6 +31,7 @@ class GlobalVariables{
   ComplaintList myComplaintList;
   ComplaintType complaintTypes;
   List<Map> listOfParams;
+  List<Map> fetchAccountParamsList;
   String phoneNumber;
   String serviceid;
   String servicename;
