@@ -1,3 +1,4 @@
+import 'package:customer_application/BookServiceNewFlow.dart';
 import 'package:customer_application/JSONResponseClasses/Bank.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:customer_application/CreateTextField.dart';
@@ -155,8 +156,13 @@ class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
                         ),
                       ),
                       onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            new CupertinoPageRoute(
+                                builder: (context) => BookServiceNewFlow()));
 
-                        if (allParamsFilled()) {
+                       /* if (allParamsFilled()) {
                           GlobalVariables().myBookServiceBloc = new BookServiceBloc();
                           Navigator.pop(context);
                           Navigator.push(
@@ -166,13 +172,7 @@ class _FetchAccountParamsDialogState extends State<FetchAccountParamsDialog> {
                         }
                         else{
                           CommonMethods().toast(context, 'Please fill all the Mandatory fields!');
-                          /*Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              new CupertinoPageRoute(
-                                  builder: (context) => BookService()));*/
-                        }
-                        /* ... */
+                        }*/
                       },
                     ),
                   ],

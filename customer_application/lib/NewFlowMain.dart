@@ -70,10 +70,22 @@ class _NewFlowMainState extends State<NewFlowMain> {
                       itemBuilder: (context, index) {
                         {
                           bankOutput = bankListSnapshot.data.oUTPUT[index];
+
                           CommonMethods().printLog('project snapshot data is: ${bankListSnapshot.data}');
                           return GestureDetector(
                             onTap: () async {
-                              return FetchAccountParamsDialog(selectedBank: bankOutput);
+                              return showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  Repository().fetchUserAccountDetails(bankOutput.bankCode);
+                                  bankOutput = bankListSnapshot.data.oUTPUT[index];
+                                  GlobalVariables().selectedBankOutput = bankListSnapshot.data.oUTPUT[index];
+                                  CommonMethods().toast(context, 'The selected Bank is ${bankOutput.bankname}, the index is $index');
+                                  GlobalVariables().bankname = bankOutput.bankname;
+                                  return FetchAccountParamsDialog(selectedBank: bankOutput);
+                                },
+                              );
+//                              return FetchAccountParamsDialog(selectedBank: bankOutput);
                              /* bankOutput = bankListSnapshot.data.oUTPUT[index];
 //                              Repository().fetchUserAccountDetails(bankOutput.bankCode);
                               GlobalVariables().myBankOTPResponse = await Repository().fetchUserAccountDetails(bankOutput.bankCode);

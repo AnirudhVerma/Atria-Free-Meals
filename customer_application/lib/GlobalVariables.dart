@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'JSONResponseClasses/AdditionalData.dart';
+import 'JSONResponseClasses/Bank.dart';
 import 'JSONResponseClasses/BookServiceReq.dart';
 import 'book_service/book_service_bloc.dart';
 
@@ -24,6 +25,7 @@ class GlobalVariables{
   BankOTPResponse myBankOTPResponse = new BankOTPResponse();
   UserAccountDetails myUserAccountDetails = new UserAccountDetails();
   SelectedService userSelectedService = new SelectedService();
+  var selectedBankOutput;
   ServiceList myServiceList = new ServiceList();
   PortalLogin myPortalLogin = new PortalLogin();
   BookServiceResponse myBookServiceResponseObject = new BookServiceResponse();

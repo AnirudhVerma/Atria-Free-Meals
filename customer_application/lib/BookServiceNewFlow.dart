@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:customer_application/GlobalVariables.dart';
 import 'package:customer_application/bloc.dart';
@@ -145,12 +147,13 @@ class _BookServiceNewFlowState extends State<BookServiceNewFlow> {
                 height: 16,
               ),
               Hero(
-                tag: GlobalVariables().bankname,
+                tag: GlobalVariables().selectedBankOutput.bankname,
                 child:
                 CircleAvatar(
-                  child: new Image(
-                      image: new AssetImage('assets/images/bank_icon.png')),maxRadius: 20,
-                ),
+                    child: Image.memory(base64Decode(GlobalVariables().selectedBankOutput.icon.toString().split(',').last))
+                  /*child: new Image(
+                                          image: new AssetImage('assets/images/bank_icon.png')),*/
+                )
               ),
               SizedBox(height: 10,),
               Row(
